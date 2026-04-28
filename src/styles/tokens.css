@@ -1,0 +1,14 @@
+:root {
+  --bg: #F7F4EF;
+  --ink: #0f0d0b;
+  --ink-mid: #56534f;
+  --ink-light: #beb8b0;
+  --accent: #BF4E2B;
+  --border: #E0DAD2;
+  --card: #FFFFFF;
+
+  --font-display: 'Lora', Georgia, serif;
+  --font-mono: 'DM Mono', monospace;
+
+  --nav-h: 5rem;
+}
