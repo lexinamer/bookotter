@@ -24,7 +24,7 @@ export default function Nav({ user, onLogin, onLogout }) {
       </Link>
 
       <div className="nav-menu">
-        <Link to="/shelf" className="nav-link">
+        <Link to="/shelf" className="meta-label">
           My Shelf
         </Link>
 
@@ -40,9 +40,9 @@ export default function Nav({ user, onLogin, onLogout }) {
             <div className="account-popover">
               {user ? (
                 <>
-                  <p className="account-status">Signed In</p>
+                  <p className="micro-label">Signed In</p>
                   <button
-                    className="account-action"
+                    className="text-action"
                     onClick={() => {
                       setOpen(false);
                       onLogout();
@@ -53,9 +53,9 @@ export default function Nav({ user, onLogin, onLogout }) {
                 </>
               ) : (
                 <>
-                  <p className="account-status">Guest</p>
+                  <p className="micro-label">Guest</p>
                   <button
-                    className="account-action"
+                    className="text-action"
                     onClick={() => {
                       setOpen(false);
                       onLogin();

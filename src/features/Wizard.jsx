@@ -76,10 +76,10 @@ export default function Wizard({ onSubmit, onReset }) {
   const renderHero = () => (
     <section className="wizard-section active" id="s-hero">
       <div className="step-inner">
-        <p>Tell us the books you love.</p>
-        <h1>We'll tell you what to read next.</h1>
+        <p className="meta-label">Tell us the books you love.</p>
+        <h1 className="display-title">We'll tell you what to read next.</h1>
 
-        <button type="button" id="hero-btn" onClick={handleNext}>
+        <button type="button" className="primary-action" onClick={handleNext}>
           Get Started
         </button>
       </div>
@@ -90,17 +90,18 @@ export default function Wizard({ onSubmit, onReset }) {
     <section className="wizard-section active" id="s-books">
       <div className="step-inner">
         <div className="step-meta">
-          <p className="step-label">{current.label}</p>
+          <p className="micro-label">{current.label}</p>
         </div>
 
-        <h2>{current.title}</h2>
-        <p className="step-hint">{current.hint}</p>
+        <h2 className="display-title">{current.title}</h2>
+        <p className="meta-label">{current.hint}</p>
 
         <div className="book-inputs">
           {current.placeholders.map((placeholder, index) => (
             <input
               key={index}
               type="text"
+              className="field-input field-text"
               placeholder={placeholder}
               value={formData.books[index]}
               onChange={(e) => handleBookChange(index, e.target.value)}
@@ -113,7 +114,7 @@ export default function Wizard({ onSubmit, onReset }) {
         <div className="step-actions">
           <button
             type="button"
-            className="btn-next"
+            className="primary-action"
             onClick={handleNext}
             disabled={!canAdvance}
           >
@@ -122,7 +123,7 @@ export default function Wizard({ onSubmit, onReset }) {
 
           <button
             type="button"
-            className="btn-start-over"
+            className="text-action"
             onClick={handleStartOver}
           >
             Start Over
@@ -136,11 +137,11 @@ export default function Wizard({ onSubmit, onReset }) {
     <section className="wizard-section active" id={`s-${current.id}`}>
       <div className="step-inner">
         <div className="step-meta">
-          <p className="step-label">{current.label}</p>
+          <p className="micro-label">{current.label}</p>
         </div>
 
-        <h2>{current.title}</h2>
-        <p className="step-hint">{current.hint}</p>
+        <h2 className="display-title">{current.title}</h2>
+        <p className="meta-label">{current.hint}</p>
 
         <div className="pills">
           {current.options.map((option) => {
@@ -165,20 +166,20 @@ export default function Wizard({ onSubmit, onReset }) {
         <div className="step-actions">
           <button
             type="button"
-            className="btn-start-over"
+            className="text-action"
             onClick={handleStartOver}
           >
             Start Over
           </button>
 
           {isLast ? (
-            <button type="button" id="submit-btn" onClick={handleSubmit}>
+            <button type="button" className="primary-action" onClick={handleSubmit}>
               Find my next book →
             </button>
           ) : (
             <button
               type="button"
-              className="btn-next"
+              className="primary-action"
               onClick={handleNext}
             >
               Next

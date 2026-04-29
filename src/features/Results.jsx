@@ -11,7 +11,7 @@ export default function Results({
   if (data.error) {
     return (
       <div id="results">
-        <p className="error">{data.error}</p>
+        <p className="body-copy">{data.error}</p>
       </div>
     );
   }
@@ -19,9 +19,9 @@ export default function Results({
   return (
     <div id="results">
       <div className="results-topbar">
-        <p className="results-header">{data.length} recommendations for you</p>
+        <p className="meta-label">{data.length} recommendations for you</p>
 
-        <button className="btn-start-over" onClick={onReset}>
+        <button className="text-action" onClick={onReset}>
           Start Over
         </button>
       </div>

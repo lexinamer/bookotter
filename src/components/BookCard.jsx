@@ -21,13 +21,13 @@ export default function BookCard({
             href={`${amazonBase}${query}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="result-title"
+            className="book-title"
           >
             {book.title}
           </a>
 
-          <div className="result-author">{book.author}</div>
-          <div className="result-meta">{book.year} • {book.pages} pages</div>
+          <div className="meta-label">{book.author}</div>
+          <div className="micro-label">{book.year} • {book.pages} pages</div>
         </div>
 
         {mode === 'results' && (
@@ -78,8 +78,8 @@ export default function BookCard({
         )}
       </div>
 
-      <div className="result-what">{book.what}</div>
-      <div className="result-why">{book.why}</div>
+      <div className="book-note">{book.what}</div>
+      <div className="book-reason">{book.why}</div>
     </div>
   );
 }

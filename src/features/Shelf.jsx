@@ -12,41 +12,47 @@ export default function Shelf({
   return (
     <div id="results">
       {hasResultsSession && (
-        <div className="step-actions" style={{ marginBottom: '2rem' }}>
-          <button className="btn-next" onClick={onBackToResults}>
+        <div className="results-topbar">
+          <p className="meta-label">Your Shelf</p>
+
+          <button className="secondary-action" onClick={onBackToResults}>
             Back to Recommendations
           </button>
         </div>
       )}
 
-      <p className="results-header">Saved Books</p>
+      <p className="meta-label">Saved Books</p>
 
-      {savedBooks.length === 0 && <p className="error">No saved books yet.</p>}
+      {savedBooks.length === 0 && <p className="body-copy">No saved books yet.</p>}
 
-      {savedBooks.map((book) => (
-        <BookCard
-          key={book.id}
-          book={book}
-          onRemoveSaved={onRemoveSaved}
-          onRead={onRead}
-          mode="saved"
-        />
-      ))}
+      <div className="results-grid">
+        {savedBooks.map((book) => (
+          <BookCard
+            key={book.id}
+            book={book}
+            onRemoveSaved={onRemoveSaved}
+            onRead={onRead}
+            mode="saved"
+          />
+        ))}
+      </div>
 
-      <p className="results-header" style={{ marginTop: '3rem' }}>
-        Books Read
-      </p>
+      <div style={{ marginTop: '4rem' }}>
+        <p className="meta-label">Books Read</p>
+      </div>
 
-      {readBooks.length === 0 && <p className="error">No read books yet.</p>}
+      {readBooks.length === 0 && <p className="body-copy">No read books yet.</p>}
 
-      {readBooks.map((book) => (
-        <BookCard
-          key={book.id}
-          book={book}
-          onRemoveRead={onRemoveRead}
-          mode="read"
-        />
-      ))}
+      <div className="results-grid">
+        {readBooks.map((book) => (
+          <BookCard
+            key={book.id}
+            book={book}
+            onRemoveRead={onRemoveRead}
+            mode="read"
+          />
+        ))}
+      </div>
     </div>
   );
 }

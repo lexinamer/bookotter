@@ -1,77 +1,56 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Nav from './components/Nav';
 import AuthModal from './components/AuthModal';
 import Wizard from './features/Wizard';
 import Results from './features/Results';
 import Shelf from './features/Shelf';
-import { getRecommendations } from './core/api';
-import { watchAuthState, loginWithGoogle, logoutUser } from './features/auth';
-import {
-  loadShelf,
-  saveBook,
-  unsaveBook,
-  markBookRead,
-  removeReadBook,
-} from './core/shelf';
-
+import useAuth from './hooks/useAuth';
+import useShelf from './hooks/useShelf';
+import useRecommendations from './hooks/useRecommendations';
 import './styles/global.scss';
-
-const STORAGE_KEY = 'bookotter_active_session';
 
 export default function App() {
   const navigate = useNavigate();
 
-  const [results, setResults] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const {
+    user,
+    authReady,
+    authModalOpen,
+    pendingAction,
+    setPendingAction,
+    setAuthModalOpen,
+    beginAuthFlow,
+    confirmGoogleLogin,
+    logoutUser,
+  } = useAuth();
 
-  const [user, setUser] = useState(null);
-  const [authReady, setAuthReady] = useState(false);
+  const {
+    savedBooks,
+    readBooks,
+    handleSave,
+    handleRemoveSaved,
+    handleRemoveRead,
+    handleRead,
+  } = useShelf(user, authReady);
 
-  const [savedBooks, setSavedBooks] = useState([]);
-  const [readBooks, setReadBooks] = useState([]);
-
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [pendingAction, setPendingAction] = useState(null);
-
-  useEffect(() => {
-    const unsubscribe = watchAuthState(setUser, setAuthReady);
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      setResults(JSON.parse(stored));
-    }
-  }, []);
-
-  useEffect(() => {
-    async function hydrateShelf() {
-      if (!user) {
-        setSavedBooks([]);
-        setReadBooks([]);
-        return;
-      }
-
-      const shelf = await loadShelf(user.uid);
-      setSavedBooks(shelf.savedBooks);
-      setReadBooks(shelf.readBooks);
-    }
-
-    if (authReady) hydrateShelf();
-  }, [user, authReady]);
+  const {
+    results,
+    loading,
+    handleSubmit,
+    handleReset,
+  } = useRecommendations(readBooks, navigate);
 
   useEffect(() => {
     async function replayPending() {
       if (!user || !pendingAction) return;
 
       if (pendingAction.type === 'save') {
-        await handleSave(pendingAction.book, true);
+        await handleSave(user.uid, pendingAction.book);
       }
 
       if (pendingAction.type === 'read') {
-        await handleRead(pendingAction.book, true);
+        await handleRead(user.uid, pendingAction.book);
       }
 
       setPendingAction(null);
@@ -80,82 +59,24 @@ export default function App() {
     replayPending();
   }, [user]);
 
-  const handleSubmit = async (formData) => {
-    setLoading(true);
-
-    try {
-      const data = await getRecommendations(
-        formData.books,
-        formData.genre,
-        formData.length,
-        readBooks.map(book => book.title)
-      );
-
-      const filtered = data.recommendations.filter(
-        (book) => !readBooks.some((read) => read.id === book.id)
-      );
-
-      setResults(filtered);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
-      navigate('/');
-    } catch (error) {
-      setResults({ error: error.message });
-    } finally {
-      setLoading(false);
-    }
+  const guardedSave = async (book) => {
+    if (!user) return beginAuthFlow('save', book);
+    await handleSave(user.uid, book);
   };
 
-  const handleReset = () => {
-    setResults(null);
-    localStorage.removeItem(STORAGE_KEY);
-    navigate('/');
+  const guardedRead = async (book) => {
+    if (!user) return beginAuthFlow('read', book);
+    await handleRead(user.uid, book);
   };
 
-  const beginAuthFlow = (type, book) => {
-    setPendingAction({ type, book });
-    setAuthModalOpen(true);
-  };
-
-  const confirmGoogleLogin = async () => {
-    setAuthModalOpen(false);
-    await loginWithGoogle();
-  };
-
-  const handleSave = async (book, bypassAuth = false) => {
-    if (!user && !bypassAuth) {
-      return beginAuthFlow('save', book);
-    }
-
-    const activeUser = user || (await loginWithGoogle()).user;
-    await saveBook(activeUser.uid, book);
-
-    setSavedBooks(prev => [...prev.filter(b => b.id !== book.id), book]);
-  };
-
-  const handleRemoveSaved = async (book) => {
+  const guardedRemoveSaved = async (book) => {
     if (!user) return;
-
-    await unsaveBook(user.uid, book.id);
-    setSavedBooks(prev => prev.filter(b => b.id !== book.id));
+    await handleRemoveSaved(user.uid, book);
   };
 
-  const handleRemoveRead = async (book) => {
+  const guardedRemoveRead = async (book) => {
     if (!user) return;
-
-    await removeReadBook(user.uid, book.id);
-    setReadBooks(prev => prev.filter(b => b.id !== book.id));
-  };
-
-  const handleRead = async (book, bypassAuth = false) => {
-    if (!user && !bypassAuth) {
-      return beginAuthFlow('read', book);
-    }
-
-    const activeUser = user || (await loginWithGoogle()).user;
-    await markBookRead(activeUser.uid, book);
-
-    setSavedBooks(prev => prev.filter(b => b.id !== book.id));
-    setReadBooks(prev => [...prev.filter(b => b.id !== book.id), book]);
+    await handleRemoveRead(user.uid, book);
   };
 
   if (loading) {
@@ -187,8 +108,8 @@ export default function App() {
               <Results
                 data={results}
                 onReset={handleReset}
-                onSave={handleSave}
-                onRead={handleRead}
+                onSave={guardedSave}
+                onRead={guardedRead}
                 savedBooks={savedBooks}
                 readBooks={readBooks}
               />
@@ -202,9 +123,9 @@ export default function App() {
             <Shelf
               savedBooks={savedBooks}
               readBooks={readBooks}
-              onRemoveSaved={handleRemoveSaved}
-              onRemoveRead={handleRemoveRead}
-              onRead={handleRead}
+              onRemoveSaved={guardedRemoveSaved}
+              onRemoveRead={guardedRemoveRead}
+              onRead={guardedRead}
               onBackToResults={() => navigate('/')}
               hasResultsSession={!!results}
             />
