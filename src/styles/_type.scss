@@ -1,0 +1,45 @@
+// ─── Type mixins ─────────────────────────────────────────────────────────────
+// @use this file in component stylesheets, then @include the role you need.
+// Component CSS only handles color, spacing, and layout — never font declarations.
+// ─────────────────────────────────────────────────────────────────────────────
+
+@mixin display {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4.5vw, 2.2rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.15;
+}
+
+@mixin title {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1.08;
+}
+
+@mixin body {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.65;
+}
+
+@mixin body-sm {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  line-height: 1.65;
+}
+
+@mixin label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@mixin caption {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+}

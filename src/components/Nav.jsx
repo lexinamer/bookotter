@@ -1,8 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { CircleUserRound } from 'lucide-react';
 
 export default function Nav({ user, onLogin, onLogout }) {
   const [open, setOpen] = useState(false);
+  const popRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (popRef.current && !popRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <nav id="site-nav">
@@ -11,37 +24,46 @@ export default function Nav({ user, onLogin, onLogout }) {
       </Link>
 
       <div className="nav-menu">
-        <Link to="/shelf" className="nav-link">My Shelf</Link>
+        <Link to="/shelf" className="nav-link">
+          My Shelf
+        </Link>
 
-        <div style={{ position: 'relative' }}>
+        <div className="nav-account" ref={popRef}>
           <button
-            className="nav-link"
+            className="nav-avatar"
             onClick={() => setOpen(prev => !prev)}
           >
-            {user ? 'Account' : 'Sign In'}
+            <CircleUserRound size={15} strokeWidth={1.8} />
           </button>
 
           {open && (
-            <div
-              style={{
-                position: 'absolute',
-                top: '1.5rem',
-                right: 0,
-                background: 'white',
-                border: '1px solid var(--border)',
-                padding: '0.8rem 1rem',
-                minWidth: '150px',
-                zIndex: 500
-              }}
-            >
+            <div className="account-popover">
               {user ? (
-                <button className="nav-link" onClick={onLogout}>
-                  Sign Out
-                </button>
+                <>
+                  <p className="account-status">Signed In</p>
+                  <button
+                    className="account-action"
+                    onClick={() => {
+                      setOpen(false);
+                      onLogout();
+                    }}
+                  >
+                    Sign Out
+                  </button>
+                </>
               ) : (
-                <button className="nav-link" onClick={onLogin}>
-                  Sign In with Google
-                </button>
+                <>
+                  <p className="account-status">Guest</p>
+                  <button
+                    className="account-action"
+                    onClick={() => {
+                      setOpen(false);
+                      onLogin();
+                    }}
+                  >
+                    Sign In with Google
+                  </button>
+                </>
               )}
             </div>
           )}

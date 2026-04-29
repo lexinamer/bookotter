@@ -4,9 +4,9 @@ export default function Results({
   data,
   onReset,
   onSave,
-  onUnsave,
   onRead,
   savedBooks,
+  readBooks,
 }) {
   if (data.error) {
     return (
@@ -18,20 +18,27 @@ export default function Results({
 
   return (
     <div id="results">
-      <p className="results-header">{data.length} recommendations for you</p>
-      <button className="btn-next" onClick={onReset}>Get New Books</button>
+      <div className="results-topbar">
+        <p className="results-header">{data.length} recommendations for you</p>
 
-      {data.map((book, idx) => (
-        <BookCard
-          key={idx}
-          book={book}
-          onSave={onSave}
-          onRead={onRead}
-          onUnsave={onUnsave}
-          mode="results"
-          saved={savedBooks.some(saved => saved.id === book.id)}
-        />
-      ))}
+        <button className="btn-start-over" onClick={onReset}>
+          Start Over
+        </button>
+      </div>
+
+      <div className="results-grid">
+        {data.map((book) => (
+          <BookCard
+            key={book.id}
+            book={book}
+            onSave={onSave}
+            onRead={onRead}
+            mode="results"
+            saved={savedBooks.some(saved => saved.id === book.id)}
+            read={readBooks.some(read => read.id === book.id)}
+          />
+        ))}
+      </div>
     </div>
   );
 }

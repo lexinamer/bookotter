@@ -1,0 +1,150 @@
+@use './type' as t;
+
+// ─── Layout ───────────────────────────────────────────────────────────────────
+
+#wizard {
+  min-height: 100vh;
+  width: 100%;
+}
+
+.wizard-section {
+  min-height: 100vh;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--nav-h) 2.5rem 6rem;
+
+  &.active { display: flex; }
+}
+
+.step-inner {
+  width: 100%;
+  max-width: 540px;
+}
+
+.step-meta {
+  margin-bottom: 1.75rem;
+}
+
+// ─── Type ─────────────────────────────────────────────────────────────────────
+
+#s-hero p,
+.step-label {
+  @include t.label;
+  color: var(--ink-mid);
+}
+
+#s-hero h1,
+.step-inner h2 {
+  @include t.display;
+}
+
+#s-hero h1 {
+  margin-bottom: 2.5rem;
+}
+
+.step-hint {
+  @include t.label;
+  margin: 1.5rem 0 2.5rem;
+  line-height: 1.6;
+  color: var(--ink-mid);
+}
+
+// ─── Inputs ───────────────────────────────────────────────────────────────────
+
+.book-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+input[type='text'] {
+  width: 100%;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  padding: 1rem 1.25rem;
+  font-size: 1.15rem;
+  font-style: italic;
+  outline: none;
+
+  &:focus { border-color: var(--accent); }
+  &::placeholder { color: var(--ink-light); }
+}
+
+// ─── Pills ────────────────────────────────────────────────────────────────────
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 2.75rem;
+}
+
+.pill {
+  position: relative;
+
+  input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  span {
+    display: inline-block;
+    padding: 0.65rem 1.3rem;
+    border: 1.5px solid var(--border);
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--ink-mid);
+    transition: all 0.15s;
+
+    &:hover {
+      border-color: var(--ink-mid);
+      color: var(--ink);
+    }
+  }
+
+  input:checked + span {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+}
+
+// ─── Actions ─────────────────────────────────────────────────────────────────
+
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-next,
+#submit-btn,
+#hero-btn {
+  padding: 0.8rem 1.7rem;
+  border-radius: 4px;
+}
+
+.btn-next {
+  @include t.label;
+  background: var(--ink);
+  color: var(--bg);
+}
+
+#submit-btn,
+#hero-btn {
+  background: var(--accent);
+  color: #fff;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.btn-start-over {
+  @include t.label;
+  color: var(--ink-mid);
+
+  &:hover { color: var(--ink); }
+}

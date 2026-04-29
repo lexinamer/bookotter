@@ -172,7 +172,7 @@ export default function Wizard({ onSubmit, onReset }) {
           </button>
 
           {isLast ? (
-            <button type="submit" id="submit-btn">
+            <button type="button" id="submit-btn" onClick={handleSubmit}>
               Find my next book →
             </button>
           ) : (
@@ -191,11 +191,11 @@ export default function Wizard({ onSubmit, onReset }) {
 
   return (
     <div id="wizard">
-      <form id="book-form" onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
+      <div id="book-form" onKeyDown={handleKeyDown}>
         {current.type === 'hero' && renderHero()}
         {current.type === 'books' && renderBooks()}
         {current.type === 'pills' && renderPills()}
-      </form>
+      </div>
     </div>
   );
 }

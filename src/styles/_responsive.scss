@@ -1,0 +1,28 @@
+@media (max-width: 1024px) {
+  .results-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  #site-nav {
+    padding: 0 1.25rem;
+  }
+
+  .nav-menu {
+    gap: 1.25rem;
+  }
+
+  .wizard-section {
+    padding: var(--nav-h) 1.25rem 5rem;
+  }
+
+  .results-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .card-top {
+    gap: 1rem;
+  }
+}
