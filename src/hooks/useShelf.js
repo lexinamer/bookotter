@@ -5,7 +5,7 @@ import {
   unsaveBook,
   markBookRead,
   removeReadBook,
-} from '../core/shelf';
+} from '../services/shelf';
 
 export default function useShelf(user, authReady) {
   const [savedBooks, setSavedBooks] = useState([]);

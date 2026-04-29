@@ -1,17 +1,10 @@
 /* ───────── MAIN NAV ───────── */
 
 #site-nav {
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 300;
-  width: min(1400px, 92vw);
-  height: var(--nav-h);
+  height: var(--nav-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--bg);
 }
 
 .nav-logo img {

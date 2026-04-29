@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import Nav from './components/Nav';
 import AuthModal from './components/AuthModal';
-import Wizard from './features/Wizard';
-import Results from './features/Results';
-import Shelf from './features/Shelf';
+
+import Nav from './components/Nav';
+import Wizard from './screens/Wizard';
+import Results from './screens/Results';
+import Shelf from './screens/Shelf';
 import useAuth from './hooks/useAuth';
 import useShelf from './hooks/useShelf';
 import useRecommendations from './hooks/useRecommendations';

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { STEPS } from '../core/steps';
+import { STEPS } from '../services/steps';
 
 export default function Wizard({ onSubmit, onReset }) {
   const [stepIndex, setStepIndex] = useState(0);

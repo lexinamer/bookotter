@@ -51,7 +51,6 @@ app.post('/api/recommend', async (req, res) => {
 
 A reader loved these books:
 ${bookList}
-
 ${readList}
 ${genreNote}
 ${lengthNote}

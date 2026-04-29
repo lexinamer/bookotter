@@ -1,5 +1,3 @@
-import BookCard from '../components/BookCard';
-
 export default function Results({
   data,
   onReset,
@@ -26,19 +24,17 @@ export default function Results({
         </button>
       </div>
 
-      <div className="results-grid">
-        {data.map((book) => (
-          <BookCard
-            key={book.id}
-            book={book}
-            onSave={onSave}
-            onRead={onRead}
-            mode="results"
-            saved={savedBooks.some(saved => saved.id === book.id)}
-            read={readBooks.some(read => read.id === book.id)}
-          />
-        ))}
-      </div>
+      {data.map((book) => (
+        <BookCard
+          key={book.id}
+          book={book}
+          onSave={onSave}
+          onRead={onRead}
+          mode="results"
+          saved={savedBooks.some(saved => saved.id === book.id)}
+          read={readBooks.some(read => read.id === book.id)}
+        />
+      ))}
     </div>
   );
 }

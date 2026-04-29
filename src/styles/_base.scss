@@ -12,8 +12,16 @@
   --font-serif: 'Cormorant Garamond', serif;
   --font-mono: 'IBM Plex Mono', monospace;
 
-  --nav-h: 82px;
+  --space-sm: 2rem;
+  --space-md: 4rem;
+  --space-lg: 6rem;
+  --space-xl: 8rem;
+
+  --content-width: 550px;
+  --nav-height: var(--space-xl);
+
 }
+  
 
 /* ───────── RESET ───────── */
 
@@ -21,6 +29,14 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  font-family: var(--font-serif);
+  color: var(--ink);
+  width: min(1300px, 92vw);
+  margin: 0 auto
 }
 
 a {

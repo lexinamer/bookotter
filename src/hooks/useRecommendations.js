@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getRecommendations } from '../core/api';
+import { getRecommendations } from '../services/api';
 
 const STORAGE_KEY = 'bookotter_active_session';
 
