@@ -24,18 +24,33 @@
   display: block;
 }
 
-.step-inner {
+#book-form {
   width: 100%;
-  max-width: 550px;;
 }
 
 .step-inner .meta-label,
-.step-inner .micro-label {
-  margin-bottom: 1rem;
+.step-inner .micro-label,
+.step-inner .display-title {
+  margin-bottom: 2rem;
 }
 
-.step-inner .display-title {
-  margin-bottom: 1rem;
+.step-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 2rem;
+}
+
+.step-back {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-mid);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+
+  &:hover {
+    color: var(--ink);
+  }
 }
 
 /* ───────── RESULTS ───────── */

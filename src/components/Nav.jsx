@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { CircleUserRound } from 'lucide-react';
 
-export default function Nav({ user, onLogin, onLogout }) {
+export default function Nav({ user, onLogin, onLogout, onShelfOpen }) {
   const [open, setOpen] = useState(false);
   const popRef = useRef(null);
-  const location = useLocation();
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -34,19 +33,9 @@ export default function Nav({ user, onLogin, onLogout }) {
       </Link>
 
       <div className="nav-menu">
-        <Link
-          to="/"
-          className={`meta-label nav-item ${location.pathname === '/' ? 'active' : ''}`}
-        >
-          Discover
-        </Link>
-
-        <Link
-          to="/shelf"
-          className={`meta-label nav-item ${location.pathname === '/shelf' ? 'active' : ''}`}
-        >
-          Library
-        </Link>
+        <button className="meta-label nav-item" onClick={onShelfOpen}>
+          Bookshelf
+        </button>
 
         <div className="nav-account" ref={popRef}>
           <button

@@ -1,14 +1,11 @@
-import { Bookmark, CircleCheck } from 'lucide-react';
+import { Bookmark } from 'lucide-react';
 
 export default function BookCard({
   book,
   onSave,
-  onRead,
   onRemoveSaved,
-  onRemoveRead,
   mode = 'results',
   saved = false,
-  read = false,
 }) {
   const amazonBase = 'https://www.amazon.com/s?k=';
   const query = encodeURIComponent(`${book.title} ${book.author}`);
@@ -34,16 +31,9 @@ export default function BookCard({
           <div className="card-actions">
             <button
               className={`icon-toggle ${saved ? 'active' : ''}`}
-              onClick={() => !saved && !read && onSave(book)}
+              onClick={() => !saved && onSave(book)}
             >
               <Bookmark size={15} strokeWidth={1.8} />
-            </button>
-
-            <button
-              className={`icon-toggle ${read ? 'active' : ''}`}
-              onClick={() => !read && onRead(book)}
-            >
-              <CircleCheck size={15} strokeWidth={1.8} />
             </button>
           </div>
         )}
@@ -55,24 +45,6 @@ export default function BookCard({
               onClick={() => onRemoveSaved(book)}
             >
               <Bookmark size={15} strokeWidth={1.8} />
-            </button>
-
-            <button
-              className="icon-toggle"
-              onClick={() => onRead(book)}
-            >
-              <CircleCheck size={15} strokeWidth={1.8} />
-            </button>
-          </div>
-        )}
-
-        {mode === 'read' && (
-          <div className="card-actions">
-            <button
-              className="icon-toggle active"
-              onClick={() => onRemoveRead(book)}
-            >
-              <CircleCheck size={15} strokeWidth={1.8} />
             </button>
           </div>
         )}

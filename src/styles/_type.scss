@@ -15,7 +15,7 @@
 
 .meta-label {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--ink-mid);
@@ -23,7 +23,7 @@
 
 .micro-label {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.16em;
   color: var(--ink-light);
@@ -59,4 +59,11 @@
   font-size: 0.8rem;
   line-height: 1.65;
   color: var(--ink-mid);
+}
+
+.text-action {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  color: var(--ink);
 }

@@ -1,16 +1,25 @@
 /* ───────── ACTION BUTTONS ───────── */
 
 .primary-action {
-  padding: 0.72rem 1.45rem;
-  border-radius: 3px;
+  min-width: 170px;
+  padding: var(--space-sm);
   background: var(--accent);
   color: white;
-  font-size: 0.9rem;
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  letter-spacing: .05em;
   font-style: italic;
+  border-radius: 2px;
+  transition: opacity 0.15s ease;
+}
+
+.primary-action:hover {
+  opacity: 0.9;
 }
 
 .primary-action:disabled {
-  opacity: 0.45;
+  background: var(--border);
+  color: var(--ink-light);
   cursor: not-allowed;
 }
 
@@ -20,14 +29,6 @@
   background: var(--ink);
   color: var(--bg);
   font-size: 0.72rem;
-}
-
-.text-action {
-  color: var(--ink-mid);
-}
-
-.text-action:hover {
-  color: var(--ink);
 }
 
 
@@ -69,6 +70,7 @@
 
 .pill {
   position: relative;
+  cursor: pointer;
 }
 
 .pill input {
@@ -84,6 +86,11 @@
   font-family: var(--font-mono);
   font-size: 0.82rem;
   color: var(--ink-mid);
+}
+
+.pill span:hover {
+  border-color: var(--ink-mid);
+  color: var(--ink);
 }
 
 .pill input:checked + span {

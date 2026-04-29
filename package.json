@@ -4,12 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite\" \"node --watch server/server.js\"",
+    "dev": "concurrently \"vite\" \"node --watch src/utils/recommend.js\"",
     "dev:ui": "vite",
-    "dev:server": "node --watch server/server.js",
+    "dev:server": "node --watch src/utils/recommend.js",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "node server/server.js"
+    "start": "node src/utils/recommend.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.1",
