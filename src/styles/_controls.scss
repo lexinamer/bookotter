@@ -1,0 +1,93 @@
+/* ───────── ACTION BUTTONS ───────── */
+
+.primary-action {
+  padding: 0.72rem 1.45rem;
+  border-radius: 3px;
+  background: var(--accent);
+  color: white;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.primary-action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.secondary-action {
+  padding: 0.72rem 1.45rem;
+  border-radius: 3px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.72rem;
+}
+
+.text-action {
+  color: var(--ink-mid);
+}
+
+.text-action:hover {
+  color: var(--ink);
+}
+
+
+
+/* ───────── FORM FIELDS ───────── */
+
+.book-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 2rem 0 2.5rem;
+}
+
+.field-input {
+  width: 100%;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  padding: 1rem 1.25rem;
+  outline: none;
+}
+
+.field-input::placeholder {
+  color: var(--ink-light);
+}
+
+.field-input:focus {
+  border-color: var(--accent);
+}
+
+/* ───────── PILLS ───────── */
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 2rem 0 2.75rem;
+}
+
+.pill {
+  position: relative;
+}
+
+.pill input {
+  position: absolute;
+  opacity: 0;
+}
+
+.pill span {
+  display: inline-block;
+  padding: 0.65rem 1.3rem;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink-mid);
+}
+
+.pill input:checked + span {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}

@@ -1,116 +1,32 @@
-/* ───────── ACTION BUTTONS ───────── */
+/* ───────── AUTH MODAL ───────── */
 
-.primary-action {
-  padding: 0.72rem 1.45rem;
-  border-radius: 3px;
-  background: var(--accent);
-  color: white;
-  font-size: 0.9rem;
-  font-style: italic;
-}
-
-.secondary-action {
-  padding: 0.72rem 1.45rem;
-  border-radius: 3px;
-  background: var(--ink);
-  color: var(--bg);
-  font-size: 0.72rem;
-}
-
-.text-action {
-  color: var(--ink-mid);
-}
-
-/* ───────── ACCOUNT NAV ───────── */
-
-.nav-account {
-  position: relative;
-}
-
-.nav-avatar {
-  width: 30px;
-  height: 30px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 13, 11, 0.18);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--ink-mid);
-  background: var(--card);
+  z-index: 800;
 }
 
-.account-popover {
-  position: absolute;
-  top: 2.4rem;
-  right: 0;
-  min-width: 150px;
+.auth-modal {
+  width: 100%;
+  max-width: 420px;
+  margin: 1.5rem;
+  padding: 2rem;
   background: var(--card);
   border: 1px solid var(--border);
-  padding: 0.85rem 1rem;
 }
 
-/* ───────── FORM FIELDS ───────── */
-
-.book-inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin: 2rem 0 2.5rem;
+.auth-modal .display-title {
+  font-size: 1.45rem;
+  margin-top: 0.9rem;
+  max-width: 100%;
 }
 
-.field-input {
-  width: 100%;
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 5px;
-  padding: 1rem 1.25rem;
-  outline: none;
-}
-
-.field-input:focus {
-  border-color: var(--accent);
-}
-
-/* ───────── PILLS ───────── */
-
-.pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin: 2rem 0 2.75rem;
-}
-
-.pill {
-  position: relative;
-}
-
-.pill input {
-  position: absolute;
-  opacity: 0;
-}
-
-.pill span {
-  display: inline-block;
-  padding: 0.65rem 1.3rem;
-  border: 1.5px solid var(--border);
-  border-radius: 3px;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: var(--ink-mid);
-}
-
-.pill input:checked + span {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--bg);
-}
-
-/* ───────── LAYOUT UTILITIES ───────── */
-
-.step-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.auth-actions {
+  margin-top: 2rem;
 }
 
 /* ───────── BOOK CARDS ───────── */
@@ -125,6 +41,10 @@
   justify-content: space-between;
   gap: 1.25rem;
   margin-bottom: 1.25rem;
+}
+
+.card-headings {
+  flex: 1;
 }
 
 .card-actions {

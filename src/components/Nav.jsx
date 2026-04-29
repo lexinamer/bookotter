@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { CircleUserRound } from 'lucide-react';
 
 export default function Nav({ user, onLogin, onLogout }) {
   const [open, setOpen] = useState(false);
   const popRef = useRef(null);
+  const location = useLocation();
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -17,6 +18,15 @@ export default function Nav({ user, onLogin, onLogout }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const initials = user?.displayName
+    ? user.displayName
+        .split(' ')
+        .map(word => word[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase()
+    : null;
+
   return (
     <nav id="site-nav">
       <Link to="/" className="nav-logo">
@@ -24,8 +34,18 @@ export default function Nav({ user, onLogin, onLogout }) {
       </Link>
 
       <div className="nav-menu">
-        <Link to="/shelf" className="meta-label">
-          My Shelf
+        <Link
+          to="/"
+          className={`meta-label nav-item ${location.pathname === '/' ? 'active' : ''}`}
+        >
+          Discover
+        </Link>
+
+        <Link
+          to="/shelf"
+          className={`meta-label nav-item ${location.pathname === '/shelf' ? 'active' : ''}`}
+        >
+          Library
         </Link>
 
         <div className="nav-account" ref={popRef}>
@@ -33,14 +53,18 @@ export default function Nav({ user, onLogin, onLogout }) {
             className="nav-avatar"
             onClick={() => setOpen(prev => !prev)}
           >
-            <CircleUserRound size={15} strokeWidth={1.8} />
+            {initials ? (
+              <span className="avatar-initials">{initials}</span>
+            ) : (
+              <CircleUserRound size={15} strokeWidth={1.8} />
+            )}
           </button>
 
           {open && (
             <div className="account-popover">
               {user ? (
                 <>
-                  <p className="micro-label">Signed In</p>
+                  <p className="micro-label">{user.displayName}</p>
                   <button
                     className="text-action"
                     onClick={() => {

@@ -1,0 +1,77 @@
+/* ───────── MAIN NAV ───────── */
+
+#site-nav {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 300;
+  width: min(1400px, 92vw);
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg);
+}
+
+.nav-logo img {
+  height: 50px;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 1.3rem;
+}
+
+.nav-item {
+  transition: color 0.15s;
+}
+
+.nav-item.active {
+  color: var(--ink);
+}
+
+.nav-item:hover {
+  color: var(--ink);
+}
+
+/* ───────── ACCOUNT NAV ───────── */
+
+.nav-account {
+  position: relative;
+}
+
+.nav-avatar {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-mid);
+  background: var(--card);
+}
+
+.avatar-initials {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--ink-mid);
+}
+
+.account-popover {
+  position: absolute;
+  top: 2.4rem;
+  right: 0;
+  min-width: 160px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 0.9rem 1rem;
+}
+
+.account-popover .micro-label {
+  margin-bottom: 0.65rem;
+}

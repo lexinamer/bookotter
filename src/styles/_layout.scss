@@ -1,3 +1,23 @@
+/* ───────── TOKENS ───────── */
+
+:root {
+  --bg: #f6f3ef;
+  --card: #fcfaf7;
+  --ink: #1f1b18;
+  --ink-mid: #6d6761;
+  --ink-light: #a49d96;
+  --border: #ddd6cf;
+  --accent: #c95a2c;
+
+  --font-serif: 'Cormorant Garamond', serif;
+  --font-body: 'Cormorant Garamond', serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  --nav-h: 82px;
+}
+
+/* ───────── RESET ───────── */
+
 * {
   margin: 0;
   padding: 0;
@@ -6,6 +26,8 @@
 
 body {
   background: var(--bg);
+  font-family: var(--font-body);
+  color: var(--ink);
 }
 
 a {
@@ -19,15 +41,83 @@ button {
   cursor: pointer;
 }
 
+/* ───────── TYPE SYSTEM ───────── */
+
+.display-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.95rem, 4vw, 2.8rem);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.15;
+  max-width: 620px;
+}
+
+.body-copy {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink-mid);
+}
+
+.meta-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-mid);
+}
+
+.micro-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-light);
+}
+
+.book-title {
+  display: inline-block;
+  font-family: var(--font-serif);
+  font-size: 1.7rem;
+  line-height: 1.05;
+  font-weight: 400;
+  margin-bottom: 0.35rem;
+}
+
+.field-text {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-style: italic;
+}
+
+.book-note {
+  margin-top: 0.6rem;
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.65;
+  color: var(--ink-mid);
+}
+
+.book-reason {
+  margin-top: 0.8rem;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: var(--ink-mid);
+}
+
+/* ───────── MAIN NAV ───────── */
+
 #site-nav {
   position: fixed;
-  inset: 0 0 auto 0;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 300;
+  width: min(1400px, 92vw);
   height: var(--nav-h);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
   background: var(--bg);
 }
 
@@ -38,7 +128,190 @@ button {
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.3rem;
+}
+
+.nav-item {
+  transition: color 0.15s;
+}
+
+.nav-item.active {
+  color: var(--ink);
+}
+
+.nav-item:hover {
+  color: var(--ink);
+}
+
+/* ───────── ACCOUNT NAV ───────── */
+
+.nav-account {
+  position: relative;
+}
+
+.nav-avatar {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-mid);
+  background: var(--card);
+}
+
+.avatar-initials {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--ink-mid);
+}
+
+.account-popover {
+  position: absolute;
+  top: 2.4rem;
+  right: 0;
+  min-width: 160px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 0.9rem 1rem;
+}
+
+.account-popover .micro-label {
+  margin-bottom: 0.65rem;
+}
+
+/* ───────── ACTION BUTTONS ───────── */
+
+.primary-action {
+  padding: 0.72rem 1.45rem;
+  border-radius: 3px;
+  background: var(--accent);
+  color: white;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.primary-action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.secondary-action {
+  padding: 0.72rem 1.45rem;
+  border-radius: 3px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.72rem;
+}
+
+.text-action {
+  color: var(--ink-mid);
+}
+
+.text-action:hover {
+  color: var(--ink);
+}
+
+/* ───────── AUTH MODAL ───────── */
+
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 13, 11, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 800;
+}
+
+.auth-modal {
+  width: 100%;
+  max-width: 420px;
+  margin: 1.5rem;
+  padding: 2rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.auth-modal .display-title {
+  font-size: 1.45rem;
+  margin-top: 0.9rem;
+  max-width: 100%;
+}
+
+.auth-actions {
+  margin-top: 2rem;
+}
+
+/* ───────── FORM FIELDS ───────── */
+
+.book-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 2rem 0 2.5rem;
+}
+
+.field-input {
+  width: 100%;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  padding: 1rem 1.25rem;
+  outline: none;
+}
+
+.field-input::placeholder {
+  color: var(--ink-light);
+}
+
+.field-input:focus {
+  border-color: var(--accent);
+}
+
+/* ───────── PILLS ───────── */
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 2rem 0 2.75rem;
+}
+
+.pill {
+  position: relative;
+}
+
+.pill input {
+  position: absolute;
+  opacity: 0;
+}
+
+.pill span {
+  display: inline-block;
+  padding: 0.65rem 1.3rem;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink-mid);
+}
+
+.pill input:checked + span {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+/* ───────── LAYOUT ───────── */
+
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #wizard {
@@ -60,7 +333,17 @@ button {
 
 .step-inner {
   width: 100%;
-  max-width: 540px;
+  max-width: 560px;
+  margin-top: -3vh;
+}
+
+.step-inner .meta-label,
+.step-inner .micro-label {
+  margin-bottom: 1rem;
+}
+
+.step-inner .display-title {
+  margin-bottom: 1rem;
 }
 
 #results {
@@ -92,6 +375,50 @@ button {
   font-size: 2rem;
 }
 
+/* ───────── BOOK CARDS ───────── */
+
+.result-card {
+  border-top: 1px solid var(--border);
+  padding-top: 2rem;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.card-headings {
+  flex: 1;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+}
+
+.icon-toggle {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  background: var(--card);
+}
+
+.icon-toggle.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* ───────── RESPONSIVE ───────── */
+
 @media (max-width: 1100px) {
   .results-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -99,10 +426,7 @@ button {
 }
 
 @media (max-width: 760px) {
-  #site-nav {
-    padding: 0 1.25rem;
-  }
-
+  #site-nav,
   #results {
     width: 94vw;
   }
@@ -113,5 +437,9 @@ button {
 
   .wizard-section {
     padding: var(--nav-h) 1.25rem 5rem;
+  }
+
+  .step-inner {
+    margin-top: 0;
   }
 }
