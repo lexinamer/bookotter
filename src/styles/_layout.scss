@@ -67,6 +67,37 @@
   padding: 1rem 0;
 }
 
+.results-prompt {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.results-prompt-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  font-size: 0.8rem;
+}
+
+.results-prompt-label {
+  color: var(--ink-light);
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &::after {
+    content: ':';
+  }
+}
+
+.results-prompt-values {
+  color: var(--ink-mid);
+}
+
 .loading-screen {
   min-height: 100vh;
   display: flex;

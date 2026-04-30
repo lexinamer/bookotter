@@ -4,6 +4,7 @@ import { auth, provider } from './firebase';
 import { loadShelf, saveBook, unsaveBook } from './shelf';
 
 const STORAGE_KEY = 'bookotter_active_session';
+const PROMPT_KEY = 'bookotter_active_prompt';
 
 async function getRecommendations(books, genre, moods) {
   const response = await fetch('/api/recommend', {
@@ -27,6 +28,7 @@ export default function useAppState(navigate) {
   const [pendingAction, setPendingAction] = useState(null);
   const [savedBooks, setSavedBooks] = useState([]);
   const [results, setResults] = useState(null);
+  const [prompt, setPrompt] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -55,6 +57,8 @@ export default function useAppState(navigate) {
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) setResults(JSON.parse(stored));
+    const storedPrompt = localStorage.getItem(PROMPT_KEY);
+    if (storedPrompt) setPrompt(JSON.parse(storedPrompt));
   }, []);
 
   const beginAuthFlow = (type, book) => {
@@ -86,8 +90,11 @@ export default function useAppState(navigate) {
 
     try {
       const data = await getRecommendations(formData.books, formData.genre, formData.mood);
+      const promptData = { books: formData.books, genre: formData.genre, mood: formData.mood };
       setResults(data.recommendations);
+      setPrompt(promptData);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data.recommendations));
+      localStorage.setItem(PROMPT_KEY, JSON.stringify(promptData));
       navigate('/');
     } catch (error) {
       setResults({ error: error.message });
@@ -98,7 +105,9 @@ export default function useAppState(navigate) {
 
   const handleReset = () => {
     setResults(null);
+    setPrompt(null);
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(PROMPT_KEY);
     navigate('/');
   };
 
@@ -116,6 +125,7 @@ export default function useAppState(navigate) {
     handleSave,
     handleRemoveSaved,
     results,
+    prompt,
     loading,
     setResults,
     handleSubmit,

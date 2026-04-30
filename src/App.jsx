@@ -27,6 +27,7 @@ export default function App() {
     handleSave,
     handleRemoveSaved,
     results,
+    prompt,
     loading,
     handleSubmit,
     handleReset,
@@ -91,6 +92,7 @@ export default function App() {
             ) : (
               <Results
                 data={results}
+                prompt={prompt}
                 onReset={handleReset}
                 onSave={guardedSave}
                 savedBooks={savedBooks}

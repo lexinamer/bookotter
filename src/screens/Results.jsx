@@ -2,6 +2,7 @@ import BookCard from '../components/BookCard';
 
 export default function Results({
   data,
+  prompt,
   onReset,
   onSave,
   savedBooks,
@@ -23,6 +24,31 @@ export default function Results({
           Start Over
         </button>
       </div>
+
+      {prompt && (
+        <div className="results-prompt">
+          {prompt.books?.length > 0 && (
+            <div className="results-prompt-row">
+              <span className="results-prompt-label">Books you loved</span>
+              <span className="results-prompt-values">{prompt.books.join(', ')}</span>
+            </div>
+          )}
+          {prompt.genre && (
+            <div className="results-prompt-row">
+              <span className="results-prompt-label">Genre</span>
+              <span className="results-prompt-values">{prompt.genre}</span>
+            </div>
+          )}
+          {prompt.mood?.length > 0 && (
+            <div className="results-prompt-row">
+              <span className="results-prompt-label">Mood</span>
+              <span className="results-prompt-values">
+                {Array.isArray(prompt.mood) ? prompt.mood.join(', ') : prompt.mood}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
 
       {data.map((book) => (
         <BookCard

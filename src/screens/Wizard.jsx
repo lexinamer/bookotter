@@ -23,42 +23,32 @@ const STEPS = [
     options: [
       'Fiction',
       'Historical Fiction',
-      'Nonfiction',
-      'Memoir',
+      'Speculative',
       'Fantasy',
-      'Sci-Fi',
       'Mystery',
       'Thriller',
       'Romance',
+      'Nonfiction',
+      'Memoir',
     ],
   },
   {
     id: 'mood',
     type: 'pills',
-    title: 'What two moods are you feeling?',
+    title: 'What moods are you feeling?',
     name: 'mood',
     maxSelect: 2,
     options: [
-      'Easy Reading',
-      'Page Turner',
+      'Beach Read',
+      'Book Club',
+      'Inspiring',
+      'Laugh Out Loud',
       'Suspenseful',
-      'Funny',
-      'Thought Provoking',
-      'Dark & Heavy',
-      'Light & Hopeful',
+      'Atmospheric',
+      'Devestating',
+      'Unhinged',
     ],
-  },
-  // {
-  //   id: 'length',
-  //   type: 'pills',
-  //   title: 'Have a preferred length?',
-  //   name: 'length',
-  //   options: [
-  //     'Under 300 pages',
-  //     '300-500 pages',
-  //     'Over 500 pages'
-  //   ],
-  // },
+  }
 ];
 
 const nonHeroSteps = STEPS.filter(s => s.type !== 'hero');
@@ -121,7 +111,7 @@ export default function Wizard({ onSubmit, onReset }) {
     setFormData(prev => {
       const selected = prev[name];
       if (selected.includes(value)) return { ...prev, [name]: selected.filter(v => v !== value) };
-      if (selected.length >= maxSelect) return prev;
+      if (selected.length >= maxSelect) return { ...prev, [name]: [...selected.slice(0, -1), value] };
       return { ...prev, [name]: [...selected, value] };
     });
   };
@@ -210,18 +200,22 @@ export default function Wizard({ onSubmit, onReset }) {
                 const label = typeof option === 'string' ? option : option.label;
                 const isMulti = current.maxSelect > 1;
                 const checked = isMulti ? fieldValue.includes(value) : fieldValue === value;
-                const disabled = isMulti && !checked && fieldValue.length >= current.maxSelect;
-
                 return (
-                  <label key={value} className={`pill${disabled ? ' disabled' : ''}`}>
+                  <label
+                    key={value}
+                    className="pill"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (isMulti) handleMultiFieldChange(current.name, value, current.maxSelect);
+                      else handleFieldChange(current.name, value);
+                    }}
+                  >
                     <input
                       type={isMulti ? 'checkbox' : 'radio'}
                       name={current.name}
                       value={value}
                       checked={checked}
-                      disabled={disabled}
-                      onChange={isMulti ? () => handleMultiFieldChange(current.name, value, current.maxSelect) : undefined}
-                      onClick={!isMulti ? () => handleFieldChange(current.name, value) : undefined}
+                      onChange={() => {}}
                     />
                     <span>{label}</span>
                   </label>
