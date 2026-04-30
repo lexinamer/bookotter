@@ -38,7 +38,7 @@ function validateRequestBody({ books, moods }) {
     return 'Each book must be a string under 200 characters';
   }
 
-  if (moods !== undefined && !Array.isArray(moods)) {
+  if (moods != null && !Array.isArray(moods)) {
     return 'Moods must be an array';
   }
 
@@ -55,22 +55,28 @@ function buildPrompt(books, genre, moods) {
   const bookList = books.map((b) => `- ${b}`).join('\n');
 
   const genreNote = genre
-    ? `The reader wants ${genre} specifically. Only recommend books from this genre. Fiction means contemporary or literary fiction — not Historical Fiction, not Speculative.`
-    : '';
+    ? `Keep every recommendation clearly inside the ${genre} shelf. Genre is a boundary filter, not the main source of taste.`
+    : `Stay in the same general reading lane suggested by the input books. Do not drift into mismatched genres.`;
 
   const moodNote = Array.isArray(moods) && moods.length > 0
-    ? `The reader is in the mood for something: ${moods.join(' and ')}. Let this guide the emotional tone and reading experience of your recommendations.`
+    ? `Within that lane, lightly lean toward these reading qualities: ${moods.join(' and ')}. These are tonal nudges only and must never overpower similarity to the input books.`
     : '';
 
-  return `You are an expert literary book recommender with deep knowledge of writing styles, literary fiction, and reader taste.
+  return `You are an expert contemporary book recommendation engine with deep knowledge of real reader taste, bestseller readalikes, genre boundaries, and highly satisfying next-book comps.
 
 A reader loved these books:
 ${bookList}
+
+The input books are the primary recommendation signal and should drive most of the recommendation logic.
+Recommend books that readers of these exact titles would realistically love next.
+Prioritize readership overlap, emotional similarity, prose sensibility, pacing, setting energy, and overall reading experience.
 
 ${genreNote}
 ${moodNote}
 
 Recommend exactly ${RECOMMENDATION_COUNT} books.
+
+Favor highly credible, satisfying, human-plausible recommendations over obscure or overly niche picks.
 
 Respond ONLY with raw JSON:
 {
@@ -81,8 +87,9 @@ Respond ONLY with raw JSON:
       "author": "Author Name",
       "year": 2020,
       "pages": 320,
-      "what": "One sentence capturing the soul of this book — atmospheric, specific, evocative. Not a plot summary. Under 20 words.",
-      "why": "One sentence connecting this book to the specific books they loved — name the actual titles, precise, not generic praise. Under 20 words."
+      "genre": "One of: Fiction, Historical Fiction, Fantasy, Romance, Speculative, Horror, Mystery & Thriller, Nonfiction",
+      "what": "One vivid sentence capturing the reading experience or soul of this book. Not a plot summary. Under 20 words.",
+      "why": "One precise sentence explaining why fans of the listed input books would love this next. Name the actual input titles when relevant. Under 20 words."
     }
   ]
 }
@@ -91,9 +98,13 @@ Rules:
 - id must be deterministic and based on title plus author
 - Never recommend books the reader already listed
 - Only recommend books that actually exist
-- Never recommend YA or middle grade unless the reader's books were YA or middle grade
-- Never recommend nonfiction unless the genre is Nonfiction or Memoir
-- Pay close attention to emotional tone and mood over genre defaults`;
+- Never recommend YA or middle grade unless the reader's input books were YA or middle grade
+- Never recommend nonfiction unless the genre is Nonfiction
+- Never recommend horror unless the genre is Horror or the input books clearly justify horror
+- Never recommend romance unless the genre is Romance or the input books clearly justify romance
+- Never let mood selections overpower core similarity to the input books
+- Avoid obscure, inaccessible, or experimental recommendations unless strongly justified by the input books
+- Recommendations should feel like highly satisfying next reads, not merely thematically adjacent books`;
 }
 
 // ─── Response Parsing ────────────────────────────────────────────────────────

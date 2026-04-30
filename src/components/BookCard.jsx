@@ -30,7 +30,7 @@ export default function BookCard({
 
           <div className="meta-label">{book.author}</div>
           <div className="micro-label">
-            {book.year} • {book.pages} pages
+            {book.year} • {book.pages} pages{book.genre ? ` • ${book.genre}` : ''}
           </div>
         </div>
 
