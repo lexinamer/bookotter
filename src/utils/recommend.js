@@ -24,13 +24,13 @@ function makeBookId(title, author) {
 
 app.post('/api/recommend', async (req, res) => {
   try {
-    const { books, mood, length } = req.body;
+    const { books, genre, length } = req.body;
 
     if (!books || !Array.isArray(books) || books.length === 0) {
       return res.status(400).json({ error: 'At least one book is required' });
     }
 
-    const moodInstruction = mood ? `Preferred mood: ${mood}` : '';
+    const genreInstruction = genre ? `Preferred genre: ${genre}` : '';
 
     const lengthInstruction =
       length && length !== 'No preference'
@@ -58,7 +58,7 @@ You prioritize:
 - darkness, tenderness, menace, loneliness, warmth, brutality
 
 You do NOT prioritize:
-- broad mood alone
+- broad genre alone
 - bestseller popularity
 - famous award winners unless exact fits
 - vague "similar vibe" recommendations
@@ -88,7 +88,7 @@ Return only valid raw JSON.
     const userPrompt = `
 Reader loved:
 ${books.map((b) => `- ${b}`).join('\n')}
-${moodInstruction}
+${genreInstruction}
 ${lengthInstruction}
 
 Silently infer the reader's hidden taste profile, then recommend exactly 3 books that are the closest experiential matches.
