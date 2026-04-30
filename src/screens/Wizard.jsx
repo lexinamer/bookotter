@@ -32,14 +32,14 @@ const STEPS = [
     ],
   },
   {
-    id: 'mood',
+    id: 'style',
     type: 'pills',
     title: 'What are you in the mood for?',
-    name: 'mood',
+    name: 'style',
     options: [
-      'Easy to Fall Into',
-      'Rich & Immersive',
-      'Thought-Provoking',
+      'Reader favorites',
+      'Off the beaten path',
+      'A mix of both',
     ],
   }
 ];

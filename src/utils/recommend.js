@@ -8,9 +8,9 @@ dotenv.config();
 // ─── Config ──────────────────────────────────────────────────────────────────
 
 const PORT = process.env.PORT || 3001;
-const MODEL = 'claude-haiku-4-5-20251001';
+const MODEL = 'claude-sonnet-4-5-20250929';
 const MAX_TOKENS = 1200;
-const TEMPERATURE = 0.7;
+const TEMPERATURE = 0.65;
 const RECOMMENDATION_COUNT = 3;
 const MAX_BOOKS_INPUT = 20;
 const MAX_BOOK_STRING_LENGTH = 200;
@@ -25,7 +25,7 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 // ─── Validation ──────────────────────────────────────────────────────────────
 
-function validateRequestBody({ books, moods }) {
+function validateRequestBody({ books, readingExperience }) {
   if (!Array.isArray(books) || books.length === 0) {
     return 'At least one book is required';
   }
@@ -38,12 +38,8 @@ function validateRequestBody({ books, moods }) {
     return 'Each book must be a string under 200 characters';
   }
 
-  if (moods != null && !Array.isArray(moods)) {
-    return 'Moods must be an array';
-  }
-
-  if (Array.isArray(moods) && !moods.every((m) => typeof m === 'string')) {
-    return 'Each mood must be a string';
+  if (readingExperience != null && typeof readingExperience !== 'string') {
+    return 'Reading experience must be a string';
   }
 
   return null;
@@ -51,15 +47,15 @@ function validateRequestBody({ books, moods }) {
 
 // ─── Prompt Builder ──────────────────────────────────────────────────────────
 
-function buildPrompt(books, genre, moods) {
+function buildPrompt(books, genre, style) {
   const bookList = books.map((b) => `- ${b}`).join('\n');
 
   const genreNote = genre
     ? `Keep every recommendation clearly inside the ${genre} shelf. Genre is a boundary filter, not the main source of taste.`
     : `Stay in the same general reading lane suggested by the input books. Do not drift into mismatched genres.`;
 
-  const moodNote = Array.isArray(moods) && moods.length > 0
-    ? `Within that lane, lightly lean toward these reading qualities: ${moods.join(' and ')}. These are tonal nudges only and must never overpower similarity to the input books.`
+  const styleNote = style
+    ? `Recommendation style preference: ${style}. Use this only to control how familiar versus unexpected the picks feel, but never overpower similarity to the input books.`
     : '';
 
   return `You are an expert contemporary book recommendation engine with deep knowledge of real reader taste, bestseller readalikes, genre boundaries, and highly satisfying next-book comps.
@@ -71,12 +67,18 @@ The input books are the primary recommendation signal and should drive most of t
 Recommend books that readers of these exact titles would realistically love next.
 Prioritize readership overlap, emotional similarity, prose sensibility, pacing, setting energy, and overall reading experience.
 
+Do not match books on surface themes alone.
+First determine the shared center of gravity across the input titles: common readership, tonal overlap, prose style, emotional intensity, and likely next-read satisfaction.
+Recommend from that shared overlap rather than pulling isolated traits from only one title.
+
 ${genreNote}
-${moodNote}
+${styleNote}
 
 Recommend exactly ${RECOMMENDATION_COUNT} books.
 
-Favor highly credible, satisfying, human-plausible recommendations over obscure or overly niche picks.
+If the style is Reader Favorites, favor highly recognizable, widely loved, bestselling, discussion-friendly recommendations.
+If the style is Off the Beaten Path, favor more surprising, underrecommended, but still highly credible and satisfying recommendations.
+If the style is A Mix of Both, blend familiar favorites with one or two fresher choices.
 
 Respond ONLY with raw JSON:
 {
@@ -102,8 +104,8 @@ Rules:
 - Never recommend nonfiction unless the genre is Nonfiction
 - Never recommend horror unless the genre is Horror or the input books clearly justify horror
 - Never recommend romance unless the genre is Romance or the input books clearly justify romance
-- Never let mood selections overpower core similarity to the input books
-- Avoid obscure, inaccessible, or experimental recommendations unless strongly justified by the input books
+- Never let recommendation style overpower core similarity to the input books
+- Avoid random obscure books chosen only for novelty
 - Recommendations should feel like highly satisfying next reads, not merely thematically adjacent books`;
 }
 
@@ -139,14 +141,16 @@ function parseRecommendationResponse(text) {
 // ─── Route ───────────────────────────────────────────────────────────────────
 
 app.post('/api/recommend', async (req, res) => {
-  const { books, genre, moods } = req.body;
+  const { books, genre, readingExperience } = req.body;
 
-  const validationError = validateRequestBody({ books, moods });
+  const validationError = validateRequestBody({ books, readingExperience });
   if (validationError) {
     return res.status(400).json({ error: validationError });
   }
 
-  console.log(`[recommend] request — ${books.length} book(s), genre: ${genre || 'any'}`);
+  console.log(
+    `[recommend] request — ${books.length} book(s), genre: ${genre || 'any'}, readingExperience: ${readingExperience || 'any'}`
+  );
 
   try {
     const message = await client.messages.create({
@@ -156,7 +160,7 @@ app.post('/api/recommend', async (req, res) => {
       messages: [
         {
           role: 'user',
-          content: buildPrompt(books, genre, moods),
+          content: buildPrompt(books, genre, readingExperience),
         },
       ],
     });
