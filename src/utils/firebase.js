@@ -3,12 +3,12 @@ import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyCwsS60Q5A4pknaNRn5Hr2tmI7jtvlm_Ec',
-  authDomain: 'bookotter-app.firebaseapp.com',
-  projectId: 'bookotter-app',
-  storageBucket: 'bookotter-app.firebasestorage.app',
-  messagingSenderId: '165049402865',
-  appId: '1:165049402865:web:4412e088942be155d23050',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);

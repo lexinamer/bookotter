@@ -10,7 +10,7 @@ dotenv.config();
 const PORT = process.env.PORT || 3001;
 const MODEL = 'claude-haiku-4-5-20251001';
 const MAX_TOKENS = 1200;
-const TEMPERATURE = 0.28;
+const TEMPERATURE = 0.7;
 const RECOMMENDATION_COUNT = 3;
 const MAX_BOOKS_INPUT = 20;
 const MAX_BOOK_STRING_LENGTH = 200;
@@ -49,10 +49,30 @@ function validateRequestBody({ books, moods }) {
   return null;
 }
 
-// ─── Prompt Builders ─────────────────────────────────────────────────────────
+// ─── Prompt Builder ──────────────────────────────────────────────────────────
 
-function buildRecommendationSchema() {
-  return `
+function buildPrompt(books, genre, moods) {
+  const bookList = books.map((b) => `- ${b}`).join('\n');
+
+  const genreNote = genre
+    ? `The reader wants ${genre} specifically. Only recommend books from this genre. Fiction means contemporary or literary fiction — not Historical Fiction, not Speculative.`
+    : '';
+
+  const moodNote = Array.isArray(moods) && moods.length > 0
+    ? `The reader is in the mood for something: ${moods.join(' and ')}. Let this guide the emotional tone and reading experience of your recommendations.`
+    : '';
+
+  return `You are an expert literary book recommender with deep knowledge of writing styles, literary fiction, and reader taste.
+
+A reader loved these books:
+${bookList}
+
+${genreNote}
+${moodNote}
+
+Recommend exactly ${RECOMMENDATION_COUNT} books.
+
+Respond ONLY with raw JSON:
 {
   "recommendations": [
     {
@@ -61,89 +81,19 @@ function buildRecommendationSchema() {
       "author": "Author Name",
       "year": 2020,
       "pages": 320,
-      "what": "One vivid concrete sentence describing the reading experience. No plot summary. Under 16 words.",
-      "why": "One precise sentence explaining why this strongly matches the user's listed books, naming at least one listed title. Under 16 words."
+      "what": "One sentence capturing the soul of this book — atmospheric, specific, evocative. Not a plot summary. Under 20 words.",
+      "why": "One sentence connecting this book to the specific books they loved — name the actual titles, precise, not generic praise. Under 20 words."
     }
   ]
-}`;
 }
 
-function buildSystemPrompt() {
-  return `
-You are an obsessive independent bookseller with exceptional skill at matching readers to books.
-
-Your job is to produce ${RECOMMENDATION_COUNT} highly targeted recommendations that feel hand-sold and uncannily precise.
-
-Infer from the books the reader loved:
-- prose feel
-- emotional atmosphere
-- pacing
-- psychological intensity
-- literary vs commercial sensibility
-- setting texture
-- thematic concerns
-
-The user's selected moods are the PRIMARY constraint. Satisfy them first.
-The selected genre is a hard boundary. Do not cross it under any circumstances.
-
-Genre boundaries are strict and distinct:
-- Fiction means contemporary or literary fiction only. Do not recommend Historical Fiction when the user selected Fiction.
-- Historical Fiction means books set in a specific historical period. Do not bleed into contemporary Fiction.
-- Speculative means literary speculative fiction — think Emily St. John Mandel, Susanna Clarke, Kazuo Ishiguro. Not hard sci-fi or space opera.
-- Fantasy means genre fantasy. Not literary speculative fiction.
-- Mystery and Thriller are separate genres. Stay within the one selected.
-
-Mood definitions:
-- Beach Read: accessible, propulsive, highly readable — fun and immersive without being demanding
-- Book Club: substantive, emotional, discussable, polished mainstream fiction — think Ferrante, Hannah, Patchett, Towles
-- Inspiring: uplifting, life-affirming, leaves the reader moved and energized
-- Unhinged: darkly funny, strange, audacious, narratively surprising, tonally offbeat in an entertaining way
-- Laugh Out Loud: genuinely comic — wit or humor is central, not a footnote
-- Suspenseful: tension-driven, high stakes, strong forward pull
-- Atmospheric: immersive, textured, sensory — mood, setting, and prose feel as important as plot
-- Devastating: emotionally brutal, tragic, or deeply devastating — will leave the reader wrecked
-
-Favor well-known and widely loved books, but do not avoid a lesser-known title if it is a genuinely perfect fit.
-Prioritize variety — do not default to the most obvious comp title.
-
-Do not drift into:
-- academic nonfiction
-- obscure speculative fiction
-- strange niche genre picks
-
-Recommendations should feel cohesive together.
-
-Hard rules:
-- never recommend books the reader already entered
-- only recommend real existing books
-- never recommend YA or middle grade unless the user's input books were YA or middle grade
-- never recommend nonfiction unless the user selected Nonfiction or Memoir as their genre
-- never recommend Historical Fiction when the user selected Fiction
-- if Beach Read is selected, do not recommend slow, dense, structurally difficult, or meditative books
-- if Devastating is selected, do not recommend light, cozy, or redemptive books
-
-Return only valid raw JSON.
-`;
-}
-
-function buildUserPrompt(books, genre, moods) {
-  const genreInstruction = genre ? `Required genre: ${genre}. This is a hard boundary — do not recommend books from any other genre.` : '';
-  const moodInstruction = Array.isArray(moods) && moods.length > 0
-    ? `Required moods (PRIMARY constraint): ${moods.join(', ')}.`
-    : '';
-
-  return `
-Reader loved these books:
-${books.map((b) => `- ${b}`).join('\n')}
-
-${genreInstruction}
-${moodInstruction}
-
-Recommend exactly ${RECOMMENDATION_COUNT} books this reader would most likely love next.
-
-Respond in this exact format:
-${buildRecommendationSchema()}
-`;
+Rules:
+- id must be deterministic and based on title plus author
+- Never recommend books the reader already listed
+- Only recommend books that actually exist
+- Never recommend YA or middle grade unless the reader's books were YA or middle grade
+- Never recommend nonfiction unless the genre is Nonfiction or Memoir
+- Pay close attention to emotional tone and mood over genre defaults`;
 }
 
 // ─── Response Parsing ────────────────────────────────────────────────────────
@@ -192,11 +142,10 @@ app.post('/api/recommend', async (req, res) => {
       model: MODEL,
       max_tokens: MAX_TOKENS,
       temperature: TEMPERATURE,
-      system: buildSystemPrompt(),
       messages: [
         {
           role: 'user',
-          content: buildUserPrompt(books, genre, moods),
+          content: buildPrompt(books, genre, moods),
         },
       ],
     });
