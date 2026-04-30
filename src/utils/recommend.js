@@ -25,7 +25,7 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 // ─── Validation ──────────────────────────────────────────────────────────────
 
-function validateRequestBody({ books, readingExperience }) {
+function validateRequestBody({ books, length }) {
   if (!Array.isArray(books) || books.length === 0) {
     return 'At least one book is required';
   }
@@ -38,8 +38,8 @@ function validateRequestBody({ books, readingExperience }) {
     return 'Each book must be a string under 200 characters';
   }
 
-  if (readingExperience != null && typeof readingExperience !== 'string') {
-    return 'Reading experience must be a string';
+  if (length != null && typeof length !== 'string') {
+    return 'Length must be a string';
   }
 
   return null;
@@ -47,38 +47,33 @@ function validateRequestBody({ books, readingExperience }) {
 
 // ─── Prompt Builder ──────────────────────────────────────────────────────────
 
-function buildPrompt(books, genre, style) {
+function buildPrompt(books, genre, length, excludeBooks = []) {
   const bookList = books.map((b) => `- ${b}`).join('\n');
 
   const genreNote = genre
-    ? `Keep every recommendation clearly inside the ${genre} shelf. Genre is a boundary filter, not the main source of taste.`
-    : `Stay in the same general reading lane suggested by the input books. Do not drift into mismatched genres.`;
-
-  const styleNote = style
-    ? `Recommendation style preference: ${style}. Use this only to control how familiar versus unexpected the picks feel, but never overpower similarity to the input books.`
+    ? `The reader would like ${genre}. Keep recommendations in this lane.`
     : '';
 
-  return `You are an expert contemporary book recommendation engine with deep knowledge of real reader taste, bestseller readalikes, genre boundaries, and highly satisfying next-book comps.
+  const lengthNote = length
+    ? `The reader prefers ${length} books. Let this gently guide pacing and overall reading commitment.`
+    : '';
+
+  const excludeNote = excludeBooks.length > 0
+    ? `\nDo NOT recommend any of these books (already suggested):\n${excludeBooks.map((b) => `- ${b}`).join('\n')}`
+    : '';
+
+  return `You are an expert contemporary book recommender with deep knowledge of reader taste, writing styles, and satisfying readalike recommendations.
 
 A reader loved these books:
 ${bookList}
 
-The input books are the primary recommendation signal and should drive most of the recommendation logic.
-Recommend books that readers of these exact titles would realistically love next.
-Prioritize readership overlap, emotional similarity, prose sensibility, pacing, setting energy, and overall reading experience.
-
-Do not match books on surface themes alone.
-First determine the shared center of gravity across the input titles: common readership, tonal overlap, prose style, emotional intensity, and likely next-read satisfaction.
-Recommend from that shared overlap rather than pulling isolated traits from only one title.
-
 ${genreNote}
-${styleNote}
+${lengthNote}
+${excludeNote}
 
-Recommend exactly ${RECOMMENDATION_COUNT} books.
+Recommend exactly ${RECOMMENDATION_COUNT} books that this reader would be genuinely excited to pick up next.
 
-If the style is Reader Favorites, favor highly recognizable, widely loved, bestselling, discussion-friendly recommendations.
-If the style is Off the Beaten Path, favor more surprising, underrecommended, but still highly credible and satisfying recommendations.
-If the style is A Mix of Both, blend familiar favorites with one or two fresher choices.
+Prioritize writing sensibility, emotional depth, and reader satisfaction over obvious one-to-one similarities in setting, scenery, plot mechanics, or shared subject matter.
 
 Respond ONLY with raw JSON:
 {
@@ -90,23 +85,17 @@ Respond ONLY with raw JSON:
       "year": 2020,
       "pages": 320,
       "genre": "One of: Fiction, Historical Fiction, Fantasy, Romance, Speculative, Horror, Mystery & Thriller, Nonfiction",
-      "what": "One vivid sentence capturing the reading experience or soul of this book. Not a plot summary. Under 20 words.",
-      "why": "One precise sentence explaining why fans of the listed input books would love this next. Name the actual input titles when relevant. Under 20 words."
+      "what": "One sentence capturing the soul of this book — atmospheric, specific, evocative. Not a plot summary. Under 20 words.",
+      "why": "One sentence connecting this book to the specific books they loved — name those titles directly and be precise. Under 20 words."
     }
   ]
 }
 
 Rules:
-- id must be deterministic and based on title plus author
 - Never recommend books the reader already listed
 - Only recommend books that actually exist
-- Never recommend YA or middle grade unless the reader's input books were YA or middle grade
-- Never recommend nonfiction unless the genre is Nonfiction
-- Never recommend horror unless the genre is Horror or the input books clearly justify horror
-- Never recommend romance unless the genre is Romance or the input books clearly justify romance
-- Never let recommendation style overpower core similarity to the input books
-- Avoid random obscure books chosen only for novelty
-- Recommendations should feel like highly satisfying next reads, not merely thematically adjacent books`;
+- Never recommend YA unless the input books are YA
+- Favor highly satisfying next reads over merely adjacent literary similarities`;
 }
 
 // ─── Response Parsing ────────────────────────────────────────────────────────
@@ -141,15 +130,15 @@ function parseRecommendationResponse(text) {
 // ─── Route ───────────────────────────────────────────────────────────────────
 
 app.post('/api/recommend', async (req, res) => {
-  const { books, genre, readingExperience } = req.body;
+  const { books, genre, length, excludeBooks = [] } = req.body;
 
-  const validationError = validateRequestBody({ books, readingExperience });
+  const validationError = validateRequestBody({ books, length });
   if (validationError) {
     return res.status(400).json({ error: validationError });
   }
 
   console.log(
-    `[recommend] request — ${books.length} book(s), genre: ${genre || 'any'}, readingExperience: ${readingExperience || 'any'}`
+    `[recommend] request — ${books.length} book(s), genre: ${genre || 'any'}, length: ${length || 'any'}, excluding: ${excludeBooks.length}`
   );
 
   try {
@@ -160,7 +149,7 @@ app.post('/api/recommend', async (req, res) => {
       messages: [
         {
           role: 'user',
-          content: buildPrompt(books, genre, readingExperience),
+          content: buildPrompt(books, genre, length, excludeBooks),
         },
       ],
     });

@@ -5,6 +5,9 @@ import { loadShelf, saveBook, unsaveBook } from './shelf';
 
 const STORAGE_KEY = 'bookotter_active_session';
 const PROMPT_KEY = 'bookotter_active_prompt';
+const REFRESH_COUNT_KEY = 'bookotter_refresh_count';
+const EXCLUDED_BOOKS_KEY = 'bookotter_excluded_books';
+const MAX_REFRESHES = 2;
 
 async function getRecommendations(books, genre, moods) {
   const response = await fetch('/api/recommend', {

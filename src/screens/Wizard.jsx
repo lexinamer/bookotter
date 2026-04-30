@@ -32,14 +32,14 @@ const STEPS = [
     ],
   },
   {
-    id: 'style',
+    id: 'length',
     type: 'pills',
-    title: 'What are you in the mood for?',
-    name: 'style',
+    title: 'Have a particular length in mind?',
+    name: 'length',
     options: [
-      'Reader favorites',
-      'Off the beaten path',
-      'A mix of both',
+      'Under 300 pages',
+      '300-500 pages',
+      'Over 500 pages',
     ],
   }
 ];
