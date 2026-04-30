@@ -5,11 +5,11 @@ import { loadShelf, saveBook, unsaveBook } from './shelf';
 
 const STORAGE_KEY = 'bookotter_active_session';
 
-async function getRecommendations(books, genre, length) {
+async function getRecommendations(books, genre, moods) {
   const response = await fetch('/api/recommend', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ books, genre, length }),
+    body: JSON.stringify({ books, genre, moods }),
   });
 
   if (!response.ok) {
@@ -85,7 +85,7 @@ export default function useAppState(navigate) {
     setLoading(true);
 
     try {
-      const data = await getRecommendations(formData.books, formData.genre, formData.length);
+      const data = await getRecommendations(formData.books, formData.genre, formData.mood);
       setResults(data.recommendations);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data.recommendations));
       navigate('/');

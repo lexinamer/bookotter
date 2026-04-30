@@ -76,40 +76,69 @@
 
 .result-card {
   border-top: 1px solid var(--border);
-  padding-top: 2rem;
+  padding: var(--space-md) 0;
 }
 
 .card-top {
   display: flex;
   justify-content: space-between;
-  gap: 1.25rem;
-  margin-bottom: 1.25rem;
-}
-
-.card-headings {
-  flex: 1;
-}
-
-.card-actions {
-  display: flex;
-  gap: 0.55rem;
   align-items: flex-start;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.meta-label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-mid);
+  margin: 15px;
+}
+
+.micro-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-light);
 }
 
 .icon-toggle {
-  width: 32px;
-  height: 32px;
+  width: 2.35rem;
+  height: 2.35rem;
+  flex-shrink: 0;
   border: 1px solid var(--border);
   border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--ink);
   background: var(--card);
+  color: var(--ink);
+  cursor: pointer;
+  margin-top: 0.15rem;
 }
 
 .icon-toggle.active {
   background: var(--accent);
   border-color: var(--accent);
   color: white;
+}
+
+.book-note {
+  margin-top: var(--space-sm);
+  max-width: 42rem;
+  font-family: var(--font-serif);
+  font-size: 0.98rem;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--ink-mid);
+}
+
+.book-reason {
+  margin-top: 0.65rem;
+  max-width: 42rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--ink-mid);
 }

@@ -22,65 +22,70 @@ function makeBookId(title, author) {
     .replace(/(^-|-$)/g, '');
 }
 
+function buildMoodInstruction(moods) {
+  if (!moods || !Array.isArray(moods) || moods.length === 0) return '';
+  return `Current reading mood modifiers: ${moods.join(', ')}.`;
+}
+
+function buildRecommendationSchema() {
+  return `
+{
+  "recommendations": [
+    {
+      "id": "lowercase-title-author-slug",
+      "title": "Book Title",
+      "author": "Author Name",
+      "genre": "Broad reader-facing genre label",
+      "year": 2020,
+      "pages": 320,
+      "what": "One vivid concrete sentence describing the reading experience. No plot summary. Under 16 words.",
+      "why": "One precise sentence explaining why this strongly matches the user's listed books, naming at least one listed title. Under 16 words."
+    }
+  ]
+}`;
+}
+
 app.post('/api/recommend', async (req, res) => {
   try {
-    const { books, genre, length } = req.body;
+    const { books, genre, moods } = req.body;
 
     if (!books || !Array.isArray(books) || books.length === 0) {
       return res.status(400).json({ error: 'At least one book is required' });
     }
 
-    const genreInstruction = genre ? `Preferred genre: ${genre}` : '';
-
-    const lengthInstruction =
-      length && length !== 'No preference'
-        ? length === 'Short'
-          ? 'Favor books generally under 300 pages.'
-          : length === 'Medium'
-            ? 'Favor books generally between 300 and 500 pages.'
-            : length === 'Long'
-              ? 'Favor books generally over 500 pages.'
-              : ''
-        : '';
+    const genreInstruction = genre ? `Preferred genre lane: ${genre}.` : '';
+    const moodInstruction = buildMoodInstruction(moods);
 
     const systemPrompt = `
 You are an obsessive independent bookseller with exceptional skill at matching readers to books.
 
-Your recommendations should feel uncannily precise, as if you immediately understood what the reader actually loved.
+Your job is to produce three highly targeted recommendations that feel hand-sold and uncannily precise.
 
-You prioritize:
+Infer:
 - prose feel
 - emotional atmosphere
-- narrative pressure
-- psychological intimacy
-- setting texture
+- pacing
+- psychological intensity
 - literary vs commercial sensibility
-- darkness, tenderness, menace, loneliness, warmth, brutality
+- setting texture
+- thematic concerns
 
-You do NOT prioritize:
-- broad genre alone
-- bestseller popularity
-- famous award winners unless exact fits
-- vague "similar vibe" recommendations
-- books that are merely plot-adjacent
+Use the user's selected genre as a broad shelf boundary.
+Use the user's selected moods as refinement modifiers.
+
+Stay inside adult mainstream reading lanes unless clearly directed otherwise.
+
+Do not drift into:
+- horror
+- academic nonfiction
+- obscure speculative fiction
+- strange niche genre picks
+
+Recommendations should feel cohesive together.
 
 Hard rules:
-- never recommend books the reader listed
+- never recommend books the reader already listed
 - only recommend real existing books
-- avoid fantasy, sci-fi, magical realism, and speculative drift unless clearly justified by the user's books
-- recommendations should feel hand-sold, not algorithmic
-
-Example of recommendation quality:
-
-Input books:
-- The Great Alone
-- Wild Dark Shore
-
-Good recommendation behavior:
-Prefer tense, isolated, psychologically severe literary fiction rooted in hostile environments, family pressure, loneliness, and emotional survival.
-
-Bad recommendation behavior:
-Do not jump to random atmospheric fantasy, speculative fiction, or simply "beautifully written" literary novels.
 
 Return only valid raw JSON.
 `;
@@ -89,61 +94,24 @@ Return only valid raw JSON.
 Reader loved:
 ${books.map((b) => `- ${b}`).join('\n')}
 ${genreInstruction}
-${lengthInstruction}
+${moodInstruction}
 
-Silently infer the reader's hidden taste profile, then recommend exactly 3 books that are the closest experiential matches.
+Recommend exactly 3 books that best fit this reader.
 
 Respond in this exact format:
-
-{
-  "recommendations": [
-    {
-      "id": "lowercase-title-author-slug",
-      "title": "Book Title",
-      "author": "Author Name",
-      "year": 2020,
-      "pages": 320,
-      "what": "One vivid concrete sentence describing the reading experience. No plot summary. Under 16 words.",
-      "why": "One precise sentence explaining why this strongly matches the user's listed books, naming at least one listed title. Under 16 words."
-    },
-    {
-      "id": "lowercase-title-author-slug",
-      "title": "Book Title",
-      "author": "Author Name",
-      "year": 2020,
-      "pages": 320,
-      "what": "One vivid concrete sentence describing the reading experience. No plot summary. Under 16 words.",
-      "why": "One precise sentence explaining why this strongly matches the user's listed books, naming at least one listed title. Under 16 words."
-    },
-    {
-      "id": "lowercase-title-author-slug",
-      "title": "Book Title",
-      "author": "Author Name",
-      "year": 2020,
-      "pages": 320,
-      "what": "One vivid concrete sentence describing the reading experience. No plot summary. Under 16 words.",
-      "why": "One precise sentence explaining why this strongly matches the user's listed books, naming at least one listed title. Under 16 words."
-    }
-  ]
-}
+${buildRecommendationSchema()}
 `;
 
     const message = await client.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 1200,
-      temperature: 0.35,
+      temperature: 0.32,
       system: systemPrompt,
-      messages: [
-        {
-          role: 'user',
-          content: userPrompt,
-        },
-      ],
+      messages: [{ role: 'user', content: userPrompt }],
     });
 
     const text = message.content[0].text.trim();
     const clean = text.replace(/```json|```/g, '').trim();
-
     const parsed = JSON.parse(clean);
 
     if (!parsed.recommendations || !Array.isArray(parsed.recommendations)) {
