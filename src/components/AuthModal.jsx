@@ -7,7 +7,7 @@ export default function AuthModal({ open, onClose, onConfirm }) {
         <p className="meta-label">Save your books</p>
 
         <h3 className="display-title">
-          Create an account to save books and build your shelf.
+          Create an account to save books.
         </h3>
 
         <div className="step-actions auth-actions">

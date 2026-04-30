@@ -24,12 +24,12 @@ export default function Results({
   return (
     <div id="results">
       <div className="results-topbar">
-        <p className="meta-label">{data.length} recommendations for you</p>
+        <p className="meta-label">{data.length} recommendations</p>
 
         <div className="results-topbar-actions">
           {canRefresh && (
             <button className="text-action" onClick={onRefresh}>
-              Give me new results
+              Try Again
               <span className="refresh-remaining">({refreshesLeft} left)</span>
             </button>
           )}
@@ -43,7 +43,7 @@ export default function Results({
         <div className="results-prompt">
           {prompt.books?.length > 0 && (
             <div className="results-prompt-row">
-              <span className="results-prompt-label">Books you loved</span>
+              <span className="results-prompt-label">Books</span>
               <span className="results-prompt-values">{prompt.books.join(', ')}</span>
             </div>
           )}
@@ -53,14 +53,10 @@ export default function Results({
               <span className="results-prompt-values">{prompt.genre}</span>
             </div>
           )}
-          {prompt.mood?.length > 0 && (
-            <div className="results-prompt-row">
-              <span className="results-prompt-label">Mood</span>
-              <span className="results-prompt-values">
-                {Array.isArray(prompt.mood) ? prompt.mood.join(', ') : prompt.mood}
-              </span>
-            </div>
-          )}
+          <div className="results-prompt-row">
+            <span className="results-prompt-label">Length</span>
+            <span className="results-prompt-values">{prompt.length || 'Any'}</span>
+          </div>
         </div>
       )}
 

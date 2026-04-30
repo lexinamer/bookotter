@@ -62,41 +62,47 @@ function buildPrompt(books, genre, length, excludeBooks = []) {
     ? `\nDo NOT recommend any of these books (already suggested):\n${excludeBooks.map((b) => `- ${b}`).join('\n')}`
     : '';
 
-  return `You are an expert contemporary book recommender with deep knowledge of reader taste, writing styles, and satisfying readalike recommendations.
+      return `You are a literary book recommender who thinks like a trusted bookseller —  someone who matches readers on emotional register, not just genre.
 
-A reader loved these books:
-${bookList}
+      A reader loved these books:
+      ${bookList}
 
-${genreNote}
-${lengthNote}
-${excludeNote}
+      ${genreNote}
+      ${lengthNote}
+      ${excludeNote}
 
-Recommend exactly ${RECOMMENDATION_COUNT} books that this reader would be genuinely excited to pick up next.
+      Recommend exactly ${RECOMMENDATION_COUNT} books that this reader would be genuinely excited to pick up next.
 
-Prioritize writing sensibility, emotional depth, and reader satisfaction over obvious one-to-one similarities in setting, scenery, plot mechanics, or shared subject matter.
+      When choosing: ask what emotional need unites the books this reader loved,  then find books that meet that need — even if surface details differ.
 
-Respond ONLY with raw JSON:
-{
-  "recommendations": [
-    {
-      "id": "lowercase-title-author-slug",
-      "title": "Book Title",
-      "author": "Author Name",
-      "year": 2020,
-      "pages": 320,
-      "genre": "One of: Fiction, Historical Fiction, Fantasy, Romance, Speculative, Horror, Mystery & Thriller, Nonfiction",
-      "what": "One sentence capturing the soul of this book — atmospheric, specific, evocative. Not a plot summary. Under 20 words.",
-      "why": "One sentence connecting this book to the specific books they loved — name those titles directly and be precise. Under 20 words."
-    }
-  ]
-}
+      For "what": capture the soul of the book in one sentence. Lead with mood or texture, not plot. Avoid starting with a noun-verb construction. Under 15 words.
 
-Rules:
-- Never recommend books the reader already listed
-- Only recommend books that actually exist
-- Never recommend YA unless the input books are YA
-- Favor highly satisfying next reads over merely adjacent literary similarities`;
-}
+      For "why": name a specific craft element — prose style, pacing, structural choice, emotional register — that connects this book to the ones they loved. Name the actual titles. Under 20 words.
+
+      Prioritize writing sensibility, emotional depth, and reader satisfaction over obvious one-to-one similarities in setting, scenery, plot mechanics, or shared subject matter.
+
+      Respond ONLY with raw JSON:
+      {
+        "recommendations": [
+          {
+            "id": "lowercase-title-author-slug",
+            "title": "Book Title",
+            "author": "Author Name",
+            "year": 2020,
+            "pages": 320,
+            "genre": "One of: Fiction, Historical Fiction, Speculative, Dystopian, Fantasy, Romance, Horror, Mystery, Thriller, Memoir, Nonfiction",
+            "what": "One sentence capturing the soul of this book — atmospheric, specific, evocative. Not a plot summary. Under 20 words.", 
+            "why": "One sentence connecting this book to the specific books they loved — name the actual titles by name, precise, not generic praise. Under 20 words."
+          }
+        ]
+      }
+
+      Rules: 
+      - id must be deterministic and based on title plus author 
+      - Never recommend books the reader already listed
+      - Pay close attention to emotional tone over genre 
+      - Only recommend books that actually exist`
+  ;}
 
 // ─── Response Parsing ────────────────────────────────────────────────────────
 

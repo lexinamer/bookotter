@@ -18,7 +18,7 @@ const STEPS = [
   {
     id: 'genre',
     type: 'pills',
-    title: 'Looking for a particular genre?',
+    title: 'Have a genre in mind?',
     name: 'genre',
     options: [
       'Fiction',
@@ -34,7 +34,7 @@ const STEPS = [
   {
     id: 'length',
     type: 'pills',
-    title: 'Have a particular length in mind?',
+    title: 'Any particular length?',
     name: 'length',
     options: [
       'Under 300 pages',
@@ -85,7 +85,7 @@ export default function Wizard({ onSubmit, onReset }) {
 
   const handleBookChange = (index, value) => {
     const nextBooks = [...formData.books];
-    nextBooks[index] = value;
+    nextBooks[index] = value.replace(/\b\w/g, c => c.toUpperCase());
 
     setFormData(prev => ({
       ...prev,
@@ -220,7 +220,7 @@ export default function Wizard({ onSubmit, onReset }) {
           <div className="step-actions">
             {isLast ? (
               <button type="button" className="primary-action" onClick={handleSubmit}>
-                Find my next book →
+                {isEmpty ? 'Skip & Find My Next Book' : 'Find My Next Book'} →
               </button>
             ) : (
               <button
