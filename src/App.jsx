@@ -30,7 +30,10 @@ export default function App() {
     prompt,
     loading,
     handleSubmit,
+    handleRefresh,
     handleReset,
+    refreshCount,
+    maxRefreshes,
   } = useAppState(navigate);
 
   useEffect(() => {
@@ -94,8 +97,11 @@ export default function App() {
                 data={results}
                 prompt={prompt}
                 onReset={handleReset}
+                onRefresh={handleRefresh}
                 onSave={guardedSave}
                 savedBooks={savedBooks}
+                refreshCount={refreshCount}
+                maxRefreshes={maxRefreshes}
               />
             )
           }

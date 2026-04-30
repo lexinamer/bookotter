@@ -67,6 +67,18 @@
   padding: 1rem 0;
 }
 
+.results-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.refresh-remaining {
+  margin-left: 0.3em;
+  opacity: 0.5;
+  font-size: 0.85em;
+}
+
 .results-prompt {
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -99,10 +111,11 @@
 }
 
 .loading-screen {
-  min-height: 100vh;
+  min-height: calc(100vh - var(--nav-height));
   display: flex;
   align-items: center;
   justify-content: center;
   font-style: italic;
   font-size: 2rem;
+  transform: translateY(-8vh);
 }

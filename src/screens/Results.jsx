@@ -4,8 +4,11 @@ export default function Results({
   data,
   prompt,
   onReset,
+  onRefresh,
   onSave,
   savedBooks,
+  refreshCount,
+  maxRefreshes,
 }) {
   if (data.error) {
     return (
@@ -15,14 +18,25 @@ export default function Results({
     );
   }
 
+  const refreshesLeft = maxRefreshes - refreshCount;
+  const canRefresh = refreshesLeft > 0;
+
   return (
     <div id="results">
       <div className="results-topbar">
         <p className="meta-label">{data.length} recommendations for you</p>
 
-        <button className="text-action" onClick={onReset}>
-          Start Over
-        </button>
+        <div className="results-topbar-actions">
+          {canRefresh && (
+            <button className="text-action" onClick={onRefresh}>
+              Give me new results
+              <span className="refresh-remaining">({refreshesLeft} left)</span>
+            </button>
+          )}
+          <button className="text-action" onClick={onReset}>
+            Start Over
+          </button>
+        </div>
       </div>
 
       {prompt && (
