@@ -79,6 +79,13 @@
 
 /* ───────── BOOK CARDS ───────── */
 
+.why-block {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .result-card {
   border-top: 1px solid var(--border);
   padding: var(--space-md) 0;
@@ -95,7 +102,7 @@
 .card-headings {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .icon-toggle {

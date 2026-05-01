@@ -44,7 +44,10 @@ export default function BookCard({
       </div>
 
       <p className="callout">{book.what}</p>
-      <p>{book.why}</p>
+      <div className="why-block">
+        <span className="caption">Why we picked it</span>
+        <p>{book.why}</p>
+      </div>
     </div>
   );
 }

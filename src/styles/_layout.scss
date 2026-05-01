@@ -81,34 +81,46 @@
 }
 
 .results-prompt {
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px 16px;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .results-prompt-row {
   display: flex;
-  gap: 8px;
+  gap: 16px;
   align-items: baseline;
-  font-size: 13px;
 }
 
 .results-prompt-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   color: var(--ink-light);
   white-space: nowrap;
   flex-shrink: 0;
-
-  &::after {
-    content: ':';
-  }
+  min-width: 56px;
 }
 
 .results-prompt-values {
+  font-family: var(--font-serif);
+  font-size: 15px;
   color: var(--ink-mid);
+}
+
+.results-topbar .label {
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.results-topbar-actions .action {
+  color: var(--ink-light);
+
+  &:hover {
+    color: var(--ink);
+  }
 }
 
 .loading-screen {
