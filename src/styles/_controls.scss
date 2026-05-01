@@ -49,6 +49,9 @@
   border-radius: 5px;
   padding: 16px 20px;
   outline: none;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-style: italic;
 }
 
 .field-input::placeholder {

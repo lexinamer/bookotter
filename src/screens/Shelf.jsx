@@ -8,7 +8,7 @@ export default function Shelf({ isOpen, onClose, savedBooks, onRemoveSaved }) {
 
       <div className={`shelf-panel ${isOpen ? 'open' : ''}`}>
         <div className="shelf-header">
-          <p className="meta-label">Bookshelf</p>
+          <p className="label">Bookshelf</p>
           <button className="icon-toggle" onClick={onClose}>
             <X size={15} strokeWidth={1.8} />
           </button>
@@ -16,7 +16,7 @@ export default function Shelf({ isOpen, onClose, savedBooks, onRemoveSaved }) {
 
         <div className="shelf-body">
           {savedBooks.length === 0 ? (
-            <p className="body-copy">No saved books yet.</p>
+            <p>No saved books yet.</p>
           ) : (
             savedBooks.map((book) => (
               <BookCard

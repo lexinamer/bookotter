@@ -13,7 +13,7 @@ export default function Results({
   if (data.error) {
     return (
       <div id="results">
-        <p className="body-copy">{data.error}</p>
+        <p>{data.error}</p>
       </div>
     );
   }
@@ -24,16 +24,16 @@ export default function Results({
   return (
     <div id="results">
       <div className="results-topbar">
-        <p className="meta-label">{data.length} recommendations</p>
+        <p className="label">{data.length} recommendations</p>
 
         <div className="results-topbar-actions">
           {canRefresh && (
-            <button className="text-action" onClick={onRefresh}>
+            <button className="action" onClick={onRefresh}>
               Try Again
               <span className="refresh-remaining">({refreshesLeft} left)</span>
             </button>
           )}
-          <button className="text-action" onClick={onReset}>
+          <button className="action" onClick={onReset}>
             Start Over
           </button>
         </div>

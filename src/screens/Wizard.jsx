@@ -137,8 +137,8 @@ export default function Wizard({ onSubmit, onReset }) {
   const renderHero = () => (
     <section className="wizard-section active" id="s-hero">
       <div className="step-inner">
-        <p className="meta-label">Tell us a few books you loved.</p>
-        <h1 className="display-title">We'll tell you what to read next.</h1>
+        <p className="label">Tell us a few books you loved.</p>
+        <h1>We'll tell you what to read next.</h1>
 
         <button type="button" className="primary-action" onClick={handleNext}>
           Get Started
@@ -162,12 +162,12 @@ export default function Wizard({ onSubmit, onReset }) {
                 ← Back · {stepLabel}
               </button>
             ) : (
-              <p className="micro-label">{stepLabel}</p>
+              <p className="caption">{stepLabel}</p>
             )}
           </div>
 
-          <h2 className="display-title">{current.title}</h2>
-          {/* {current.hint && <p className="micro-label">{current.hint}</p>} */}
+          <h2>{current.title}</h2>
+          {/* {current.hint && <p className="caption">{current.hint}</p>} */}
 
           {current.type === 'books' && (
             <div className="book-inputs">
@@ -175,7 +175,7 @@ export default function Wizard({ onSubmit, onReset }) {
                 <input
                   key={index}
                   type="text"
-                  className="field-input field-text"
+                  className="field-input"
                   placeholder={placeholder}
                   value={formData.books[index]}
                   onChange={(e) => handleBookChange(index, e.target.value)}

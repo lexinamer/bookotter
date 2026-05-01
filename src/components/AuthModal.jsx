@@ -4,9 +4,9 @@ export default function AuthModal({ open, onClose, onConfirm }) {
   return (
     <div className="auth-overlay">
       <div className="auth-modal">
-        <p className="meta-label">Save your books</p>
+        <p className="label">Save your books</p>
 
-        <h3 className="display-title">
+        <h3>
           Create an account to save books.
         </h3>
 
@@ -15,7 +15,7 @@ export default function AuthModal({ open, onClose, onConfirm }) {
             Sign in with Google
           </button>
 
-          <button className="text-action" onClick={onClose}>
+          <button className="action" onClick={onClose}>
             Cancel
           </button>
         </div>

@@ -19,17 +19,18 @@ export default function BookCard({
     <div className="result-card">
       <div className="card-top">
         <div className="card-headings">
-          <a
-            href={`${amazonBase}${query}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="display-title-sm"
-          >
-            {book.title}
-          </a>
+          <h3>
+            <a
+              href={`${amazonBase}${query}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {book.title}
+            </a>
+          </h3>
 
-          <div className="meta-label">{book.author}</div>
-          <div className="micro-label">
+          <div className="label">{book.author}</div>
+          <div className="caption">
             {book.year} • {book.pages} pages{book.genre ? ` • ${book.genre}` : ''}
           </div>
         </div>
@@ -42,8 +43,8 @@ export default function BookCard({
         </button>
       </div>
 
-      <p className="book-note">{book.what}</p>
-      <p className="book-reason">{book.why}</p>
+      <p className="callout">{book.what}</p>
+      <p>{book.why}</p>
     </div>
   );
 }

@@ -1,78 +1,60 @@
-/* ───────── TYPPOGRAPHY ───────── */
+/* ───────── TYPOGRAPHY ───────── */
 
-%display-base {
+/* ── Elements ── */
+
+h1, h2, h3 {
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 400;
 }
 
-%mono-label-base {
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-}
+h1 { font-size: 40px; }
+h2 { font-size: 26px; }
+h3 { font-size: 22px; }
 
-.display-title {
-  @extend %display-base;
-  font-size: 40px;
-}
-
-.display-title-sm {
-  @extend %display-base;
-  font-size: 32px;
-}
-
-.body-copy {
-  font-size: 16px;
-  color: var(--ink-mid);
-}
-
-.meta-label {
-  @extend %mono-label-base;
-  font-size: 13px;
-  letter-spacing: 0.14em;
-  color: var(--ink-mid);
-}
-
-.micro-label {
-  @extend %mono-label-base;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  color: var(--ink-light);
-}
-
-.book-title {
-  display: inline-block;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 27px;
-  line-height: 1.05;
-  font-weight: 400;
-  margin-bottom: 6px;
-}
-
-.field-text {
-  font-family: var(--font-serif);
-  font-size: 18px;
-  font-style: italic;
-}
-
-.book-note {
-  margin-top: 10px;
-  font-family: var(--font-serif);
-  font-size: 16px;
-  font-style: italic;
-  line-height: 1.7;
-  color: var(--ink-mid);
-}
-
-.book-reason {
-  margin-top: 10px;
+p {
   font-size: 15px;
   line-height: 1.7;
   color: var(--ink-mid);
 }
 
-.text-action {
+a {
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--ink-light);
+  }
+}
+
+/* ── Utilities ── */
+
+.callout {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+}
+
+.caption {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-light);
+}
+
+.action {
   font-family: var(--font-mono);
   font-size: 13px;
   letter-spacing: 0.05em;

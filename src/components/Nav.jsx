@@ -33,7 +33,7 @@ export default function Nav({ user, onLogin, onLogout, onShelfOpen }) {
       </Link>
 
       <div className="nav-menu">
-        <button className="meta-label nav-item" onClick={onShelfOpen}>
+        <button className="label nav-item" onClick={onShelfOpen}>
           Bookshelf
         </button>
 
@@ -43,7 +43,7 @@ export default function Nav({ user, onLogin, onLogout, onShelfOpen }) {
             onClick={() => setOpen(prev => !prev)}
           >
             {initials ? (
-              <span className="avatar-initials">{initials}</span>
+              <span className="caption">{initials}</span>
             ) : (
               <CircleUserRound size={15} strokeWidth={1.8} />
             )}
@@ -53,9 +53,9 @@ export default function Nav({ user, onLogin, onLogout, onShelfOpen }) {
             <div className="account-popover">
               {user ? (
                 <>
-                  <p className="micro-label">{user.displayName}</p>
+                  <p className="caption">{user.displayName}</p>
                   <button
-                    className="text-action"
+                    className="action"
                     onClick={() => {
                       setOpen(false);
                       onLogout();
@@ -66,9 +66,9 @@ export default function Nav({ user, onLogin, onLogout, onShelfOpen }) {
                 </>
               ) : (
                 <>
-                  <p className="micro-label">Guest</p>
+                  <p className="caption">Guest</p>
                   <button
-                    className="text-action"
+                    className="action"
                     onClick={() => {
                       setOpen(false);
                       onLogin();
