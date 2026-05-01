@@ -8,8 +8,8 @@ dotenv.config();
 // ─── Config ──────────────────────────────────────────────────────────────────
 
 const PORT = process.env.PORT || 3001;
-const MODEL = 'claude-sonnet-4-5-20250929';
-const MAX_TOKENS = 1200;
+const MODEL = 'claude-sonnet-4-6';
+const MAX_TOKENS = 2000;
 const TEMPERATURE = 0.65;
 const RECOMMENDATION_COUNT = 3;
 const MAX_BOOKS_INPUT = 20;
@@ -51,7 +51,7 @@ function buildPrompt(books, genre, length, excludeBooks = []) {
   const bookList = books.map((b) => `- ${b}`).join('\n');
 
   const genreNote = genre
-    ? `The reader would like ${genre}. Keep recommendations in this lane.`
+    ? `The reader would like ${genre}. Keep recommendations in this lane, but don't let genre override emotional fit.`
     : '';
 
   const lengthNote = length
@@ -62,47 +62,47 @@ function buildPrompt(books, genre, length, excludeBooks = []) {
     ? `\nDo NOT recommend any of these books (already suggested):\n${excludeBooks.map((b) => `- ${b}`).join('\n')}`
     : '';
 
-      return `You are a literary book recommender who thinks like a trusted bookseller —  someone who matches readers on emotional register, not just genre.
+  return `You are a literary book recommender who thinks like a trusted independent bookseller — someone who matches readers on emotional register, psychological texture, and prose sensibility, not just genre or setting.
 
-      A reader loved these books:
-      ${bookList}
+A reader loved these books:
+${bookList}
 
-      ${genreNote}
-      ${lengthNote}
-      ${excludeNote}
+${genreNote}
+${lengthNote}
+${excludeNote}
 
-      Recommend exactly ${RECOMMENDATION_COUNT} books that this reader would be genuinely excited to pick up next.
+Before choosing your recommendations, silently ask yourself: what emotional need or psychological experience unites the books this reader loved? What kind of reader are they? Use that as your true north — not setting, not subject matter, not era.
 
-      When choosing: ask what emotional need unites the books this reader loved,  then find books that meet that need — even if surface details differ.
+Recommend exactly ${RECOMMENDATION_COUNT} books that this reader would be genuinely excited to pick up next.
 
-      For "what": capture the soul of the book in one sentence. Lead with mood or texture, not plot. Avoid starting with a noun-verb construction. Under 15 words.
+Rules for choosing:
+- Prioritize writing sensibility, emotional depth, and psychological texture over surface similarities in setting, plot, or subject matter
+- No more than one recommendation should share an obvious surface trait (same country, same era, same subject) with the input books
+- At least one recommendation should feel unexpected but emotionally inevitable — the book they didn't know they needed
+- Avoid the most commonly recommended books for these titles; think one layer deeper than the first title that comes to mind
+- Never recommend books the reader already listed
+- Only recommend books that actually exist
 
-      For "why": name a specific craft element — prose style, pacing, structural choice, emotional register — that connects this book to the ones they loved. Name the actual titles. Under 20 words.
+For the "what" field: capture the soul of this book in a couple of sentences. Lead with mood, texture, or an image — but also briefly explain a bit about the plot. Avoid starting with a noun-verb construction. No adjective stacking. Under 30 words.
 
-      Prioritize writing sensibility, emotional depth, and reader satisfaction over obvious one-to-one similarities in setting, scenery, plot mechanics, or shared subject matter.
+For the "why" field: name a specific craft element — prose style, pacing, structural choice, emotional register — that connects this book to the ones they loved. Name the actual input titles by name. No generic praise. Under 30 words.
 
-      Respond ONLY with raw JSON:
-      {
-        "recommendations": [
-          {
-            "id": "lowercase-title-author-slug",
-            "title": "Book Title",
-            "author": "Author Name",
-            "year": 2020,
-            "pages": 320,
-            "genre": "One of: Fiction, Historical Fiction, Speculative, Dystopian, Fantasy, Romance, Horror, Mystery, Thriller, Memoir, Nonfiction",
-            "what": "One sentence capturing the soul of this book — atmospheric, specific, evocative. Not a plot summary. Under 20 words.", 
-            "why": "One sentence connecting this book to the specific books they loved — name the actual titles by name, precise, not generic praise. Under 20 words."
-          }
-        ]
-      }
-
-      Rules: 
-      - id must be deterministic and based on title plus author 
-      - Never recommend books the reader already listed
-      - Pay close attention to emotional tone over genre 
-      - Only recommend books that actually exist`
-  ;}
+Respond ONLY with raw JSON:
+{
+  "recommendations": [
+    {
+      "id": "lowercase-title-author-slug",
+      "title": "Book Title",
+      "author": "Author Name",
+      "year": 2020,
+      "pages": 320,
+      "genre": "One of: Fiction, Historical Fiction, Speculative, Dystopian, Fantasy, Romance, Horror, Mystery, Thriller, Memoir, Nonfiction",
+      "what": "One sentence capturing the soul of this book. Under 15 words.",
+      "why": "One sentence connecting to their specific loved books by name. Under 20 words."
+    }
+  ]
+}`;
+}
 
 // ─── Response Parsing ────────────────────────────────────────────────────────
 

@@ -1,37 +1,41 @@
 /* ───────── TYPPOGRAPHY ───────── */
 
-.display-title {
+%display-base {
   font-family: var(--font-serif);
-  font-size: 2.5rem;
   font-style: italic;
   font-weight: 400;
+}
+
+%mono-label-base {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+
+.display-title {
+  @extend %display-base;
+  font-size: 40px;
 }
 
 .display-title-sm {
-  font-family: var(--font-serif);
-  font-size: 1.8rem;
-  font-style: italic;
-  font-weight: 400;
+  @extend %display-base;
+  font-size: 32px;
 }
 
 .body-copy {
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 16px;
   color: var(--ink-mid);
 }
 
 .meta-label {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  text-transform: uppercase;
+  @extend %mono-label-base;
+  font-size: 13px;
   letter-spacing: 0.14em;
   color: var(--ink-mid);
 }
 
 .micro-label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  text-transform: uppercase;
+  @extend %mono-label-base;
+  font-size: 11px;
   letter-spacing: 0.16em;
   color: var(--ink-light);
 }
@@ -40,37 +44,37 @@
   display: inline-block;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 1.7rem;
+  font-size: 27px;
   line-height: 1.05;
   font-weight: 400;
-  margin-bottom: 0.35rem;
+  margin-bottom: 6px;
 }
 
 .field-text {
   font-family: var(--font-serif);
-  font-size: 1.15rem;
+  font-size: 18px;
   font-style: italic;
 }
 
 .book-note {
-  margin-top: 0.6rem;
+  margin-top: 10px;
   font-family: var(--font-serif);
-  font-size: 0.95rem;
+  font-size: 16px;
   font-style: italic;
-  line-height: 1.65;
+  line-height: 1.7;
   color: var(--ink-mid);
 }
 
 .book-reason {
-  margin-top: 0.8rem;
-  font-size: 0.8rem;
-  line-height: 1.65;
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.7;
   color: var(--ink-mid);
 }
 
 .text-action {
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 13px;
   letter-spacing: 0.05em;
   color: var(--ink);
 }

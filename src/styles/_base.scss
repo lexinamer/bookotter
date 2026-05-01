@@ -4,25 +4,26 @@
   --bg: #f6f3ef;
   --card: #fcfaf7;
   --ink: #1f1b18;
-  --ink-mid: #6d6761;
-  --ink-light: #a49d96;
+  --ink-mid: #4c4844;
+  --ink-light: #857e78;
   --border: #ddd6cf;
   --accent: #c95a2c;
+  --overlay-bg: rgba(15, 13, 11, 0.18);
 
   --font-serif: 'Cormorant Garamond', serif;
   --font-mono: 'IBM Plex Mono', monospace;
 
-  --space-sm: 1rem;
-  --space-md: 2rem;
-  --space-lg: 4rem;
-  --space-xl: 6rem;
-  --space-xxl: 8rem;
+  --space-sm: 16px;
+  --space-md: 32px;
+  --space-lg: 64px;
+  --space-xl: 96px;
+  --space-xxl: 128px;
 
   --content-width: 575px;
-  --nav-height: 8rem;
+  --nav-height: 128px;
 
 }
-  
+
 
 /* ───────── RESET ───────── */
 
@@ -50,4 +51,3 @@ button {
   border: none;
   cursor: pointer;
 }
-

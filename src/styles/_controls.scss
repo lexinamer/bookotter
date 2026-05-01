@@ -6,7 +6,7 @@
   background: var(--accent);
   color: white;
   font-family: var(--font-serif);
-  font-size: 1.1rem;
+  font-size: 18px;
   letter-spacing: .05em;
   font-style: italic;
   border-radius: 2px;
@@ -24,11 +24,11 @@
 }
 
 .secondary-action {
-  padding: 0.72rem 1.45rem;
+  padding: 12px 23px;
   border-radius: 3px;
   background: var(--ink);
   color: var(--bg);
-  font-size: 0.72rem;
+  font-size: 12px;
 }
 
 
@@ -38,8 +38,8 @@
 .book-inputs {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin: 2rem 0 2.5rem;
+  gap: 12px;
+  margin: 32px 0 40px;
 }
 
 .field-input {
@@ -47,7 +47,7 @@
   background: var(--card);
   border: 1.5px solid var(--border);
   border-radius: 5px;
-  padding: 1rem 1.25rem;
+  padding: 16px 20px;
   outline: none;
 }
 
@@ -64,8 +64,8 @@
 .pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
-  margin: 2rem 0 2.75rem;
+  gap: 10px;
+  margin: 32px 0 44px;
 }
 
 .pill {
@@ -80,11 +80,11 @@
 
 .pill span {
   display: inline-block;
-  padding: 0.65rem 1.3rem;
+  padding: 10px 21px;
   border: 1.5px solid var(--border);
   border-radius: 3px;
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 13px;
   color: var(--ink-mid);
 }
 

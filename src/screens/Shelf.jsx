@@ -24,6 +24,7 @@ export default function Shelf({ isOpen, onClose, savedBooks, onRemoveSaved }) {
                 book={book}
                 onRemoveSaved={onRemoveSaved}
                 mode="saved"
+                saved={true}
               />
             ))
           )}
