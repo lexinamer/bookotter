@@ -10,10 +10,10 @@ export default function Results({
   onRefresh,
   onSave,
   onSkip,
-  onRemoveSaved,
-  onRemoveSkipped,
+  onRead,
   savedBooks,
   skippedBooks,
+  readBooks,
   refreshCount,
   maxRefreshes,
 }) {
@@ -45,19 +45,23 @@ export default function Results({
       </section>
 
       <section className="results-list">
-        {data.map((book) => (
-          <BookCard
-            key={book.id}
-            book={book}
-            onSave={onSave}
-            onSkip={onSkip}
-            onRemoveSaved={onRemoveSaved}
-            onRemoveSkipped={onRemoveSkipped}
-            mode="results"
-            saved={savedBooks.some(b => b.id === book.id)}
-            skipped={skippedBooks.some(b => b.id === book.id)}
-          />
-        ))}
+        {data
+          .filter(book =>
+            !skippedBooks.some(b => b.id === book.id) &&
+            !readBooks.some(b => b.id === book.id)
+          )
+          .map((book) => (
+            <BookCard
+              key={book.id}
+              book={book}
+              onSave={onSave}
+              onSkip={onSkip}
+              onRead={onRead}
+              mode="results"
+              saved={savedBooks.some(b => b.id === book.id)}
+              read={readBooks.some(b => b.id === book.id)}
+            />
+          ))}
       </section>
     </main>
   );

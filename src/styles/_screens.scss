@@ -129,7 +129,7 @@
   }
 
   &.active {
-    opacity: 0.4;
+    color: var(--accent);
   }
 }
 
@@ -139,10 +139,10 @@
 
   a {
     color: var(--ink);
-    transition: opacity 0.15s ease;
+    transition: color 0.15s ease;
 
     &:hover {
-      opacity: 0.6;
+      color: var(--action);
     }
   }
 }
@@ -176,6 +176,173 @@
 .book-why .prompt-kicker {
   display: block;
   margin-bottom: 6px;
+}
+
+/* =========================
+   SHELF TABS + CARDS
+========================= */
+
+.shelf-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 0;
+}
+
+.shelf-tab {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 20px 0;
+  margin-right: 32px;
+  border-bottom: 1.5px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  &.active {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
+  }
+
+  &:hover:not(.active) {
+    color: var(--action);
+  }
+}
+
+.shelf-tab-count {
+  opacity: 0.45;
+  margin-left: 6px;
+}
+
+.shelf-list {
+  margin-top: 0;
+}
+
+.shelf-card {
+  border-top: 1px solid var(--line);
+  padding: 26px 0;
+
+  &:first-child {
+    border-top: none;
+  }
+}
+
+.shelf-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 5px;
+}
+
+.shelf-card-title {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.25;
+  margin-bottom: 0;
+
+  a {
+    color: var(--ink);
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: var(--action);
+    }
+  }
+}
+
+.shelf-status-select {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 4px 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+  appearance: auto;
+  transition: border-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    border-color: var(--ink-mid);
+    color: var(--ink);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--action);
+  }
+}
+
+.shelf-card-author {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  margin-bottom: 2px;
+}
+
+.shelf-card-meta {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.shelf-card-hook {
+  font-size: 15px;
+  line-height: 1.5;
+  font-style: italic;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.shelf-card-why {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-mid);
+  margin-bottom: 16px;
+}
+
+.shelf-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shelf-action {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--action);
+  }
+
+  &--remove:hover {
+    color: var(--accent);
+  }
+}
+
+.shelf-action-divider {
+  color: var(--line);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.shelf-empty {
+  padding-top: 40px;
+  color: var(--muted);
+  font-size: 15px;
+  font-style: italic;
 }
 
 /* =========================

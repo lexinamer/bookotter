@@ -1,60 +1,69 @@
-import { X } from 'lucide-react';
-import BookCard from '../components/BookCard';
+import { useState } from 'react';
+import ShelfCard from '../components/ShelfCard';
 
-export default function Shelf({ isOpen, onClose, savedBooks, skippedBooks, onRemoveSaved, onRemoveSkipped }) {
-  const isEmpty = savedBooks.length === 0 && skippedBooks.length === 0;
+const TABS = [
+  { key: 'saved', label: 'Saved' },
+  { key: 'read', label: 'Read' },
+  { key: 'skipped', label: 'Passed' },
+];
+
+export default function Shelf({
+  savedBooks,
+  skippedBooks,
+  readBooks,
+  onSave,
+  onSkip,
+  onRead,
+}) {
+  const [tab, setTab] = useState('saved');
+
+  const shelfMap = {
+    saved: savedBooks,
+    read: readBooks,
+    skipped: skippedBooks,
+  };
+
+  const emptyMessages = {
+    saved: 'Nothing saved yet. Go find a recommendation you like.',
+    read: 'Nothing marked as read yet.',
+    skipped: 'Nothing passed on yet.',
+  };
+
+  const books = shelfMap[tab];
 
   return (
-    <>
-      {isOpen && <div className="overlay" onClick={onClose} />}
-
-      <aside className={`shelf-panel ${isOpen ? 'open' : ''}`}>
-        <div className="shelf-header">
-          <p className="form-label">My Bookshelf</p>
-
-          <button className="close-button" onClick={onClose}>
-            <X size={16} strokeWidth={1.8} />
+    <main className="shelf-page">
+      <div className="shelf-tabs">
+        {TABS.map(({ key, label }) => (
+          <button
+            key={key}
+            className={`shelf-tab${tab === key ? ' active' : ''}`}
+            onClick={() => setTab(key)}
+          >
+            {label}
+            {shelfMap[key].length > 0 && (
+              <span className="shelf-tab-count">{shelfMap[key].length}</span>
+            )}
           </button>
-        </div>
+        ))}
+      </div>
 
-        <div className="shelf-body">
-          {isEmpty ? (
-            <div className="empty-shelf">
-              <p>No books here yet.</p>
-            </div>
-          ) : (
-            <>
-              {savedBooks.length > 0 && (
-                <div className="shelf-section">
-                  <p className="form-label shelf-section-label">Save for Later</p>
-                  {savedBooks.map((book) => (
-                    <BookCard
-                      key={book.id}
-                      book={book}
-                      onRemoveSaved={onRemoveSaved}
-                      mode="saved"
-                    />
-                  ))}
-                </div>
-              )}
-
-              {skippedBooks.length > 0 && (
-                <div className="shelf-section">
-                  <p className="form-label shelf-section-label">Not This One</p>
-                  {skippedBooks.map((book) => (
-                    <BookCard
-                      key={book.id}
-                      book={book}
-                      onRemoveSkipped={onRemoveSkipped}
-                      mode="skipped"
-                    />
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </aside>
-    </>
+      <div className="shelf-list">
+        {books.length === 0 ? (
+          <p className="shelf-empty">{emptyMessages[tab]}</p>
+        ) : (
+          books.map((book) => (
+            <ShelfCard
+              key={book.id}
+              book={book}
+              mode={tab}
+              onSave={onSave}
+              onSkip={onSkip}
+              onRead={onRead}
+            />
+          ))
+        )}
+      </div>
+    </main>
   );
 }

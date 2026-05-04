@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
-export default function Nav({ user, onLogin, onLogout, onShelfOpen }) {
+export default function Nav({ user, onLogin, onLogout }) {
+  const { pathname } = useLocation();
+
   return (
     <nav className="site-nav">
       <Link to="/" className="nav-logo">
@@ -8,9 +10,7 @@ export default function Nav({ user, onLogin, onLogout, onShelfOpen }) {
       </Link>
 
       <div className="nav-right">
-        <button className="nav-link" onClick={onShelfOpen}>
-          My Bookshelf
-        </button>
+        <Link to="/shelf" className={`nav-link${pathname === '/shelf' ? ' active' : ''}`}>My Bookshelf</Link>
         <span className="nav-divider">|</span>
         <button className="nav-link" onClick={user ? onLogout : onLogin}>
           {user ? 'Sign Out' : 'Sign In'}

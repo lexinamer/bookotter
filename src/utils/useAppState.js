@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { auth, provider } from './firebase';
-import { loadShelf, saveBook, unsaveBook, skipBook, unskipBook } from './shelf';
+import { loadShelf, saveBook, unsaveBook, skipBook, unskipBook, readBook, unreadBook } from './shelf';
 
 const STORAGE_KEY = 'nextread_session';
 const MAX_REFRESHES = 2;
@@ -30,6 +30,7 @@ export default function useAppState(navigate) {
   const [authReady, setAuthReady] = useState(false);
   const [savedBooks, setSavedBooks] = useState([]);
   const [skippedBooks, setSkippedBooks] = useState([]);
+  const [readBooks, setReadBooks] = useState([]);
   const [results, setResults] = useState(null);
   const [prompt, setPrompt] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -57,6 +58,7 @@ export default function useAppState(navigate) {
       const shelf = await loadShelf(user.uid);
       setSavedBooks(shelf.savedBooks);
       setSkippedBooks(shelf.skippedBooks);
+      setReadBooks(shelf.readBooks);
     }
 
     if (authReady) hydrateShelf();
@@ -99,6 +101,16 @@ export default function useAppState(navigate) {
   const handleRemoveSkipped = async (uid, book) => {
     setSkippedBooks(prev => prev.filter(b => b.id !== book.id));
     await unskipBook(uid, book.id);
+  };
+
+  const handleRead = async (uid, book) => {
+    setReadBooks(prev => [...prev.filter(b => b.id !== book.id), book]);
+    await readBook(uid, book);
+  };
+
+  const handleRemoveRead = async (uid, book) => {
+    setReadBooks(prev => prev.filter(b => b.id !== book.id));
+    await unreadBook(uid, book.id);
   };
 
   const handleSubmit = async (formData) => {
@@ -159,10 +171,13 @@ export default function useAppState(navigate) {
     logoutUser,
     savedBooks,
     skippedBooks,
+    readBooks,
     handleSave,
     handleRemoveSaved,
     handleSkip,
     handleRemoveSkipped,
+    handleRead,
+    handleRemoveRead,
     results,
     prompt,
     loading,

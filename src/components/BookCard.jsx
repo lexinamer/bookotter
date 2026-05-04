@@ -2,14 +2,79 @@ export default function BookCard({
   book,
   onSave,
   onSkip,
-  onRemoveSaved,
-  onRemoveSkipped,
+  onRead,
   mode = 'results',
   saved = false,
-  skipped = false,
+  read = false,
 }) {
   const amazonBase = 'https://www.amazon.com/s?k=';
   const query = encodeURIComponent(`${book.title} ${book.author}`);
+
+  let actionContent;
+
+  if (mode === 'results') {
+    if (saved) {
+      actionContent = <span className="book-action-pill active">Saved</span>;
+    } else if (read) {
+      actionContent = <span className="book-action-pill active">Read</span>;
+    } else {
+      actionContent = (
+        <>
+          <button className="book-action-pill" onClick={() => onSave(book)}>
+            Save
+          </button>
+          <button className="book-action-pill" onClick={() => onRead(book)}>
+            Read
+          </button>
+          <button className="book-action-pill" onClick={() => onSkip(book)}>
+            Pass
+          </button>
+        </>
+      );
+    }
+  }
+
+  if (mode === 'saved') {
+    actionContent = (
+      <>
+        <span className="book-action-pill active">Saved</span>
+        <button className="book-action-pill" onClick={() => onRead(book)}>
+          Read
+        </button>
+        <button className="book-action-pill" onClick={() => onSkip(book)}>
+          Pass
+        </button>
+      </>
+    );
+  }
+
+  if (mode === 'read') {
+    actionContent = (
+      <>
+        <button className="book-action-pill" onClick={() => onSave(book)}>
+          Save
+        </button>
+        <span className="book-action-pill active">Read</span>
+        <button className="book-action-pill" onClick={() => onSkip(book)}>
+          Pass
+        </button>
+      </>
+    );
+  }
+
+  if (mode === 'skipped') {
+    actionContent = (
+      <>
+        <button className="book-action-pill" onClick={() => onSave(book)}>
+          Save
+        </button>
+        <button className="book-action-pill" onClick={() => onRead(book)}>
+          Read
+        </button>
+        <span className="book-action-pill active">Passed</span>
+      </>
+    );
+  }
 
   return (
     <article className="book-card">
@@ -26,34 +91,7 @@ export default function BookCard({
         </div>
 
         <div className="book-actions">
-          {mode === 'results' && (
-            <>
-              <button
-                className={`book-action-pill${saved ? ' active' : ''}`}
-                onClick={() => saved ? onRemoveSaved?.(book) : onSave(book)}
-              >
-                {saved ? 'Saved' : 'Save for later'}
-              </button>
-              <button
-                className={`book-action-pill${skipped ? ' active' : ''}`}
-                onClick={() => skipped ? onRemoveSkipped?.(book) : onSkip(book)}
-              >
-                {skipped ? 'Skipped' : 'Not this one'}
-              </button>
-            </>
-          )}
-
-          {mode === 'saved' && (
-            <button className="book-action-pill" onClick={() => onRemoveSaved(book)}>
-              Remove
-            </button>
-          )}
-
-          {mode === 'skipped' && (
-            <button className="book-action-pill" onClick={() => onRemoveSkipped(book)}>
-              Remove
-            </button>
-          )}
+          {actionContent}
         </div>
       </div>
 

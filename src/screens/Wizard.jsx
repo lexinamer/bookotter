@@ -1,14 +1,14 @@
 import { useState } from 'react';
 
 const FOCUS_OPTIONS = [
-  { value: 'vibe', label: 'The same vibe' },
-  { value: 'topic', label: 'The same topic' },
-  { value: 'style', label: 'The same writing style' },
+  { value: 'mood', label: 'Mood' },
+  { value: 'topic', label: 'Topic' },
+  { value: 'style', label: 'Writing Style' },
 ];
 
 export default function Wizard({ onSubmit }) {
   const [books, setBooks] = useState([{ title: '' }, { title: '' }]);
-  const [focus, setFocus] = useState('vibe');
+  const [focus, setFocus] = useState('mood');
 
   const canSubmit = books.some(book => book.title.trim());
 

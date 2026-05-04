@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 
 import Nav from './components/Nav';
@@ -11,7 +10,6 @@ import './styles/global.scss';
 
 export default function App() {
   const navigate = useNavigate();
-  const [shelfOpen, setShelfOpen] = useState(false);
 
   const {
     user,
@@ -19,10 +17,13 @@ export default function App() {
     logoutUser,
     savedBooks,
     skippedBooks,
+    readBooks,
     handleSave,
     handleRemoveSaved,
     handleSkip,
     handleRemoveSkipped,
+    handleRead,
+    handleRemoveRead,
     results,
     prompt,
     loading,
@@ -36,6 +37,8 @@ export default function App() {
 
   const guardedSave = async (book) => {
     if (!user) return confirmGoogleLogin();
+    if (skippedBooks.some(b => b.id === book.id)) await handleRemoveSkipped(user.uid, book);
+    if (readBooks.some(b => b.id === book.id)) await handleRemoveRead(user.uid, book);
     await handleSave(user.uid, book);
   };
 
@@ -46,6 +49,8 @@ export default function App() {
 
   const guardedSkip = async (book) => {
     if (!user) return confirmGoogleLogin();
+    if (savedBooks.some(b => b.id === book.id)) await handleRemoveSaved(user.uid, book);
+    if (readBooks.some(b => b.id === book.id)) await handleRemoveRead(user.uid, book);
     await handleSkip(user.uid, book);
   };
 
@@ -54,22 +59,24 @@ export default function App() {
     await handleRemoveSkipped(user.uid, book);
   };
 
+  const guardedRead = async (book) => {
+    if (!user) return confirmGoogleLogin();
+    if (savedBooks.some(b => b.id === book.id)) await handleRemoveSaved(user.uid, book);
+    if (skippedBooks.some(b => b.id === book.id)) await handleRemoveSkipped(user.uid, book);
+    await handleRead(user.uid, book);
+  };
+
+  const guardedRemoveRead = async (book) => {
+    if (!user) return;
+    await handleRemoveRead(user.uid, book);
+  };
+
   return (
     <div className="app-shell">
       <Nav
         user={user}
         onLogin={confirmGoogleLogin}
         onLogout={logoutUser}
-        onShelfOpen={() => setShelfOpen(true)}
-      />
-
-      <Shelf
-        isOpen={shelfOpen}
-        onClose={() => setShelfOpen(false)}
-        savedBooks={savedBooks}
-        skippedBooks={skippedBooks}
-        onRemoveSaved={guardedRemoveSaved}
-        onRemoveSkipped={guardedRemoveSkipped}
       />
 
       {loading ? (
@@ -94,14 +101,30 @@ export default function App() {
                   onRefresh={handleRefresh}
                   onSave={guardedSave}
                   onSkip={guardedSkip}
-                  onRemoveSaved={guardedRemoveSaved}
-                  onRemoveSkipped={guardedRemoveSkipped}
+                  onRead={guardedRead}
                   savedBooks={savedBooks}
                   skippedBooks={skippedBooks}
+                  readBooks={readBooks}
                   refreshCount={refreshCount}
                   maxRefreshes={maxRefreshes}
                 />
               )
+            }
+          />
+          <Route
+            path="/shelf"
+            element={
+              <Shelf
+                savedBooks={savedBooks}
+                skippedBooks={skippedBooks}
+                readBooks={readBooks}
+                onSave={guardedSave}
+                onSkip={guardedSkip}
+                onRead={guardedRead}
+                onRemoveSaved={guardedRemoveSaved}
+                onRemoveSkipped={guardedRemoveSkipped}
+                onRemoveRead={guardedRemoveRead}
+              />
             }
           />
         </Routes>
