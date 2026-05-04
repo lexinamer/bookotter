@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import AuthModal from './components/AuthModal';
 
 import Nav from './components/Nav';
 import Wizard from './screens/Wizard';
 import Results from './screens/Results';
 import Shelf from './screens/Shelf';
+
 import useAppState from './utils/useAppState';
 import './styles/global.scss';
 
@@ -15,12 +15,6 @@ export default function App() {
 
   const {
     user,
-    authReady,
-    authModalOpen,
-    setAuthModalOpen,
-    pendingAction,
-    setPendingAction,
-    beginAuthFlow,
     confirmGoogleLogin,
     logoutUser,
     savedBooks,
@@ -37,22 +31,8 @@ export default function App() {
     maxRefreshes,
   } = useAppState(navigate);
 
-  useEffect(() => {
-    async function replayPending() {
-      if (!user || !pendingAction) return;
-
-      if (pendingAction.type === 'save') {
-        await handleSave(user.uid, pendingAction.book);
-      }
-
-      setPendingAction(null);
-    }
-
-    replayPending();
-  }, [user]);
-
   const guardedSave = async (book) => {
-    if (!user) return beginAuthFlow('save', book);
+    if (!user) return confirmGoogleLogin();
     await handleSave(user.uid, book);
   };
 
@@ -61,35 +41,13 @@ export default function App() {
     await handleRemoveSaved(user.uid, book);
   };
 
-  if (loading) {
-    return (
-      <>
-        <Nav user={user} onLogin={confirmGoogleLogin} onLogout={logoutUser} onShelfOpen={() => setShelfOpen(true)} />
-        <div className="loading-screen">Finding books with your exact taste...</div>
-      </>
-    );
-  }
-
-  if (error) {
-    return (
-      <>
-        <Nav user={user} onLogin={confirmGoogleLogin} onLogout={logoutUser} onShelfOpen={() => setShelfOpen(true)} />
-        <div className="error-screen">
-          <p>{error}</p>
-          <button onClick={handleReset}>Start Over</button>
-        </div>
-      </>
-    );
-  }
-
   return (
-    <>
-      <Nav user={user} onLogin={confirmGoogleLogin} onLogout={logoutUser} onShelfOpen={() => setShelfOpen(true)} />
-
-      <AuthModal
-        open={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-        onConfirm={confirmGoogleLogin}
+    <div className="app-shell">
+      <Nav
+        user={user}
+        onLogin={confirmGoogleLogin}
+        onLogout={logoutUser}
+        onShelfOpen={() => setShelfOpen(true)}
       />
 
       <Shelf
@@ -99,27 +57,36 @@ export default function App() {
         onRemoveSaved={guardedRemoveSaved}
       />
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            !results ? (
-              <Wizard onSubmit={handleSubmit} onReset={handleReset} />
-            ) : (
-              <Results
-                data={results}
-                prompt={prompt}
-                onReset={handleReset}
-                onRefresh={handleRefresh}
-                onSave={guardedSave}
-                savedBooks={savedBooks}
-                refreshCount={refreshCount}
-                maxRefreshes={maxRefreshes}
-              />
-            )
-          }
-        />
-      </Routes>
-    </>
+      {loading ? (
+        <div className="page-state loading-state">Finding your next favorite book...</div>
+      ) : error ? (
+        <div className="page-state error-state">
+          <p>{error}</p>
+          <button className="secondary-action" onClick={handleReset}>Start Over</button>
+        </div>
+      ) : (
+        <Routes>
+          <Route
+            path="/"
+            element={
+              !results ? (
+                <Wizard onSubmit={handleSubmit} />
+              ) : (
+                <Results
+                  data={results}
+                  prompt={prompt}
+                  onReset={handleReset}
+                  onRefresh={handleRefresh}
+                  onSave={guardedSave}
+                  savedBooks={savedBooks}
+                  refreshCount={refreshCount}
+                  maxRefreshes={maxRefreshes}
+                />
+              )
+            }
+          />
+        </Routes>
+      )}
+    </div>
   );
 }

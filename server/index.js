@@ -157,7 +157,7 @@ app.post('/api/recommend', async (req, res) => {
       messages: [
         {
           role: 'user',
-          content: buildPrompt(books, excludeBooks, focus),
+          content: buildPrompt(books, focus, excludeBooks),
         },
       ],
     });

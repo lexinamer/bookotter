@@ -28,8 +28,6 @@ function saveSession(recommendations, prompt, refreshCount, excludedBooks) {
 export default function useAppState(navigate) {
   const [user, setUser] = useState(null);
   const [authReady, setAuthReady] = useState(false);
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [pendingAction, setPendingAction] = useState(null);
   const [savedBooks, setSavedBooks] = useState([]);
   const [results, setResults] = useState(null);
   const [prompt, setPrompt] = useState(null);
@@ -72,13 +70,7 @@ export default function useAppState(navigate) {
     if (excludedBooks) setExcludedBooks(excludedBooks);
   }, []);
 
-  const beginAuthFlow = (type, book) => {
-    setPendingAction({ type, book });
-    setAuthModalOpen(true);
-  };
-
   const confirmGoogleLogin = async () => {
-    setAuthModalOpen(false);
     await signInWithPopup(auth, provider);
   };
 
@@ -150,11 +142,6 @@ export default function useAppState(navigate) {
   return {
     user,
     authReady,
-    authModalOpen,
-    setAuthModalOpen,
-    pendingAction,
-    setPendingAction,
-    beginAuthFlow,
     confirmGoogleLogin,
     logoutUser,
     savedBooks,

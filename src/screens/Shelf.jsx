@@ -6,17 +6,20 @@ export default function Shelf({ isOpen, onClose, savedBooks, onRemoveSaved }) {
     <>
       {isOpen && <div className="overlay" onClick={onClose} />}
 
-      <div className={`panel ${isOpen ? 'open' : ''}`}>
-        <div className="panel-header">
-          <p className="label">Bookshelf</p>
-          <button className="icon-toggle" onClick={onClose}>
-            <X size={15} strokeWidth={1.8} />
+      <aside className={`shelf-panel ${isOpen ? 'open' : ''}`}>
+        <div className="shelf-header">
+          <p className="form-label">Bookshelf</p>
+
+          <button className="close-button" onClick={onClose}>
+            <X size={16} strokeWidth={1.8} />
           </button>
         </div>
 
-        <div className="panel-body">
+        <div className="shelf-body">
           {savedBooks.length === 0 ? (
-            <p>No saved books yet.</p>
+            <div className="empty-shelf">
+              <p>No saved books yet.</p>
+            </div>
           ) : (
             savedBooks.map((book) => (
               <BookCard
@@ -29,7 +32,7 @@ export default function Shelf({ isOpen, onClose, savedBooks, onRemoveSaved }) {
             ))
           )}
         </div>
-      </div>
+      </aside>
     </>
   );
 }

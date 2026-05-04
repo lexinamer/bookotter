@@ -1,63 +1,74 @@
 import { useState } from 'react';
 
 const FOCUS_OPTIONS = [
-  { value: 'mood', label: 'The same mood' },
+  { value: 'vibe', label: 'The same vibe' },
   { value: 'topic', label: 'The same topic' },
-  { value: 'writing style', label: 'The same writing style' },
+  { value: 'style', label: 'The same writing style' },
 ];
 
 export default function Wizard({ onSubmit }) {
   const [books, setBooks] = useState([{ title: '' }, { title: '' }]);
-  const [focus, setFocus] = useState(null);
+  const [focus, setFocus] = useState('vibe');
 
-  const canSubmit = books.some(b => b.title.trim());
+  const canSubmit = books.some(book => book.title.trim());
 
-  const update = (index, value) => {
-    setBooks(prev => prev.map((b, i) => i === index ? { ...b, title: value } : b));
+  const updateBook = (index, value) => {
+    setBooks(prev =>
+      prev.map((book, i) => (i === index ? { ...book, title: value } : book))
+    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!canSubmit) return;
-    const filled = books.filter(b => b.title.trim());
-    await onSubmit({ books: filled.map(b => b.title.trim()), focus });
+
+    const filledBooks = books
+      .filter(book => book.title.trim())
+      .map(book => book.title.trim());
+
+    await onSubmit({ books: filledBooks, focus });
   };
 
   return (
-    <div id="input-form">
-      <h1>Tell us two books you love and discover <span className="accent">what to read next.</span></h1>
+    <main className="wizard-screen">
+      <section className="wizard-hero">
+        <h1>
+          Tell us two books you love and discover <span className="accent">what to read next.</span>
+        </h1>
+      </section>
 
-      <form onSubmit={handleSubmit}>
-        <div class="book-section">
-        {[
-          { label: 'First book', placeholder: 'Station Eleven' },
-          { label: 'Second book', placeholder: 'The Great Alone' },
-        ].map(({ label, placeholder }, i) => (
-          <div key={i} className="book-entry">
-              <label className="label" htmlFor={`book-${i}`}>{label}</label>
+      <form className="wizard-form" onSubmit={handleSubmit}>
+        <div className="book-row">
+          {[
+            { label: 'First book', placeholder: 'Station Eleven' },
+            { label: 'Second book', placeholder: 'The Great Alone' },
+          ].map(({ label, placeholder }, i) => (
+            <div key={i} className="form-group">
+              <label className="form-label" htmlFor={`book-${i}`}>{label}</label>
               <input
                 id={`book-${i}`}
                 type="text"
-                className="field-input"
+                className="form-input"
                 placeholder={placeholder}
                 value={books[i].title}
-                onChange={e => update(i, e.target.value)}
+                onChange={(e) => updateBook(i, e.target.value)}
                 autoComplete="off"
                 spellCheck="false"
               />
-          </div>
-        ))}
-                  </div>
+            </div>
+          ))}
+        </div>
 
-        <div className="focus-section">
-          <p className="label">What do you want more of?</p>
-          <div className="focus-pills">
-            {FOCUS_OPTIONS.map(opt => (
+        <div className="focus-group">
+          <p className="form-label">What do you want more of?</p>
+
+          <div className="pill-row">
+            {FOCUS_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
                 type="button"
-                className={`focus-pill${focus === opt.value ? ' active' : ''}`}
-                onClick={() => setFocus(focus === opt.value ? null : opt.value)}
+                className={`pill-button${focus === opt.value ? ' active' : ''}`}
+                onClick={() => setFocus(opt.value)}
               >
                 {opt.label}
               </button>
@@ -65,12 +76,12 @@ export default function Wizard({ onSubmit }) {
           </div>
         </div>
 
-        <div className="form-actions">
+        <div className="cta-row">
           <button type="submit" className="primary-action" disabled={!canSubmit}>
             Find my next read
           </button>
         </div>
       </form>
-    </div>
+    </main>
   );
 }

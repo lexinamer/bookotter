@@ -10,16 +10,16 @@ export default function BookCard({
   const amazonBase = 'https://www.amazon.com/s?k=';
   const query = encodeURIComponent(`${book.title} ${book.author}`);
 
-  const handleClick = () => {
+  const handleBookmark = () => {
     if (mode === 'results' && !saved) onSave(book);
     if (mode === 'saved') onRemoveSaved(book);
   };
 
   return (
-    <div className="book-card">
-      <div className="card-top">
-        <div className="card-info">
-          <h3>
+    <article className="book-card">
+      <div className="book-card-header">
+        <div className="book-main">
+          <h3 className="book-title">
             <a
               href={`${amazonBase}${query}`}
               target="_blank"
@@ -29,25 +29,24 @@ export default function BookCard({
             </a>
           </h3>
 
-          <div className="label">{book.author}</div>
-          <div className="caption">
-            {book.year} • {book.pages} pages • {book.genre}
-          </div>
+          <p className="book-author">{book.author}</p>
+          <p className="book-meta">{book.year} • {book.pages} pages • {book.genre}</p>
         </div>
 
         <button
-          className={`icon-toggle ${saved ? 'active' : ''}`}
-          onClick={handleClick}
+          className={`bookmark-button${saved ? ' active' : ''}`}
+          onClick={handleBookmark}
         >
           <Bookmark strokeWidth={1.2} />
         </button>
       </div>
 
-      <p className="callout">{book.what}</p>
-      <div className="why">
-        <span className="caption">Why we picked it</span>
+      <p className="book-summary">{book.what}</p>
+
+      <div className="book-why">
+        <span className="prompt-kicker">Why we picked it</span>
         <p>{book.why}</p>
       </div>
-    </div>
+    </article>
   );
 }
