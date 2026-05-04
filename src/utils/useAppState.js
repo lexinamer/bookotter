@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { auth, provider } from './firebase';
-import { loadShelf, saveBook, unsaveBook } from './shelf';
+import { loadShelf, saveBook, unsaveBook, skipBook, unskipBook } from './shelf';
 
 const STORAGE_KEY = 'nextread_session';
 const MAX_REFRESHES = 2;
@@ -29,6 +29,7 @@ export default function useAppState(navigate) {
   const [user, setUser] = useState(null);
   const [authReady, setAuthReady] = useState(false);
   const [savedBooks, setSavedBooks] = useState([]);
+  const [skippedBooks, setSkippedBooks] = useState([]);
   const [results, setResults] = useState(null);
   const [prompt, setPrompt] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -49,11 +50,13 @@ export default function useAppState(navigate) {
     async function hydrateShelf() {
       if (!user) {
         setSavedBooks([]);
+        setSkippedBooks([]);
         return;
       }
 
       const shelf = await loadShelf(user.uid);
       setSavedBooks(shelf.savedBooks);
+      setSkippedBooks(shelf.skippedBooks);
     }
 
     if (authReady) hydrateShelf();
@@ -84,8 +87,18 @@ export default function useAppState(navigate) {
   };
 
   const handleRemoveSaved = async (uid, book) => {
-    await unsaveBook(uid, book.id);
     setSavedBooks(prev => prev.filter(b => b.id !== book.id));
+    await unsaveBook(uid, book.id);
+  };
+
+  const handleSkip = async (uid, book) => {
+    setSkippedBooks(prev => [...prev.filter(b => b.id !== book.id), book]);
+    await skipBook(uid, book);
+  };
+
+  const handleRemoveSkipped = async (uid, book) => {
+    setSkippedBooks(prev => prev.filter(b => b.id !== book.id));
+    await unskipBook(uid, book.id);
   };
 
   const handleSubmit = async (formData) => {
@@ -145,8 +158,11 @@ export default function useAppState(navigate) {
     confirmGoogleLogin,
     logoutUser,
     savedBooks,
+    skippedBooks,
     handleSave,
     handleRemoveSaved,
+    handleSkip,
+    handleRemoveSkipped,
     results,
     prompt,
     loading,

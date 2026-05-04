@@ -3,13 +3,13 @@
 ========================= */
 
 :root {
-  --bg: #f6f3ef;
-  --card: #fcfaf7;
+  --bg: #f9f7f5;
   --ink: #1f1b18;
-  --ink-mid: #534d47;
-  --ink-light: #8a8179;
-  --border: #ddd5cd;
+  --ink-mid: #443e39;
+  --muted: #8a8179;
+  --line: #ddd5cd;
   --accent: #c95a2c;
+  --action: #0f8277;
   --overlay: rgba(18, 15, 12, 0.18);
 
   --font-serif: 'Lora', serif;
@@ -101,11 +101,16 @@ p {
 
 .form-label,
 .prompt-kicker {
-  color: var(--ink-light);
+  color: var(--muted);
 }
 
 .text-action {
   color: var(--ink-mid);
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--ink);
+  }
 }
 
 /* =========================
@@ -117,15 +122,19 @@ p {
   padding: 16px 26px;
   background: var(--accent);
   color: white;
+  border: 1.5px solid transparent;
   border-radius: 3px;
   font-family: var(--font-serif);
   font-size: 18px;
   font-style: italic;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .primary-action:disabled {
-  background: var(--border);
-  color: var(--ink-light);
+  background: transparent;
+  border-color: var(--line);
+  color: var(--muted);
+  cursor: default;
 }
 
 .primary-action.full {
@@ -139,8 +148,8 @@ p {
 .form-input {
   width: 100%;
   padding: 18px 20px;
-  background: var(--card);
-  border: 1.5px solid var(--border);
+  background: var(--bg);
+  border: 1.5px solid var(--line);
   border-radius: var(--radius);
   font-family: var(--font-serif);
   font-size: 18px;
@@ -148,7 +157,7 @@ p {
 }
 
 .form-input::placeholder {
-  color: var(--ink-light);
+  color: var(--muted);
 }
 
 .form-input:focus {
@@ -167,11 +176,11 @@ p {
 
 .pill-button {
   padding: 10px 18px;
-  border: 1.5px solid var(--border);
+  border: 1.5px solid var(--line);
   border-radius: var(--pill-radius);
   font-family: var(--font-sans);
   font-size: 14px;
-  color: var(--ink-mid);
+  color: var(--muted);
 }
 
 .pill-button.active {

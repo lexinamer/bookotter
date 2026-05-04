@@ -18,8 +18,11 @@ export default function App() {
     confirmGoogleLogin,
     logoutUser,
     savedBooks,
+    skippedBooks,
     handleSave,
     handleRemoveSaved,
+    handleSkip,
+    handleRemoveSkipped,
     results,
     prompt,
     loading,
@@ -41,6 +44,16 @@ export default function App() {
     await handleRemoveSaved(user.uid, book);
   };
 
+  const guardedSkip = async (book) => {
+    if (!user) return confirmGoogleLogin();
+    await handleSkip(user.uid, book);
+  };
+
+  const guardedRemoveSkipped = async (book) => {
+    if (!user) return;
+    await handleRemoveSkipped(user.uid, book);
+  };
+
   return (
     <div className="app-shell">
       <Nav
@@ -54,7 +67,9 @@ export default function App() {
         isOpen={shelfOpen}
         onClose={() => setShelfOpen(false)}
         savedBooks={savedBooks}
+        skippedBooks={skippedBooks}
         onRemoveSaved={guardedRemoveSaved}
+        onRemoveSkipped={guardedRemoveSkipped}
       />
 
       {loading ? (
@@ -78,7 +93,11 @@ export default function App() {
                   onReset={handleReset}
                   onRefresh={handleRefresh}
                   onSave={guardedSave}
+                  onSkip={guardedSkip}
+                  onRemoveSaved={guardedRemoveSaved}
+                  onRemoveSkipped={guardedRemoveSkipped}
                   savedBooks={savedBooks}
+                  skippedBooks={skippedBooks}
                   refreshCount={refreshCount}
                   maxRefreshes={maxRefreshes}
                 />

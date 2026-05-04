@@ -1,12 +1,19 @@
 import BookCard from '../components/BookCard';
 
+const toTitleCase = (str) =>
+  str.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+
 export default function Results({
   data,
   prompt,
   onReset,
   onRefresh,
   onSave,
+  onSkip,
+  onRemoveSaved,
+  onRemoveSkipped,
   savedBooks,
+  skippedBooks,
   refreshCount,
   maxRefreshes,
 }) {
@@ -17,7 +24,12 @@ export default function Results({
     <main className="results-screen">
       <section className="results-header">
         <div className="results-meta">
-          <p className="form-label">{data.length} recommendations</p>
+          {prompt?.books?.length > 0 && (
+            <div className="results-prompt">
+              <span className="prompt-kicker">Based on</span>
+              <span className="prompt-books">{prompt.books.map(toTitleCase).join(', ')}</span>
+            </div>
+          )}
 
           <div className="results-actions">
             {canRefresh && (
@@ -25,19 +37,11 @@ export default function Results({
                 Try Again <span className="remaining">({refreshesLeft} left)</span>
               </button>
             )}
-
             <button className="text-action" onClick={onReset}>
               Start Over
             </button>
           </div>
         </div>
-
-        {prompt?.books?.length > 0 && (
-          <div className="results-prompt">
-            <span className="prompt-kicker">Based on</span>
-            <span className="prompt-books">{prompt.books.join(', ')}</span>
-          </div>
-        )}
       </section>
 
       <section className="results-list">
@@ -46,8 +50,12 @@ export default function Results({
             key={book.id}
             book={book}
             onSave={onSave}
+            onSkip={onSkip}
+            onRemoveSaved={onRemoveSaved}
+            onRemoveSkipped={onRemoveSkipped}
             mode="results"
-            saved={savedBooks.some(saved => saved.id === book.id)}
+            saved={savedBooks.some(b => b.id === book.id)}
+            skipped={skippedBooks.some(b => b.id === book.id)}
           />
         ))}
       </section>

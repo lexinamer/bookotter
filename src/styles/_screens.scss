@@ -52,16 +52,15 @@
 }
 
 .results-header {
-  margin-bottom: 36px;
+  margin-bottom: 12px;
 }
 
 .results-meta {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 24px;
+  align-items: baseline;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
 }
 
 .results-actions {
@@ -75,12 +74,15 @@
 
 .results-prompt {
   display: flex;
-  gap: 14px;
+  gap: 10px;
   align-items: baseline;
 }
 
 .prompt-books {
-  font-size: 15px;
+  font-size: 11px;
+  font-family: var(--font-sans);
+  letter-spacing: 0.05em;
+  color: var(--ink-mid);
 }
 
 /* =========================
@@ -88,20 +90,61 @@
 ========================= */
 
 .book-card {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--line);
   padding: 42px 0;
+
+  &:first-child {
+    border-top: none;
+  }
 }
 
 .book-card-header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 24px;
   margin-bottom: 16px;
+}
+
+.book-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+  padding-top: 8px;
+}
+
+.book-action-pill {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--action);
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &.active {
+    opacity: 0.4;
+  }
 }
 
 .book-title {
   font-size: 30px;
   margin-bottom: 6px;
+
+  a {
+    color: var(--ink);
+    transition: opacity 0.15s ease;
+
+    &:hover {
+      opacity: 0.6;
+    }
+  }
 }
 
 .book-author {
@@ -115,15 +158,8 @@
 
 .book-meta {
   font-size: 13px;
-  color: var(--ink-light);
-}
-
-.bookmark-button {
-  color: var(--ink-light);
-}
-
-.bookmark-button.active {
-  color: var(--accent);
+  color: var(--muted);
+  letter-spacing: 0.08em;
 }
 
 .book-summary {

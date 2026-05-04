@@ -50,7 +50,7 @@
 }
 
 .nav-divider {
-  color: var(--border);
+  color: var(--line);
   font-family: var(--font-sans);
 }
 
@@ -64,8 +64,8 @@
   right: 0;
   width: min(480px, 92vw);
   height: 100vh;
-  background: var(--card);
-  border-left: 1px solid var(--border);
+  background: var(--bg);
+  border-left: 1px solid var(--line);
   transform: translateX(100%);
   transition: transform 0.3s ease;
   z-index: 800;
@@ -82,11 +82,11 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px 24px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--line);
 }
 
 .close-button {
-  color: var(--ink-light);
+  color: var(--muted);
 }
 
 .shelf-body {
@@ -97,4 +97,15 @@
 
 .empty-shelf {
   padding: 32px 0;
+}
+
+.shelf-section {
+  & + & {
+    border-top: 1px solid var(--line);
+    margin-top: 8px;
+  }
+}
+
+.shelf-section-label {
+  padding: 24px 0 4px;
 }

@@ -1,30 +1,22 @@
-import { Bookmark } from 'lucide-react';
-
 export default function BookCard({
   book,
   onSave,
+  onSkip,
   onRemoveSaved,
+  onRemoveSkipped,
   mode = 'results',
   saved = false,
+  skipped = false,
 }) {
   const amazonBase = 'https://www.amazon.com/s?k=';
   const query = encodeURIComponent(`${book.title} ${book.author}`);
-
-  const handleBookmark = () => {
-    if (mode === 'results' && !saved) onSave(book);
-    if (mode === 'saved') onRemoveSaved(book);
-  };
 
   return (
     <article className="book-card">
       <div className="book-card-header">
         <div className="book-main">
           <h3 className="book-title">
-            <a
-              href={`${amazonBase}${query}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={`${amazonBase}${query}`} target="_blank" rel="noopener noreferrer">
               {book.title}
             </a>
           </h3>
@@ -33,12 +25,36 @@ export default function BookCard({
           <p className="book-meta">{book.year} • {book.pages} pages • {book.genre}</p>
         </div>
 
-        <button
-          className={`bookmark-button${saved ? ' active' : ''}`}
-          onClick={handleBookmark}
-        >
-          <Bookmark strokeWidth={1.2} />
-        </button>
+        <div className="book-actions">
+          {mode === 'results' && (
+            <>
+              <button
+                className={`book-action-pill${saved ? ' active' : ''}`}
+                onClick={() => saved ? onRemoveSaved?.(book) : onSave(book)}
+              >
+                {saved ? 'Saved' : 'Save for later'}
+              </button>
+              <button
+                className={`book-action-pill${skipped ? ' active' : ''}`}
+                onClick={() => skipped ? onRemoveSkipped?.(book) : onSkip(book)}
+              >
+                {skipped ? 'Skipped' : 'Not this one'}
+              </button>
+            </>
+          )}
+
+          {mode === 'saved' && (
+            <button className="book-action-pill" onClick={() => onRemoveSaved(book)}>
+              Remove
+            </button>
+          )}
+
+          {mode === 'skipped' && (
+            <button className="book-action-pill" onClick={() => onRemoveSkipped(book)}>
+              Remove
+            </button>
+          )}
+        </div>
       </div>
 
       <p className="book-summary">{book.what}</p>
