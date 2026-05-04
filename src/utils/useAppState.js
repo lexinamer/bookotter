@@ -3,17 +3,14 @@ import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { auth, provider } from './firebase';
 import { loadShelf, saveBook, unsaveBook } from './shelf';
 
-const STORAGE_KEY = 'bookotter_active_session';
-const PROMPT_KEY = 'bookotter_active_prompt';
-const REFRESH_COUNT_KEY = 'bookotter_refresh_count';
-const EXCLUDED_BOOKS_KEY = 'bookotter_excluded_books';
+const STORAGE_KEY = 'nextread_session';
 const MAX_REFRESHES = 2;
 
-async function getRecommendations(books, genre, moods, excludeBooks = []) {
+async function getRecommendations(books, excludeBooks = [], focus = null) {
   const response = await fetch('/api/recommend', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ books, genre, moods, excludeBooks }),
+    body: JSON.stringify({ books, excludeBooks, focus }),
   });
 
   if (!response.ok) {
@@ -22,6 +19,10 @@ async function getRecommendations(books, genre, moods, excludeBooks = []) {
   }
 
   return response.json();
+}
+
+function saveSession(recommendations, prompt, refreshCount, excludedBooks) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ recommendations, prompt, refreshCount, excludedBooks }));
 }
 
 export default function useAppState(navigate) {
@@ -33,6 +34,7 @@ export default function useAppState(navigate) {
   const [results, setResults] = useState(null);
   const [prompt, setPrompt] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [refreshCount, setRefreshCount] = useState(0);
   const [excludedBooks, setExcludedBooks] = useState([]);
 
@@ -61,13 +63,13 @@ export default function useAppState(navigate) {
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) setResults(JSON.parse(stored));
-    const storedPrompt = localStorage.getItem(PROMPT_KEY);
-    if (storedPrompt) setPrompt(JSON.parse(storedPrompt));
-    const storedCount = localStorage.getItem(REFRESH_COUNT_KEY);
-    if (storedCount) setRefreshCount(parseInt(storedCount, 10));
-    const storedExcluded = localStorage.getItem(EXCLUDED_BOOKS_KEY);
-    if (storedExcluded) setExcludedBooks(JSON.parse(storedExcluded));
+    if (!stored) return;
+
+    const { recommendations, prompt, refreshCount, excludedBooks } = JSON.parse(stored);
+    if (recommendations) setResults(recommendations);
+    if (prompt) setPrompt(prompt);
+    if (refreshCount != null) setRefreshCount(refreshCount);
+    if (excludedBooks) setExcludedBooks(excludedBooks);
   }, []);
 
   const beginAuthFlow = (type, book) => {
@@ -85,8 +87,8 @@ export default function useAppState(navigate) {
   };
 
   const handleSave = async (uid, book) => {
-    await saveBook(uid, book);
     setSavedBooks(prev => [...prev.filter(b => b.id !== book.id), book]);
+    await saveBook(uid, book);
   };
 
   const handleRemoveSaved = async (uid, book) => {
@@ -96,21 +98,19 @@ export default function useAppState(navigate) {
 
   const handleSubmit = async (formData) => {
     setLoading(true);
+    setError(null);
 
     try {
-      const data = await getRecommendations(formData.books, formData.genre, formData.mood);
-      const promptData = { books: formData.books, genre: formData.genre, mood: formData.mood };
+      const data = await getRecommendations(formData.books, [], formData.focus);
+      const promptData = { books: formData.books, focus: formData.focus };
       setResults(data.recommendations);
       setPrompt(promptData);
       setRefreshCount(0);
       setExcludedBooks([]);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data.recommendations));
-      localStorage.setItem(PROMPT_KEY, JSON.stringify(promptData));
-      localStorage.setItem(REFRESH_COUNT_KEY, '0');
-      localStorage.setItem(EXCLUDED_BOOKS_KEY, JSON.stringify([]));
+      saveSession(data.recommendations, promptData, 0, []);
       navigate('/');
-    } catch (error) {
-      setResults({ error: error.message });
+    } catch (err) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -119,20 +119,19 @@ export default function useAppState(navigate) {
   const handleRefresh = async () => {
     if (!prompt || refreshCount >= MAX_REFRESHES) return;
     setLoading(true);
+    setError(null);
 
     try {
       const currentTitles = (results || []).map((b) => `${b.title} by ${b.author}`);
       const nextExcluded = [...excludedBooks, ...currentTitles];
-      const data = await getRecommendations(prompt.books, prompt.genre, prompt.mood, nextExcluded);
+      const data = await getRecommendations(prompt.books, nextExcluded, prompt.focus);
       const nextCount = refreshCount + 1;
       setResults(data.recommendations);
       setRefreshCount(nextCount);
       setExcludedBooks(nextExcluded);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data.recommendations));
-      localStorage.setItem(REFRESH_COUNT_KEY, String(nextCount));
-      localStorage.setItem(EXCLUDED_BOOKS_KEY, JSON.stringify(nextExcluded));
-    } catch (error) {
-      setResults({ error: error.message });
+      saveSession(data.recommendations, prompt, nextCount, nextExcluded);
+    } catch (err) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -143,10 +142,8 @@ export default function useAppState(navigate) {
     setPrompt(null);
     setRefreshCount(0);
     setExcludedBooks([]);
+    setError(null);
     localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem(PROMPT_KEY);
-    localStorage.removeItem(REFRESH_COUNT_KEY);
-    localStorage.removeItem(EXCLUDED_BOOKS_KEY);
     navigate('/');
   };
 
@@ -166,7 +163,7 @@ export default function useAppState(navigate) {
     results,
     prompt,
     loading,
-    setResults,
+    error,
     handleSubmit,
     handleRefresh,
     handleReset,

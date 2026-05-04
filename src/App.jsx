@@ -29,6 +29,7 @@ export default function App() {
     results,
     prompt,
     loading,
+    error,
     handleSubmit,
     handleRefresh,
     handleReset,
@@ -65,6 +66,18 @@ export default function App() {
       <>
         <Nav user={user} onLogin={confirmGoogleLogin} onLogout={logoutUser} onShelfOpen={() => setShelfOpen(true)} />
         <div className="loading-screen">Finding books with your exact taste...</div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Nav user={user} onLogin={confirmGoogleLogin} onLogout={logoutUser} onShelfOpen={() => setShelfOpen(true)} />
+        <div className="error-screen">
+          <p>{error}</p>
+          <button onClick={handleReset}>Start Over</button>
+        </div>
       </>
     );
   }

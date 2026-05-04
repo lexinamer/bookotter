@@ -25,7 +25,7 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 // ─── Validation ──────────────────────────────────────────────────────────────
 
-function validateRequestBody({ books, length }) {
+function validateRequestBody({ books }) {
   if (!Array.isArray(books) || books.length === 0) {
     return 'At least one book is required';
   }
@@ -38,54 +38,56 @@ function validateRequestBody({ books, length }) {
     return 'Each book must be a string under 200 characters';
   }
 
-  if (length != null && typeof length !== 'string') {
-    return 'Length must be a string';
-  }
-
   return null;
 }
 
 // ─── Prompt Builder ──────────────────────────────────────────────────────────
 
-function buildPrompt(books, genre, length, excludeBooks = []) {
-  const bookList = books.map((b) => `- ${b}`).join('\n');
+const FOCUS_INSTRUCTIONS = {
+  vibe: 'The reader wants books with the same immersive vibe, emotional payoff, pacing, and overall feeling. Prioritize reader experience over exact plot similarity.',
+  topic: 'The reader wants books with the same topic, premise, setting, historical lane, or central story dynamic. Lean confidently into subject similarity.',
+  style: 'The reader wants books with the same writing style, readability, storytelling rhythm, and prose accessibility. Prioritize a similar reading experience even if the topic changes.',
+};
 
-  const genreNote = genre
-    ? `The reader would like ${genre}. Keep recommendations in this lane, but don't let genre override emotional fit.`
-    : '';
-
-  const lengthNote = length
-    ? `The reader prefers ${length} books. Let this gently guide pacing and overall reading commitment.`
-    : '';
+function buildPrompt(books, mode = 'vibe', excludeBooks = []) {
+  const bookList = books.map(b => `- ${b}`).join('\n');
 
   const excludeNote = excludeBooks.length > 0
     ? `\nDo NOT recommend any of these books (already suggested):\n${excludeBooks.map((b) => `- ${b}`).join('\n')}`
     : '';
 
-  return `You are a literary book recommender who thinks like a trusted independent bookseller — someone who matches readers on emotional register, psychological texture, and prose sensibility, not just genre or setting.
+  const modeInstruction = {
+    vibe: `Prioritize matching the same emotional vibe, immersive feeling, pacing, atmosphere, and reader satisfaction over exact plot similarities.`,
+    
+    topic: `Prioritize matching the same subject matter, historical lane, premise, relationship dynamics, or central story situation while keeping the books highly readable and compelling.`,
+    
+    style: `Prioritize matching the same writing style, prose accessibility, storytelling rhythm, character depth, and overall reading experience even if the subject matter differs.`
+  };
+
+  return `You are a high-conviction next-read recommender. Your job is to suggest books the reader will be excited to start immediately — highly readable, emotionally immersive, satisfying, and strongly aligned with what they loved.
 
 A reader loved these books:
 ${bookList}
-
-${genreNote}
-${lengthNote}
 ${excludeNote}
 
-Before choosing your recommendations, silently ask yourself: what emotional need or psychological experience unites the books this reader loved? What kind of reader are they? Use that as your true north — not setting, not subject matter, not era.
+${modeInstruction[mode]}
 
-Recommend exactly ${RECOMMENDATION_COUNT} books that this reader would be genuinely excited to pick up next.
+Silently identify what specific reading itch these books satisfy, then recommend exactly ${RECOMMENDATION_COUNT} books that scratch that same itch.
 
 Rules for choosing:
-- Prioritize writing sensibility, emotional depth, and psychological texture over surface similarities in setting, plot, or subject matter
-- No more than one recommendation should share an obvious surface trait (same country, same era, same subject) with the input books
-- At least one recommendation should feel unexpected but emotionally inevitable — the book they didn't know they needed
-- Avoid the most commonly recommended books for these titles; think one layer deeper than the first title that comes to mind
-- Never recommend books the reader already listed
-- Only recommend books that actually exist
+- Prioritize books that are absorbing, easy to get into, emotionally rewarding, and hard to put down
+- Strongly prefer books published in 1990 or later
+- Choose books that are well-loved, dependable, and likely to keep reading momentum high
+- Avoid obscure, dusty, overly academic, or difficult literary choices
+- At least one recommendation should feel like an immediate obvious yes
+- The three recommendations should provide slightly different options, not three versions of the exact same book
+- Never recommend a book the reader already listed
+- Do NOT recommend any book already suggested above
+- Only recommend books you are certain exist
 
-For the "what" field: capture the soul of this book in a couple of sentences. Lead with mood, texture, or an image — but also briefly explain a bit about the plot. Avoid starting with a noun-verb construction. No adjective stacking. Under 30 words.
+For the "what" field: one vivid sentence that clearly explains what the book is about and why it feels compelling. Under 35 words.
 
-For the "why" field: name a specific craft element — prose style, pacing, structural choice, emotional register — that connects this book to the ones they loved. Name the actual input titles by name. No generic praise. Under 30 words.
+For the "why" field: explain specifically why this scratches the same itch as the input books. Mention the actual input titles. Under 22 words.
 
 Respond ONLY with raw JSON:
 {
@@ -97,8 +99,8 @@ Respond ONLY with raw JSON:
       "year": 2020,
       "pages": 320,
       "genre": "One of: Fiction, Historical Fiction, Speculative, Dystopian, Fantasy, Romance, Horror, Mystery, Thriller, Memoir, Nonfiction",
-      "what": "One sentence capturing the soul of this book. Under 15 words.",
-      "why": "One sentence connecting to their specific loved books by name. Under 20 words."
+      "what": "What it's about and why it's compelling.",
+      "why": "Why it scratches the same itch."
     }
   ]
 }`;
@@ -136,15 +138,15 @@ function parseRecommendationResponse(text) {
 // ─── Route ───────────────────────────────────────────────────────────────────
 
 app.post('/api/recommend', async (req, res) => {
-  const { books, genre, length, excludeBooks = [] } = req.body;
+  const { books, excludeBooks = [], focus = null } = req.body;
 
-  const validationError = validateRequestBody({ books, length });
+  const validationError = validateRequestBody({ books });
   if (validationError) {
     return res.status(400).json({ error: validationError });
   }
 
   console.log(
-    `[recommend] request — ${books.length} book(s), genre: ${genre || 'any'}, length: ${length || 'any'}, excluding: ${excludeBooks.length}`
+    `[recommend] request — ${books.length} book(s), focus: ${focus || 'none'}, excluding: ${excludeBooks.length}`
   );
 
   try {
@@ -155,7 +157,7 @@ app.post('/api/recommend', async (req, res) => {
       messages: [
         {
           role: 'user',
-          content: buildPrompt(books, genre, length, excludeBooks),
+          content: buildPrompt(books, excludeBooks, focus),
         },
       ],
     });

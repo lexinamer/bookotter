@@ -16,9 +16,9 @@ export default function BookCard({
   };
 
   return (
-    <div className="result-card">
+    <div className="book-card">
       <div className="card-top">
-        <div className="card-headings">
+        <div className="card-info">
           <h3>
             <a
               href={`${amazonBase}${query}`}
@@ -31,7 +31,7 @@ export default function BookCard({
 
           <div className="label">{book.author}</div>
           <div className="caption">
-            {book.year} • {book.pages} pages{book.genre ? ` • ${book.genre}` : ''}
+            {book.year} • {book.pages} pages • {book.genre}
           </div>
         </div>
 
@@ -39,12 +39,12 @@ export default function BookCard({
           className={`icon-toggle ${saved ? 'active' : ''}`}
           onClick={handleClick}
         >
-          <Bookmark size={14} strokeWidth={1.8} />
+          <Bookmark strokeWidth={1.2} />
         </button>
       </div>
 
       <p className="callout">{book.what}</p>
-      <div className="why-block">
+      <div className="why">
         <span className="caption">Why we picked it</span>
         <p>{book.why}</p>
       </div>

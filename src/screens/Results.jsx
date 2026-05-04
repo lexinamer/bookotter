@@ -10,27 +10,19 @@ export default function Results({
   refreshCount,
   maxRefreshes,
 }) {
-  if (data.error) {
-    return (
-      <div id="results">
-        <p>{data.error}</p>
-      </div>
-    );
-  }
-
   const refreshesLeft = maxRefreshes - refreshCount;
   const canRefresh = refreshesLeft > 0;
 
   return (
     <div id="results">
-      <div className="results-topbar">
+      <div className="topbar">
         <p className="label">{data.length} recommendations</p>
 
-        <div className="results-topbar-actions">
+        <div className="topbar-actions">
           {canRefresh && (
             <button className="action" onClick={onRefresh}>
               Try Again
-              <span className="refresh-remaining">({refreshesLeft} left)</span>
+              <span className="remaining">({refreshesLeft} left)</span>
             </button>
           )}
           <button className="action" onClick={onReset}>
@@ -39,24 +31,10 @@ export default function Results({
         </div>
       </div>
 
-      {prompt && (
-        <div className="results-prompt">
-          {prompt.books?.length > 0 && (
-            <div className="results-prompt-row">
-              <span className="results-prompt-label">Books</span>
-              <span className="results-prompt-values">{prompt.books.join(', ')}</span>
-            </div>
-          )}
-          {prompt.genre && (
-            <div className="results-prompt-row">
-              <span className="results-prompt-label">Genre</span>
-              <span className="results-prompt-values">{prompt.genre}</span>
-            </div>
-          )}
-          <div className="results-prompt-row">
-            <span className="results-prompt-label">Length</span>
-            <span className="results-prompt-values">{prompt.length || 'Any'}</span>
-          </div>
+      {prompt?.books?.length > 0 && (
+        <div className="prompt">
+          <span className="prompt-label">Based on</span>
+          <span className="prompt-values">{prompt.books.join(', ')}</span>
         </div>
       )}
 

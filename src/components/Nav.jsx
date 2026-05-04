@@ -29,7 +29,7 @@ export default function Nav({ user, onLogin, onLogout, onShelfOpen }) {
   return (
     <nav id="site-nav">
       <Link to="/" className="nav-logo">
-        <img src="/logo.svg" alt="BookOtter" />
+        <img src="/logo.svg" alt="NextRead" />
       </Link>
 
       <div className="nav-menu">
@@ -39,18 +39,14 @@ export default function Nav({ user, onLogin, onLogout, onShelfOpen }) {
 
         <div className="nav-account" ref={popRef}>
           <button
-            className="nav-avatar"
+            className={`nav-avatar${initials ? ' has-initials' : ''}`}
             onClick={() => setOpen(prev => !prev)}
           >
-            {initials ? (
-              <span className="caption">{initials}</span>
-            ) : (
-              <CircleUserRound size={15} strokeWidth={1.8} />
-            )}
+            {initials ? initials : <CircleUserRound size={16} strokeWidth={1.5} />}
           </button>
 
           {open && (
-            <div className="account-popover">
+            <div className="popover">
               {user ? (
                 <>
                   <p className="caption">{user.displayName}</p>
