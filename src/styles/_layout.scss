@@ -1,0 +1,100 @@
+/* =========================
+   SHELL
+========================= */
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.wizard-screen,
+.results-screen,
+.page-state {
+  width: min(var(--page-width), 92vw);
+  margin: 0 auto;
+}
+
+/* =========================
+   NAV
+========================= */
+
+.site-nav {
+  width: min(var(--nav-width), 92vw);
+  height: 100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo img {
+  height: 48px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.nav-link {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--ink);
+  }
+}
+
+.nav-divider {
+  color: var(--border);
+  font-family: var(--font-sans);
+}
+
+/* =========================
+   SHELF DRAWER
+========================= */
+
+.shelf-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(480px, 92vw);
+  height: 100vh;
+  background: var(--card);
+  border-left: 1px solid var(--border);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 800;
+  display: flex;
+  flex-direction: column;
+}
+
+.shelf-panel.open {
+  transform: translateX(0);
+}
+
+.shelf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.close-button {
+  color: var(--ink-light);
+}
+
+.shelf-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 24px 32px;
+}
+
+.empty-shelf {
+  padding: 32px 0;
+}

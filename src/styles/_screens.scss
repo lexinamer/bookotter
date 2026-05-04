@@ -1,0 +1,173 @@
+/* =========================
+   WIZARD
+========================= */
+
+.wizard-screen {
+  min-height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transform: translateY(-5vh);
+}
+
+.wizard-hero {
+  margin-bottom: 34px;
+}
+
+.wizard-form {
+  width: 100%;
+}
+
+.book-row {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.form-group {
+  flex: 1;
+}
+
+.form-group .form-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.focus-group {
+  margin-bottom: 34px;
+}
+
+.focus-group .form-label {
+  display: block;
+  margin-bottom: 12px;
+}
+
+/* =========================
+   RESULTS
+========================= */
+
+.results-screen {
+  padding-bottom: 80px;
+}
+
+.results-header {
+  margin-bottom: 36px;
+}
+
+.results-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.results-actions {
+  display: flex;
+  gap: 18px;
+}
+
+.remaining {
+  opacity: 0.5;
+}
+
+.results-prompt {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+}
+
+.prompt-books {
+  font-size: 15px;
+}
+
+/* =========================
+   BOOK CARD
+========================= */
+
+.book-card {
+  border-top: 1px solid var(--border);
+  padding: 42px 0;
+}
+
+.book-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.book-title {
+  font-size: 30px;
+  margin-bottom: 6px;
+}
+
+.book-author {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  margin-bottom: 4px;
+}
+
+.book-meta {
+  font-size: 13px;
+  color: var(--ink-light);
+}
+
+.bookmark-button {
+  color: var(--ink-light);
+}
+
+.bookmark-button.active {
+  color: var(--accent);
+}
+
+.book-summary {
+  font-size: 18px;
+  line-height: 1.6;
+  font-style: italic;
+  color: var(--ink);
+}
+
+.book-why {
+  margin-top: 20px;
+}
+
+.book-why .prompt-kicker {
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* =========================
+   PAGE STATES
+========================= */
+
+.page-state {
+  min-height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  transform: translateY(-6vh);
+}
+
+.loading-state {
+  font-size: 30px;
+  font-style: italic;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+  .book-row {
+    flex-direction: column;
+    gap: 18px;
+  }
+}
