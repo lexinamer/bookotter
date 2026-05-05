@@ -3,10 +3,10 @@
 ========================= */
 
 .book-card {
-  padding: var(--space-8) 0;
+  padding: var(--space-6) 0;
 
   &.shelf {
-    padding: var(--space-6) 0;
+    padding: var(--space-5) 0;
   }
 }
 
@@ -26,7 +26,7 @@
 }
 
 .bookcard-title {
-  font-size: 23px;
+  font-size: var(--text-xl);
 }
 
 .bookcard-title a {
@@ -40,15 +40,15 @@
 .bookcard-author {
   margin-top: var(--space-2);
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: var(--text-sm);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-mid);
 }
 
 .bookcard-meta {
-  margin-top: 6px;
-  font-size: 12px;
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
   color: var(--muted);
 }
 
@@ -64,7 +64,7 @@
 
 .bookcard-action {
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: var(--text-xs);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
@@ -81,11 +81,11 @@
 .bookcard-select {
   width: fit-content;
   min-height: 34px;
-  padding: 0 10px;
+  padding: 0 var(--space-2);
   border: 1px solid rgba(221, 213, 205, 0.8);
   border-radius: 2px;
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: var(--text-xs);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-mid);
@@ -96,7 +96,7 @@
 ========================= */
 
 .bookcard-summary {
-  font-size: 17px;
+  font-size: var(--text-md);
   line-height: 1.7;
   font-style: italic;
   color: var(--ink);
@@ -107,14 +107,14 @@
 ========================= */
 
 .bookcard-why {
-  margin-top: var(--space-5);
+  margin-top: var(--space-4);
 }
 
 .bookcard-label {
   display: block;
   margin-bottom: var(--space-2);
   font-family: var(--font-sans);
-  font-size: 10px;
+  font-size: var(--text-xs);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
@@ -129,7 +129,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-    gap: var(--space-6);
+    gap: var(--space-5);
   }
 
   .bookcard-heading {
@@ -139,16 +139,16 @@
   .bookcard-actions,
   .bookcard-select {
     flex-shrink: 0;
-    padding-top: 6px;
+    padding-top: var(--space-1);
   }
 
   .bookcard-title {
-    font-size: 28px;
+    font-size: var(--text-hero);
   }
 
   .bookcard-summary {
     max-width: 760px;
-    font-size: 18px;
+    font-size: var(--text-lg);
   }
 
   .bookcard-why {
