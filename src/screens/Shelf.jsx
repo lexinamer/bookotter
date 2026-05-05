@@ -32,8 +32,8 @@ export default function Shelf({
   const books = shelfMap[tab];
 
   return (
-    <main className="shelf-page">
-      <div className="shelf-tabs">
+    <main className="shelf-screen">
+      <section className="shelf-tabs">
         {TABS.map(({ key, label }) => (
           <button
             key={key}
@@ -41,14 +41,15 @@ export default function Shelf({
             onClick={() => setTab(key)}
           >
             {label}
+
             {shelfMap[key].length > 0 && (
-              <span className="shelf-tab-count">{shelfMap[key].length}</span>
+              <span className="shelf-count">{shelfMap[key].length}</span>
             )}
           </button>
         ))}
-      </div>
+      </section>
 
-      <div className="shelf-list">
+      <section className="shelf-list">
         {books.length === 0 ? (
           <p className="shelf-empty">{emptyMessages[tab]}</p>
         ) : (
@@ -64,7 +65,7 @@ export default function Shelf({
             />
           ))
         )}
-      </div>
+      </section>
     </main>
   );
 }

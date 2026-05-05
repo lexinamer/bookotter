@@ -1,0 +1,54 @@
+/* =========================
+   NAV
+========================= */
+
+.site-nav {
+  width: min(var(--nav-width), 92vw);
+  height: 100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  img {
+    height: 36px;
+  }
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.nav-link {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--action);
+  }
+
+  &.active {
+    color: var(--ink);
+    font-weight: 600;
+  }
+}
+
+/* =========================
+   DESKTOP
+========================= */
+
+@media (min-width: 769px) {
+  .nav-logo {
+    img {
+      height: 48px;
+    }
+  }
+}

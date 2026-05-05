@@ -9,9 +9,11 @@ export default function Nav({ user, onLogin, onLogout }) {
         <img src="/logo.svg" alt="NextRead" />
       </Link>
 
-      <div className="nav-right">
-        <Link to="/shelf" className={`nav-link${pathname === '/shelf' ? ' active' : ''}`}>My Bookshelf</Link>
-        <span className="nav-divider">|</span>
+      <div className="nav-actions">
+        <Link to="/shelf" className={`nav-link${pathname === '/shelf' ? ' active' : ''}`}>
+          My Bookshelf
+        </Link>
+
         <button className="nav-link" onClick={user ? onLogout : onLogin}>
           {user ? 'Sign Out' : 'Sign In'}
         </button>

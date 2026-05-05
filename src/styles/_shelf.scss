@@ -1,0 +1,67 @@
+/* =========================
+   TABS
+========================= */
+
+.shelf-screen {
+  padding-top: 16px;
+  padding-bottom: 60px;
+}
+
+.shelf-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.shelf-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--action);
+  }
+
+  &.active {
+    color: var(--ink);
+    font-weight: 600;
+  }
+}
+
+.shelf-count {
+  color: var(--muted);
+}
+
+/* =========================
+   LIST
+========================= */
+
+.shelf-list {
+  margin-top: 24px;
+}
+
+.shelf-empty {
+  margin-top: 40px;
+}
+
+/* =========================
+   DESKTOP
+========================= */
+
+@media (min-width: 769px) {
+  .shelf-screen {
+    padding-top: 24px;
+  }
+
+  .shelf-list {
+    margin-top: 34px;
+  }
+}

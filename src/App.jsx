@@ -37,38 +37,44 @@ export default function App() {
 
   const guardedSave = async (book) => {
     if (!user) return confirmGoogleLogin();
-    if (skippedBooks.some(b => b.id === book.id)) await handleRemoveSkipped(user.uid, book);
-    if (readBooks.some(b => b.id === book.id)) await handleRemoveRead(user.uid, book);
-    await handleSave(user.uid, book);
-  };
 
-  const guardedRemoveSaved = async (book) => {
-    if (!user) return;
-    await handleRemoveSaved(user.uid, book);
+    if (skippedBooks.some((item) => item.id === book.id)) {
+      await handleRemoveSkipped(user.uid, book);
+    }
+
+    if (readBooks.some((item) => item.id === book.id)) {
+      await handleRemoveRead(user.uid, book);
+    }
+
+    await handleSave(user.uid, book);
   };
 
   const guardedSkip = async (book) => {
     if (!user) return confirmGoogleLogin();
-    if (savedBooks.some(b => b.id === book.id)) await handleRemoveSaved(user.uid, book);
-    if (readBooks.some(b => b.id === book.id)) await handleRemoveRead(user.uid, book);
-    await handleSkip(user.uid, book);
-  };
 
-  const guardedRemoveSkipped = async (book) => {
-    if (!user) return;
-    await handleRemoveSkipped(user.uid, book);
+    if (savedBooks.some((item) => item.id === book.id)) {
+      await handleRemoveSaved(user.uid, book);
+    }
+
+    if (readBooks.some((item) => item.id === book.id)) {
+      await handleRemoveRead(user.uid, book);
+    }
+
+    await handleSkip(user.uid, book);
   };
 
   const guardedRead = async (book) => {
     if (!user) return confirmGoogleLogin();
-    if (savedBooks.some(b => b.id === book.id)) await handleRemoveSaved(user.uid, book);
-    if (skippedBooks.some(b => b.id === book.id)) await handleRemoveSkipped(user.uid, book);
-    await handleRead(user.uid, book);
-  };
 
-  const guardedRemoveRead = async (book) => {
-    if (!user) return;
-    await handleRemoveRead(user.uid, book);
+    if (savedBooks.some((item) => item.id === book.id)) {
+      await handleRemoveSaved(user.uid, book);
+    }
+
+    if (skippedBooks.some((item) => item.id === book.id)) {
+      await handleRemoveSkipped(user.uid, book);
+    }
+
+    await handleRead(user.uid, book);
   };
 
   return (
@@ -80,11 +86,15 @@ export default function App() {
       />
 
       {loading ? (
-        <div className="page-state loading-state">Finding your next favorite book...</div>
+        <div className="page-state loading-state">
+          Finding your next favorite book...
+        </div>
       ) : error ? (
         <div className="page-state error-state">
           <p>{error}</p>
-          <button className="secondary-action" onClick={handleReset}>Start Over</button>
+          <button className="results-action" onClick={handleReset}>
+            Start Over
+          </button>
         </div>
       ) : (
         <Routes>
@@ -111,6 +121,7 @@ export default function App() {
               )
             }
           />
+
           <Route
             path="/shelf"
             element={
@@ -121,9 +132,6 @@ export default function App() {
                 onSave={guardedSave}
                 onSkip={guardedSkip}
                 onRead={guardedRead}
-                onRemoveSaved={guardedRemoveSaved}
-                onRemoveSkipped={guardedRemoveSkipped}
-                onRemoveRead={guardedRemoveRead}
               />
             }
           />

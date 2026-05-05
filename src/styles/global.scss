@@ -1,3 +1,7 @@
-@use 'tokens';
-@use 'base';
-@use 'screens';
+@use './base';
+@use './type';
+@use './nav';
+@use './bookcard';
+@use './wizard';
+@use './results';
+@use './shelf';

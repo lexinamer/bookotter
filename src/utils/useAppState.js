@@ -1,12 +1,30 @@
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { auth, provider } from './firebase';
-import { loadShelf, saveBook, unsaveBook, skipBook, unskipBook, readBook, unreadBook } from './shelf';
+import {
+  loadShelf,
+  saveBook,
+  unsaveBook,
+  skipBook,
+  unskipBook,
+  readBook,
+  unreadBook,
+} from './shelf';
 
 const STORAGE_KEY = 'nextread_session';
 const MAX_REFRESHES = 2;
 
-async function getRecommendations(books, excludeBooks = [], focus = null, readBooks = [], skippedBooks = []) {
+/* =========================
+   API
+========================= */
+
+async function getRecommendations(
+  books,
+  excludeBooks = [],
+  focus = null,
+  readBooks = [],
+  skippedBooks = []
+) {
   const response = await fetch('/api/recommend', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -22,21 +40,36 @@ async function getRecommendations(books, excludeBooks = [], focus = null, readBo
 }
 
 function saveSession(recommendations, prompt, refreshCount, excludedBooks) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ recommendations, prompt, refreshCount, excludedBooks }));
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({ recommendations, prompt, refreshCount, excludedBooks })
+  );
 }
+
+/* =========================
+   HOOK
+========================= */
 
 export default function useAppState(navigate) {
   const [user, setUser] = useState(null);
   const [authReady, setAuthReady] = useState(false);
+
   const [savedBooks, setSavedBooks] = useState([]);
   const [skippedBooks, setSkippedBooks] = useState([]);
   const [readBooks, setReadBooks] = useState([]);
+
   const [results, setResults] = useState(null);
   const [prompt, setPrompt] = useState(null);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
   const [refreshCount, setRefreshCount] = useState(0);
   const [excludedBooks, setExcludedBooks] = useState([]);
+
+  /* =========================
+     AUTH
+  ========================= */
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -47,11 +80,16 @@ export default function useAppState(navigate) {
     return () => unsubscribe();
   }, []);
 
+  /* =========================
+     SHELF HYDRATION
+  ========================= */
+
   useEffect(() => {
     async function hydrateShelf() {
       if (!user) {
         setSavedBooks([]);
         setSkippedBooks([]);
+        setReadBooks([]);
         return;
       }
 
@@ -61,69 +99,100 @@ export default function useAppState(navigate) {
       setReadBooks(shelf.readBooks);
     }
 
-    if (authReady) hydrateShelf();
+    if (authReady) {
+      hydrateShelf();
+    }
   }, [user, authReady]);
+
+  /* =========================
+     SESSION HYDRATION
+  ========================= */
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return;
 
-    const { recommendations, prompt, refreshCount, excludedBooks } = JSON.parse(stored);
-    if (recommendations) setResults(recommendations);
-    if (prompt) setPrompt(prompt);
-    if (refreshCount != null) setRefreshCount(refreshCount);
-    if (excludedBooks) setExcludedBooks(excludedBooks);
+    const session = JSON.parse(stored);
+
+    if (session.recommendations) setResults(session.recommendations);
+    if (session.prompt) setPrompt(session.prompt);
+    if (session.refreshCount != null) setRefreshCount(session.refreshCount);
+    if (session.excludedBooks) setExcludedBooks(session.excludedBooks);
   }, []);
 
-  const confirmGoogleLogin = async () => {
+  /* =========================
+     AUTH ACTIONS
+  ========================= */
+
+  async function confirmGoogleLogin() {
     await signInWithPopup(auth, provider);
-  };
+  }
 
-  const logoutUser = async () => {
+  async function logoutUser() {
     await signOut(auth);
-  };
+  }
 
-  const handleSave = async (uid, book) => {
-    setSavedBooks(prev => [...prev.filter(b => b.id !== book.id), book]);
+  /* =========================
+     SHELF ACTIONS
+  ========================= */
+
+  async function handleSave(uid, book) {
+    setSavedBooks((prev) => [...prev.filter((item) => item.id !== book.id), book]);
     await saveBook(uid, book);
-  };
+  }
 
-  const handleRemoveSaved = async (uid, book) => {
-    setSavedBooks(prev => prev.filter(b => b.id !== book.id));
+  async function handleRemoveSaved(uid, book) {
+    setSavedBooks((prev) => prev.filter((item) => item.id !== book.id));
     await unsaveBook(uid, book.id);
-  };
+  }
 
-  const handleSkip = async (uid, book) => {
-    setSkippedBooks(prev => [...prev.filter(b => b.id !== book.id), book]);
+  async function handleSkip(uid, book) {
+    setSkippedBooks((prev) => [...prev.filter((item) => item.id !== book.id), book]);
     await skipBook(uid, book);
-  };
+  }
 
-  const handleRemoveSkipped = async (uid, book) => {
-    setSkippedBooks(prev => prev.filter(b => b.id !== book.id));
+  async function handleRemoveSkipped(uid, book) {
+    setSkippedBooks((prev) => prev.filter((item) => item.id !== book.id));
     await unskipBook(uid, book.id);
-  };
+  }
 
-  const handleRead = async (uid, book) => {
-    setReadBooks(prev => [...prev.filter(b => b.id !== book.id), book]);
+  async function handleRead(uid, book) {
+    setReadBooks((prev) => [...prev.filter((item) => item.id !== book.id), book]);
     await readBook(uid, book);
-  };
+  }
 
-  const handleRemoveRead = async (uid, book) => {
-    setReadBooks(prev => prev.filter(b => b.id !== book.id));
+  async function handleRemoveRead(uid, book) {
+    setReadBooks((prev) => prev.filter((item) => item.id !== book.id));
     await unreadBook(uid, book.id);
-  };
+  }
 
-  const handleSubmit = async (formData) => {
+  /* =========================
+     RECOMMENDATIONS
+  ========================= */
+
+  async function handleSubmit(formData) {
     setLoading(true);
     setError(null);
 
     try {
-      const data = await getRecommendations(formData.books, [], formData.focus, readBooks, skippedBooks);
-      const promptData = { books: formData.books, focus: formData.focus };
+      const data = await getRecommendations(
+        formData.books,
+        [],
+        formData.focus,
+        readBooks,
+        skippedBooks
+      );
+
+      const promptData = {
+        books: formData.books,
+        focus: formData.focus,
+      };
+
       setResults(data.recommendations);
       setPrompt(promptData);
       setRefreshCount(0);
       setExcludedBooks([]);
+
       saveSession(data.recommendations, promptData, 0, []);
       navigate('/');
     } catch (err) {
@@ -131,38 +200,53 @@ export default function useAppState(navigate) {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const handleRefresh = async () => {
+  async function handleRefresh() {
     if (!prompt || refreshCount >= MAX_REFRESHES) return;
+
     setLoading(true);
     setError(null);
 
     try {
-      const currentTitles = (results || []).map((b) => `${b.title} by ${b.author}`);
+      const currentTitles = (results || []).map(
+        (book) => `${book.title} by ${book.author}`
+      );
+
       const nextExcluded = [...excludedBooks, ...currentTitles];
-      const data = await getRecommendations(prompt.books, nextExcluded, prompt.focus, readBooks, skippedBooks);
+
+      const data = await getRecommendations(
+        prompt.books,
+        nextExcluded,
+        prompt.focus,
+        readBooks,
+        skippedBooks
+      );
+
       const nextCount = refreshCount + 1;
+
       setResults(data.recommendations);
       setRefreshCount(nextCount);
       setExcludedBooks(nextExcluded);
+
       saveSession(data.recommendations, prompt, nextCount, nextExcluded);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const handleReset = () => {
+  function handleReset() {
     setResults(null);
     setPrompt(null);
     setRefreshCount(0);
     setExcludedBooks([]);
     setError(null);
+
     localStorage.removeItem(STORAGE_KEY);
     navigate('/');
-  };
+  }
 
   return {
     user,

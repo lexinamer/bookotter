@@ -1,0 +1,159 @@
+/* =========================
+   CARD
+========================= */
+
+.book-card {
+  padding: 40px 0;
+  border-top: 1px solid var(--line);
+
+  &.shelf {
+    padding: 32px 0;
+  }
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.bookcard-header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.bookcard-heading {
+  width: 100%;
+}
+
+.bookcard-title {
+  a {
+    color: var(--ink);
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: var(--action);
+    }
+  }
+}
+
+.bookcard-author {
+  margin-top: 10px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+}
+
+.bookcard-meta {
+  margin-top: 8px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.bookcard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.bookcard-action {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--action);
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &.active {
+    color: var(--accent);
+  }
+}
+
+.bookcard-divider {
+  color: var(--line);
+}
+
+.bookcard-select {
+  width: fit-content;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  appearance: auto;
+
+  &:focus {
+    border-color: var(--action);
+  }
+}
+
+/* =========================
+   SUMMARY
+========================= */
+
+.bookcard-summary {
+  max-width: 860px;
+  font-size: 18px;
+  line-height: 1.7;
+  font-style: italic;
+  color: var(--ink);
+}
+
+/* =========================
+   WHY
+========================= */
+
+.bookcard-why {
+  max-width: 760px;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(221, 213, 205, 0.7);
+}
+
+.bookcard-label {
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* =========================
+   DESKTOP
+========================= */
+
+@media (min-width: 769px) {
+  .bookcard-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
+  }
+
+  .bookcard-actions,
+  .bookcard-select {
+    flex-shrink: 0;
+    padding-top: 8px;
+  }
+
+  .bookcard-heading {
+    max-width: 70%;
+  }
+}

@@ -1,0 +1,93 @@
+/* =========================
+   SCREEN
+========================= */
+
+.wizard-screen {
+  min-height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.wizard-hero {
+  margin-bottom: 32px;
+
+  span {
+    color: var(--accent);
+    font-style: italic;
+  }
+}
+
+/* =========================
+   FORM
+========================= */
+
+.wizard-form {
+  width: 100%;
+}
+
+.wizard-books {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.wizard-group {
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+}
+
+/* =========================
+   FOCUS
+========================= */
+
+.wizard-focus {
+  margin-bottom: 34px;
+
+  label {
+    display: block;
+    margin-bottom: 12px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+}
+
+.wizard-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* =========================
+   CTA
+========================= */
+
+.wizard-cta {
+  margin-top: 24px;
+}
+
+/* =========================
+   DESKTOP
+========================= */
+
+@media (min-width: 769px) {
+  .wizard-screen {
+    transform: translateY(-5vh);
+  }
+}

@@ -1,5 +1,10 @@
 import { useState } from 'react';
 
+const BOOK_FIELDS = [
+  { label: 'First book', placeholder: 'Station Eleven' },
+  { label: 'Second book', placeholder: 'The Great Alone' },
+];
+
 const FOCUS_OPTIONS = [
   { value: 'mood', label: 'Mood' },
   { value: 'topic', label: 'Topic' },
@@ -7,51 +12,47 @@ const FOCUS_OPTIONS = [
 ];
 
 export default function Wizard({ onSubmit }) {
-  const [books, setBooks] = useState([{ title: '' }, { title: '' }]);
+  const [books, setBooks] = useState(['', '']);
   const [focus, setFocus] = useState('mood');
 
-  const canSubmit = books.some(book => book.title.trim());
+  const canSubmit = books.some((book) => book.trim());
 
-  const updateBook = (index, value) => {
-    setBooks(prev =>
-      prev.map((book, i) => (i === index ? { ...book, title: value } : book))
-    );
-  };
+  function updateBook(index, value) {
+    setBooks((prev) => prev.map((book, i) => (i === index ? value : book)));
+  }
 
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!canSubmit) return;
 
     const filledBooks = books
-      .filter(book => book.title.trim())
-      .map(book => book.title.trim());
+      .filter((book) => book.trim())
+      .map((book) => book.trim());
 
     await onSubmit({ books: filledBooks, focus });
-  };
+  }
 
   return (
     <main className="wizard-screen">
       <section className="wizard-hero">
         <h1>
-          Tell us two books you love and discover <span className="accent">what to read next.</span>
+          Tell us two books you love and discover <span>what to read next.</span>
         </h1>
       </section>
 
       <form className="wizard-form" onSubmit={handleSubmit}>
-        <div className="book-row">
-          {[
-            { label: 'First book', placeholder: 'Station Eleven' },
-            { label: 'Second book', placeholder: 'The Great Alone' },
-          ].map(({ label, placeholder }, i) => (
-            <div key={i} className="form-group">
-              <label className="form-label" htmlFor={`book-${i}`}>{label}</label>
+        <div className="wizard-books">
+          {BOOK_FIELDS.map(({ label, placeholder }, index) => (
+            <div className="wizard-group" key={label}>
+              <label htmlFor={`book-${index}`}>{label}</label>
+
               <input
-                id={`book-${i}`}
+                id={`book-${index}`}
                 type="text"
-                className="form-input"
+                className="input-text"
                 placeholder={placeholder}
-                value={books[i].title}
-                onChange={(e) => updateBook(i, e.target.value)}
+                value={books[index]}
+                onChange={(e) => updateBook(index, e.target.value)}
                 autoComplete="off"
                 spellCheck="false"
               />
@@ -59,25 +60,25 @@ export default function Wizard({ onSubmit }) {
           ))}
         </div>
 
-        <div className="focus-group">
-          <p className="form-label">What do you want more of?</p>
+        <div className="wizard-focus">
+          <label>What do you want more of?</label>
 
-          <div className="pill-row">
-            {FOCUS_OPTIONS.map((opt) => (
+          <div className="wizard-pills">
+            {FOCUS_OPTIONS.map((option) => (
               <button
-                key={opt.value}
+                key={option.value}
                 type="button"
-                className={`pill-button${focus === opt.value ? ' active' : ''}`}
-                onClick={() => setFocus(opt.value)}
+                className={`button-pill${focus === option.value ? ' active' : ''}`}
+                onClick={() => setFocus(option.value)}
               >
-                {opt.label}
+                {option.label}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="cta-row">
-          <button type="submit" className="primary-action" disabled={!canSubmit}>
+        <div className="wizard-cta">
+          <button type="submit" className="button-primary" disabled={!canSubmit}>
             Find my next read
           </button>
         </div>

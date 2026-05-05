@@ -1,6 +1,34 @@
-/* =========================
-   RESET
-========================= */
+:root {
+  --white: #fff;
+  --bg: #f9f7f5;
+  --card: #fcfaf7;
+  --ink: #2c2723;
+  --ink-mid: #443e39;
+  --muted: #8a8179;
+  --placeholder: #c4b9b0;
+  --line: #ddd5cd;
+  --accent: #c95a2c;
+  --action: #0f8277;
+  --overlay: rgba(18, 15, 12, 0.18);
+
+  --font-serif: 'Georgia', serif;
+  --font-sans: 'Arial', sans-serif;
+
+  --page-width: 600px;
+  --nav-width: 1200px;
+
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  --space-7: 72px;
+
+  --radius: 6px;
+  --card-radius: 12px;
+  --pill-radius: 999px;
+}
 
 * {
   margin: 0;
@@ -14,193 +42,23 @@ body {
   font-family: var(--font-serif);
 }
 
-button,
-input {
-  border: none;
-  outline: none;
-  background: none;
+img {
+  display: block;
+  max-width: 100%;
 }
 
-button {
-  cursor: pointer;
+main {
+  width: min(var(--page-width), 92vw);
+  margin: 0 auto;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.app-shell {
+  min-height: 100vh;
 }
-
-/* =========================
-   TYPOGRAPHY
-========================= */
-
-h1 {
-  font-size: 38px;
-  font-weight: 400;
-}
-
-h3 {
-  font-size: 28px;
-  line-height: 1.3;
-  font-weight: 400;
-}
-
-p {
-  font-size: 15px;
-  line-height: 1.7;
-  color: var(--ink-mid);
-  letter-spacing: 0.2px;
-}
-
-.accent {
-  color: var(--accent);
-  font-style: italic;
-  font-weight: 500;
-}
-
-.form-label,
-.prompt-kicker,
-.text-action {
-  font-family: var(--font-sans);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.form-label,
-.prompt-kicker {
-  color: var(--muted);
-}
-
-.text-action {
-  color: var(--ink-mid);
-  transition: color 0.15s ease;
-
-  &:hover {
-    color: var(--action);
-  }
-}
-
-/* =========================
-   BUTTONS
-========================= */
-
-.primary-action {
-  min-width: 220px;
-  padding: 12px 20px;
-  background: var(--action);
-  color: white;
-  border: 1.5px solid transparent;
-  border-radius: 3px;
-  font-family: var(--font-serif);
-  font-size: 18px;
-  font-style: italic;
-  transition: opacity 0.2s ease;
-
-  &:hover:not(:disabled) {
-    opacity: 0.8;
-  }
-
-  &:disabled {
-    opacity: 0.3;
-    cursor: default;
-  }
-
-  &.full {
-    width: 100%;
-  }
-}
-
-.secondary-action {
-  padding: 10px 20px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  font-family: var(--font-sans);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-mid);
-  transition: border-color 0.15s ease, color 0.15s ease;
-
-  &:hover {
-    border-color: var(--ink-mid);
-    color: var(--ink);
-  }
-}
-
-/* =========================
-   INPUTS
-========================= */
-
-.form-input {
-  width: 100%;
-  padding: 18px 20px;
-  background: var(--white);
-  border: 1px solid transparent;
-  border-radius: var(--radius);
-  font-family: var(--font-serif);
-  font-size: 18px;
-  font-style: italic;
-  transition: border-color 0.2s ease;
-  box-shadow: 0 0 0 1px rgba(31, 27, 24, 0.04);
-
-  &::placeholder {
-    color: var(--placeholder);
-  }
-
-  &:focus {
-    border-color: var(--line);
-  }
-}
-
-/* =========================
-   PILLS
-========================= */
-
-.pill-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.pill-button {
-  padding: 12px 24px;
-  border: 1px solid var(--line);
-  border-radius: var(--pill-radius);
-  font-family: var(--font-sans);
-  font-size: 15px;
-  color: var(--ink-mid);
-  letter-spacing: 0.02em;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-
-  &:hover {
-    background: var(--line);
-  }
-
-  &.active {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: var(--bg);
-  }
-}
-
-/* =========================
-   OVERLAY
-========================= */
 
 .overlay {
   position: fixed;
   inset: 0;
   background: var(--overlay);
   z-index: 700;
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 768px) {
-  .primary-action {
-    width: 100%;
-  }
 }
