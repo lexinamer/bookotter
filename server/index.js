@@ -67,7 +67,7 @@ function buildPrompt(
   );
 
   const memoryNote = userMemory.length > 0
-    ? `\nDo NOT recommend any of these books the reader has already saved, marked as read, or passed on:\n${userMemory.map(b => `- ${b}`).join('\n')}`
+    ? `\nDo NOT recommend any of these books the reader has already saved, marked as read, or skipped:\n${userMemory.map(b => `- ${b}`).join('\n')}`
     : '';
 
   const modeInstruction = {
@@ -153,7 +153,7 @@ function parseRecommendationResponse(text) {
 // ─── Route ───────────────────────────────────────────────────────────────────
 
 app.post('/api/recommend', async (req, res) => {
-  const { books, excludeBooks = [], focus = null } = req.body;
+  const { books, excludeBooks = [], focus = null, readBooks = [], skippedBooks = [] } = req.body;
 
   const validationError = validateRequestBody({ books });
   if (validationError) {
@@ -172,7 +172,7 @@ app.post('/api/recommend', async (req, res) => {
       messages: [
         {
           role: 'user',
-          content: buildPrompt(books, focus, excludeBooks),
+          content: buildPrompt(books, focus, excludeBooks, [], readBooks, skippedBooks),
         },
       ],
     });

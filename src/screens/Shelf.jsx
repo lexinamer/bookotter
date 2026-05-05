@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import ShelfCard from '../components/ShelfCard';
+import BookCard from '../components/BookCard';
 
 const TABS = [
   { key: 'saved', label: 'Saved' },
   { key: 'read', label: 'Read' },
-  { key: 'skipped', label: 'Passed' },
+  { key: 'skipped', label: 'Not For Me' },
 ];
 
 export default function Shelf({
@@ -26,7 +26,7 @@ export default function Shelf({
   const emptyMessages = {
     saved: 'Nothing saved yet. Go find a recommendation you like.',
     read: 'Nothing marked as read yet.',
-    skipped: 'Nothing passed on yet.',
+    skipped: 'Nothing skipped yet.',
   };
 
   const books = shelfMap[tab];
@@ -53,10 +53,11 @@ export default function Shelf({
           <p className="shelf-empty">{emptyMessages[tab]}</p>
         ) : (
           books.map((book) => (
-            <ShelfCard
+            <BookCard
               key={book.id}
               book={book}
-              mode={tab}
+              variant="shelf"
+              shelfStatus={tab}
               onSave={onSave}
               onSkip={onSkip}
               onRead={onRead}

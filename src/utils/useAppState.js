@@ -6,11 +6,11 @@ import { loadShelf, saveBook, unsaveBook, skipBook, unskipBook, readBook, unread
 const STORAGE_KEY = 'nextread_session';
 const MAX_REFRESHES = 2;
 
-async function getRecommendations(books, excludeBooks = [], focus = null) {
+async function getRecommendations(books, excludeBooks = [], focus = null, readBooks = [], skippedBooks = []) {
   const response = await fetch('/api/recommend', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ books, excludeBooks, focus }),
+    body: JSON.stringify({ books, excludeBooks, focus, readBooks, skippedBooks }),
   });
 
   if (!response.ok) {
@@ -118,7 +118,7 @@ export default function useAppState(navigate) {
     setError(null);
 
     try {
-      const data = await getRecommendations(formData.books, [], formData.focus);
+      const data = await getRecommendations(formData.books, [], formData.focus, readBooks, skippedBooks);
       const promptData = { books: formData.books, focus: formData.focus };
       setResults(data.recommendations);
       setPrompt(promptData);
@@ -141,7 +141,7 @@ export default function useAppState(navigate) {
     try {
       const currentTitles = (results || []).map((b) => `${b.title} by ${b.author}`);
       const nextExcluded = [...excludedBooks, ...currentTitles];
-      const data = await getRecommendations(prompt.books, nextExcluded, prompt.focus);
+      const data = await getRecommendations(prompt.books, nextExcluded, prompt.focus, readBooks, skippedBooks);
       const nextCount = refreshCount + 1;
       setResults(data.recommendations);
       setRefreshCount(nextCount);

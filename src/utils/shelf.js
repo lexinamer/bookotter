@@ -11,7 +11,7 @@ export async function loadShelf(uid) {
   const data = snap.data();
   return {
     savedBooks: data.savedBooks ?? [],
-    skippedBooks: data.skippedBooks ?? [],
+    skippedBooks: data.skippedBooks ?? data.passedBooks ?? [],
     readBooks: data.readBooks ?? [],
   };
 }
@@ -46,7 +46,7 @@ export async function skipBook(uid, book) {
 export async function unskipBook(uid, bookId) {
   const snap = await getDoc(userShelfRef(uid));
   if (!snap.exists()) return;
-  const updated = (snap.data().skippedBooks ?? []).filter(b => b.id !== bookId);
+  const updated = (snap.data().skippedBooks ?? snap.data().passedBooks ?? []).filter(b => b.id !== bookId);
   await updateDoc(userShelfRef(uid), { skippedBooks: updated });
 }
 
