@@ -1,4 +1,69 @@
 /* =========================
+   APP SHELL
+========================= */
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.wizard-screen,
+.results-screen,
+.page-state {
+  width: min(var(--page-width), 92vw);
+  margin: 0 auto;
+}
+
+/* =========================
+   NAV
+========================= */
+
+.site-nav {
+  width: min(var(--nav-width), 92vw);
+  height: 100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo img {
+  height: 48px;
+
+  @media (max-width: 768px) {
+    height: 36px;
+  }
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.nav-link {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--action);
+  }
+
+  &.active {
+    color: var(--ink);
+    font-weight: 600;
+  }
+}
+
+.nav-divider {
+  color: var(--line);
+  font-family: var(--font-sans);
+}
+
+/* =========================
    WIZARD
 ========================= */
 
@@ -27,20 +92,26 @@
 
 .form-group {
   flex: 1;
-}
 
-.form-group .form-label {
-  display: block;
-  margin-bottom: 10px;
+  .form-label {
+    display: block;
+    margin-bottom: 10px;
+  }
 }
 
 .focus-group {
   margin-bottom: 34px;
+
+  .form-label {
+    display: block;
+    margin-bottom: 12px;
+  }
 }
 
-.focus-group .form-label {
-  display: block;
-  margin-bottom: 12px;
+.cta-row {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-4);
 }
 
 /* =========================
@@ -52,15 +123,35 @@
 }
 
 .results-header {
-  margin-bottom: 12px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 28px;
+
+  > .prompt-kicker {
+    display: block;
+    margin-bottom: 8px;
+  }
 }
 
 .results-meta {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--line);
+  align-items: center;
+  gap: 24px;
+}
+
+.results-title {
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.results-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+  padding-top: 2px;
 }
 
 .results-actions {
@@ -72,30 +163,21 @@
   opacity: 0.5;
 }
 
-.results-prompt {
-  display: flex;
-  gap: 10px;
-  align-items: baseline;
-}
-
-.prompt-books {
-  font-size: 11px;
-  font-family: var(--font-sans);
-  letter-spacing: 0.05em;
-  color: var(--ink-mid);
-}
-
 /* =========================
    BOOK CARD
 ========================= */
 
-.book-card {
-  border-top: 1px solid var(--line);
-  padding: 42px 0;
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
-  &:first-child {
-    border-top: none;
-  }
+.book-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px 22px 20px;
 }
 
 .book-card-header {
@@ -108,7 +190,6 @@
 
 .book-actions {
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
@@ -133,9 +214,14 @@
   }
 }
 
+.book-action-divider {
+  color: var(--line);
+  font-size: 12px;
+  line-height: 1;
+}
+
 .book-title {
-  font-size: 30px;
-  margin-bottom: 6px;
+  font-size: 28px;
 
   a {
     color: var(--ink);
@@ -149,17 +235,18 @@
 
 .book-author {
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink-mid);
-  margin-bottom: 4px;
+  color: var(--muted);
+  margin-top: 9px;
 }
 
 .book-meta {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--muted);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
+  margin-top: 6px;
 }
 
 .book-summary {
@@ -170,22 +257,31 @@
 }
 
 .book-why {
-  margin-top: 20px;
-}
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
 
-.book-why .prompt-kicker {
-  display: block;
-  margin-bottom: 6px;
+  .prompt-kicker {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
 }
 
 /* =========================
-   SHELF TABS + CARDS
+   SHELF
 ========================= */
+
+.shelf-page {
+  width: min(var(--page-width), 92vw);
+  margin: 0 auto;
+  padding-bottom: 80px;
+}
 
 .shelf-tabs {
   display: flex;
   border-bottom: 1px solid var(--line);
-  margin-bottom: 0;
 }
 
 .shelf-tab {
@@ -215,10 +311,6 @@
   margin-left: 6px;
 }
 
-.shelf-list {
-  margin-top: 0;
-}
-
 .shelf-card {
   border-top: 1px solid var(--line);
   padding: 26px 0;
@@ -240,7 +332,6 @@
   font-size: 22px;
   font-weight: 400;
   line-height: 1.25;
-  margin-bottom: 0;
 
   a {
     color: var(--ink);
@@ -332,12 +423,6 @@
   }
 }
 
-.book-action-divider {
-  color: var(--line);
-  font-size: 12px;
-  line-height: 1;
-}
-
 .shelf-empty {
   padding-top: 40px;
   color: var(--muted);
@@ -362,6 +447,10 @@
 .loading-state {
   font-size: 30px;
   font-style: italic;
+}
+
+.error-state {
+  text-align: center;
 }
 
 /* =========================

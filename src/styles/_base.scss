@@ -1,38 +1,4 @@
 /* =========================
-   TOKENS
-========================= */
-
-:root {
-  --white: #fff;
-  --bg: #f9f7f5;
-  --ink: #1f1b18;
-  --ink-mid: #443e39;
-  --muted: #8a8179;
-  --placeholder: #c4b9b0;
-  --line: #ddd5cd;
-  --accent: #c95a2c;
-  --action: #0f8277;
-  --overlay: rgba(18, 15, 12, 0.18);
-
-  --font-serif: 'Lora', serif;
-  --font-sans: 'Inter', sans-serif;
-
-  --page-width: 600px;
-  --nav-width: 1200px;
-
-  --space-1: 8px;
-  --space-2: 12px;
-  --space-3: 16px;
-  --space-4: 24px;
-  --space-5: 32px;
-  --space-6: 48px;
-  --space-7: 72px;
-
-  --radius: 6px;
-  --pill-radius: 999px;
-}
-
-/* =========================
    RESET
 ========================= */
 
@@ -83,6 +49,7 @@ p {
   font-size: 15px;
   line-height: 1.7;
   color: var(--ink-mid);
+  letter-spacing: 0.2px;
 }
 
 .accent {
@@ -128,25 +95,38 @@ p {
   font-family: var(--font-serif);
   font-size: 18px;
   font-style: italic;
-  transition: opacity 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: opacity 0.2s ease;
 
   &:hover:not(:disabled) {
     opacity: 0.8;
   }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  &.full {
+    width: 100%;
+  }
 }
 
-.primary-action:disabled {
-  background: var(--action);
-  opacity: 0.3;
-  border-color: transparent;
-  color: white;
-  cursor: default;
-}
+.secondary-action {
+  padding: 10px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  transition: border-color 0.15s ease, color 0.15s ease;
 
-.primary-action.full {
-  width: 100%;
+  &:hover {
+    border-color: var(--ink-mid);
+    color: var(--ink);
+  }
 }
-
 
 /* =========================
    INPUTS
@@ -163,14 +143,14 @@ p {
   font-style: italic;
   transition: border-color 0.2s ease;
   box-shadow: 0 0 0 1px rgba(31, 27, 24, 0.04);
-}
 
-.form-input::placeholder {
-  color: var(--placeholder);
-}
+  &::placeholder {
+    color: var(--placeholder);
+  }
 
-.form-input:focus {
-  border: 1px solid var(--line);
+  &:focus {
+    border-color: var(--line);
+  }
 }
 
 /* =========================
@@ -190,22 +170,22 @@ p {
   font-family: var(--font-sans);
   font-size: 15px;
   color: var(--ink-mid);
-  letter-spacing: .02em;
-  transition:  0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  letter-spacing: 0.02em;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 
   &:hover {
-    background: rgb(216, 216, 216);
+    background: var(--line);
+  }
+
+  &.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
   }
 }
 
-.pill-button.active {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--bg);
-}
-
 /* =========================
-   OVERLAYS
+   OVERLAY
 ========================= */
 
 .overlay {

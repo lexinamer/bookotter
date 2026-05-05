@@ -1,0 +1,35 @@
+:root {
+  /* Colors */
+  --white: #fff;
+  --bg: #f9f7f5;
+  --card: #fcfaf7;
+  --ink: #2c2723;
+  --ink-mid: #443e39;
+  --muted: #8a8179;
+  --placeholder: #c4b9b0;
+  --line: #ddd5cd;
+  --accent: #c95a2c;
+  --action: #0f8277;
+  --overlay: rgba(18, 15, 12, 0.18);
+
+  /* Fonts */
+  --font-serif: 'Georgia', serif;
+  --font-sans: 'Arial', sans-serif;
+
+  /* Layout */
+  --page-width: 600px;
+  --nav-width: 1200px;
+
+  /* Spacing (8px base) */
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  --space-7: 72px;
+
+  /* Radius */
+  --radius: 6px;
+  --pill-radius: 999px;
+}

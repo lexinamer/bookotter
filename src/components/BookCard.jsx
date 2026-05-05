@@ -1,3 +1,5 @@
+import React from 'react';
+
 const ACTIONS = [
   { id: 'saved', label: 'Save', active: 'Saved' },
   { id: 'read', label: 'Already Read', active: 'Already Read' },
@@ -61,7 +63,7 @@ export default function BookCard({
         </div>
         <div className="book-actions">
           {ACTIONS.map((action, index) => (
-            <>
+            <React.Fragment key={action.id}>
               {currentState === action.id ? (
                 <span className="book-action-pill active">{action.active}</span>
               ) : (
@@ -70,7 +72,7 @@ export default function BookCard({
                 </button>
               )}
               {index < ACTIONS.length - 1 && <span className="book-action-divider">|</span>}
-            </>
+            </React.Fragment>
           ))}
         </div>
       </div>
