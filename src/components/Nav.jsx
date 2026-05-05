@@ -11,7 +11,7 @@ export default function Nav({ user, onLogin, onLogout }) {
 
       <div className="nav-actions">
         <Link to="/shelf" className={`nav-link${pathname === '/shelf' ? ' active' : ''}`}>
-          My Bookshelf
+          Bookshelf
         </Link>
 
         <button className="nav-link" onClick={user ? onLogout : onLogin}>

@@ -4,8 +4,8 @@
 
 .site-nav {
   width: min(var(--nav-width), 92vw);
-  height: 100px;
   margin: 0 auto;
+  padding-top: var(--space-3);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -13,20 +13,20 @@
 
 .nav-logo {
   img {
-    height: 36px;
+    height: 42px;
   }
 }
 
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: var(--space-3);
 }
 
 .nav-link {
   font-family: var(--font-sans);
-  font-size: 11px;
-  letter-spacing: 0.14em;
+  font-size: 12px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-mid);
   transition: color 0.15s ease;
@@ -46,9 +46,21 @@
 ========================= */
 
 @media (min-width: 769px) {
+  .site-nav {
+    padding-top: 28px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;
+  }
+
   .nav-logo {
     img {
-      height: 48px;
+      height: 46px;
     }
+  }
+
+  .nav-link {
+    font-size: 11px;
   }
 }

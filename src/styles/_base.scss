@@ -17,18 +17,25 @@
   --page-width: 600px;
   --nav-width: 1200px;
 
+  --radius: 6px;
+  --pill-radius: 999px;
+
   --space-1: 8px;
   --space-2: 12px;
   --space-3: 16px;
-  --space-4: 24px;
-  --space-5: 32px;
-  --space-6: 48px;
-  --space-7: 72px;
-
-  --radius: 6px;
-  --card-radius: 12px;
-  --pill-radius: 999px;
+  --space-4: 20px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+  --space-9: 64px;
+  --space-10: 80px;
+  --space-11: 120px;
 }
+
+/* =========================
+   RESET
+========================= */
 
 * {
   margin: 0;
@@ -52,6 +59,66 @@ main {
   margin: 0 auto;
 }
 
+/* =========================
+   SEMANTIC TYPE
+========================= */
+
+h1 {
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.12;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.18;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.22;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+p {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink-mid);
+}
+
+/* =========================
+   ELEMENTS
+========================= */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select {
+  border: none;
+  outline: none;
+  background: none;
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* =========================
+   APP
+========================= */
+
 .app-shell {
   min-height: 100vh;
 }
@@ -61,4 +128,28 @@ main {
   inset: 0;
   background: var(--overlay);
   z-index: 700;
+}
+
+/* =========================
+   PAGE STATES
+========================= */
+
+.loading, .error {
+  min-height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-8) 0;
+}
+
+.loading {
+  font-size: 30px;
+  font-style: italic;
+  text-align: center;
+}
+
+.error {
+  text-align: center;
 }

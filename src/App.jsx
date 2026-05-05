@@ -86,11 +86,11 @@ export default function App() {
       />
 
       {loading ? (
-        <div className="page-state loading-state">
+        <div className="loading">
           Finding your next favorite book...
         </div>
       ) : error ? (
-        <div className="page-state error-state">
+        <div className="error">
           <p>{error}</p>
           <button className="results-action" onClick={handleReset}>
             Start Over
