@@ -3,29 +3,24 @@ import BookCard from '../components/BookCard';
 
 const TABS = [
   { key: 'saved', label: 'Saved' },
-  { key: 'read', label: 'Read' },
-  { key: 'skipped', label: 'Not For Me' },
+  { key: 'skipped', label: 'Passed' },
 ];
 
 export default function Shelf({
   savedBooks,
   skippedBooks,
-  readBooks,
   onSave,
   onSkip,
-  onRead,
 }) {
   const [tab, setTab] = useState('saved');
 
   const shelfMap = {
     saved: savedBooks,
-    read: readBooks,
     skipped: skippedBooks,
   };
 
   const emptyMessages = {
     saved: 'Nothing saved yet. Go find a recommendation you like.',
-    read: 'Nothing marked as read yet.',
     skipped: 'Nothing skipped yet.',
   };
 
@@ -61,7 +56,6 @@ export default function Shelf({
               shelfStatus={tab}
               onSave={onSave}
               onSkip={onSkip}
-              onRead={onRead}
             />
           ))
         )}

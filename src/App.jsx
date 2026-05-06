@@ -17,13 +17,10 @@ export default function App() {
     logoutUser,
     savedBooks,
     skippedBooks,
-    readBooks,
     handleSave,
     handleRemoveSaved,
     handleSkip,
     handleRemoveSkipped,
-    handleRead,
-    handleRemoveRead,
     results,
     prompt,
     loading,
@@ -42,10 +39,6 @@ export default function App() {
       await handleRemoveSkipped(user.uid, book);
     }
 
-    if (readBooks.some((item) => item.id === book.id)) {
-      await handleRemoveRead(user.uid, book);
-    }
-
     await handleSave(user.uid, book);
   };
 
@@ -56,25 +49,7 @@ export default function App() {
       await handleRemoveSaved(user.uid, book);
     }
 
-    if (readBooks.some((item) => item.id === book.id)) {
-      await handleRemoveRead(user.uid, book);
-    }
-
     await handleSkip(user.uid, book);
-  };
-
-  const guardedRead = async (book) => {
-    if (!user) return confirmGoogleLogin();
-
-    if (savedBooks.some((item) => item.id === book.id)) {
-      await handleRemoveSaved(user.uid, book);
-    }
-
-    if (skippedBooks.some((item) => item.id === book.id)) {
-      await handleRemoveSkipped(user.uid, book);
-    }
-
-    await handleRead(user.uid, book);
   };
 
   return (
@@ -111,10 +86,8 @@ export default function App() {
                   onRefresh={handleRefresh}
                   onSave={guardedSave}
                   onSkip={guardedSkip}
-                  onRead={guardedRead}
                   savedBooks={savedBooks}
                   skippedBooks={skippedBooks}
-                  readBooks={readBooks}
                   refreshCount={refreshCount}
                   maxRefreshes={maxRefreshes}
                 />
@@ -128,10 +101,8 @@ export default function App() {
               <Shelf
                 savedBooks={savedBooks}
                 skippedBooks={skippedBooks}
-                readBooks={readBooks}
                 onSave={guardedSave}
                 onSkip={guardedSkip}
-                onRead={guardedRead}
               />
             }
           />

@@ -2,7 +2,7 @@ import React from 'react';
 
 const ACTIONS = [
   { id: 'saved', label: 'Save', active: 'Saved' },
-  { id: 'skipped', label: 'Not For Me', active: 'Not For Me' },
+  { id: 'skipped', label: 'Pass', active: 'Passed' },
 ];
 
 export default function BookCard({
@@ -42,8 +42,7 @@ export default function BookCard({
         {variant === 'shelf' ? (
           <select className="bookcard-select" value={shelfStatus} onChange={handleShelfChange}>
             <option value="saved">Saved</option>
-            <option value="read">Read</option>
-            <option value="skipped">Not For Me</option>
+            <option value="skipped">Passed</option>
           </select>
         ) : (
           <div className="bookcard-actions">
@@ -54,7 +53,6 @@ export default function BookCard({
                 ) : (
                   <button className="bookcard-action" onClick={() => {
                     if (action.id === 'saved') onSave(book);
-                    if (action.id === 'read') onRead(book);
                     if (action.id === 'skipped') onSkip(book);
                   }}>
                     {action.label}

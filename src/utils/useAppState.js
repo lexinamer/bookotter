@@ -7,8 +7,6 @@ import {
   unsaveBook,
   skipBook,
   unskipBook,
-  readBook,
-  unreadBook,
 } from './shelf';
 
 const STORAGE_KEY = 'nextread_session';
@@ -22,13 +20,12 @@ async function getRecommendations(
   books,
   excludeBooks = [],
   focus = null,
-  readBooks = [],
   skippedBooks = []
 ) {
   const response = await fetch('/api/recommend', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ books, excludeBooks, focus, readBooks, skippedBooks }),
+    body: JSON.stringify({ books, excludeBooks, focus, skippedBooks }),
   });
 
   if (!response.ok) {
@@ -56,7 +53,6 @@ export default function useAppState(navigate) {
 
   const [savedBooks, setSavedBooks] = useState([]);
   const [skippedBooks, setSkippedBooks] = useState([]);
-  const [readBooks, setReadBooks] = useState([]);
 
   const [results, setResults] = useState(null);
   const [prompt, setPrompt] = useState(null);
@@ -89,14 +85,12 @@ export default function useAppState(navigate) {
       if (!user) {
         setSavedBooks([]);
         setSkippedBooks([]);
-        setReadBooks([]);
         return;
       }
 
       const shelf = await loadShelf(user.uid);
       setSavedBooks(shelf.savedBooks);
       setSkippedBooks(shelf.skippedBooks);
-      setReadBooks(shelf.readBooks);
     }
 
     if (authReady) {
@@ -156,16 +150,6 @@ export default function useAppState(navigate) {
     await unskipBook(uid, book.id);
   }
 
-  async function handleRead(uid, book) {
-    setReadBooks((prev) => [...prev.filter((item) => item.id !== book.id), book]);
-    await readBook(uid, book);
-  }
-
-  async function handleRemoveRead(uid, book) {
-    setReadBooks((prev) => prev.filter((item) => item.id !== book.id));
-    await unreadBook(uid, book.id);
-  }
-
   /* =========================
      RECOMMENDATIONS
   ========================= */
@@ -179,7 +163,6 @@ export default function useAppState(navigate) {
         formData.books,
         [],
         formData.focus,
-        readBooks,
         skippedBooks
       );
 
@@ -219,7 +202,6 @@ export default function useAppState(navigate) {
         prompt.books,
         nextExcluded,
         prompt.focus,
-        readBooks,
         skippedBooks
       );
 
@@ -255,13 +237,10 @@ export default function useAppState(navigate) {
     logoutUser,
     savedBooks,
     skippedBooks,
-    readBooks,
     handleSave,
     handleRemoveSaved,
     handleSkip,
     handleRemoveSkipped,
-    handleRead,
-    handleRemoveRead,
     results,
     prompt,
     loading,

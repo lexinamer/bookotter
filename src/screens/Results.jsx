@@ -10,10 +10,8 @@ export default function Results({
   onRefresh,
   onSave,
   onSkip,
-  onRead,
   savedBooks,
   skippedBooks,
-  readBooks,
   refreshCount,
   maxRefreshes,
 }) {
@@ -21,9 +19,7 @@ export default function Results({
   const canRefresh = refreshesLeft > 0;
 
   const visibleBooks = data.filter(
-    (book) =>
-      !skippedBooks.some((item) => item.id === book.id) &&
-      !readBooks.some((item) => item.id === book.id)
+    (book) => !skippedBooks.some((item) => item.id === book.id)
   );
 
   return (
@@ -59,9 +55,7 @@ export default function Results({
             book={book}
             onSave={onSave}
             onSkip={onSkip}
-            onRead={onRead}
             saved={savedBooks.some((item) => item.id === book.id)}
-            read={readBooks.some((item) => item.id === book.id)}
           />
         ))}
       </section>

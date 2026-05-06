@@ -53,7 +53,6 @@ function buildPrompt(
   mode = 'mood',
   excludeBooks = [],
   savedBooks = [],
-  readBooks = [],
   skippedBooks = []
 ) {
   const bookList = books.map(b => `- ${b}`).join('\n');
@@ -62,12 +61,12 @@ function buildPrompt(
     ? `\nDo NOT recommend any of these books (already suggested):\n${excludeBooks.map(b => `- ${b}`).join('\n')}`
     : '';
 
-  const userMemory = [...savedBooks, ...readBooks, ...skippedBooks].map(book =>
+  const userMemory = [...savedBooks, ...skippedBooks].map(book =>
     typeof book === 'string' ? book : book.title
   );
 
   const memoryNote = userMemory.length > 0
-    ? `\nDo NOT recommend any of these books the reader has already saved, marked as read, or skipped:\n${userMemory.map(b => `- ${b}`).join('\n')}`
+    ? `\nDo NOT recommend any of these books the reader has already saved or skipped:\n${userMemory.map(b => `- ${b}`).join('\n')}`
     : '';
 
   const modeInstruction = {
@@ -98,7 +97,7 @@ Rules for choosing:
 - The three recommendations should provide slightly different options, not three versions of the exact same book
 - Never recommend a book the reader already listed
 - Do NOT recommend any book already suggested above
-- Do NOT recommend any book the reader has already saved, read, or passed on
+- Do NOT recommend any book the reader has already saved or skipped
 - Only recommend books you are certain exist
 
 For the "what" field: one vivid sentence that clearly explains what the book is about and why it feels compelling. Under 35 words.
@@ -153,7 +152,7 @@ function parseRecommendationResponse(text) {
 // ─── Route ───────────────────────────────────────────────────────────────────
 
 app.post('/api/recommend', async (req, res) => {
-  const { books, excludeBooks = [], focus = null, readBooks = [], skippedBooks = [] } = req.body;
+  const { books, excludeBooks = [], focus = null, skippedBooks = [] } = req.body;
 
   const validationError = validateRequestBody({ books });
   if (validationError) {
@@ -172,7 +171,7 @@ app.post('/api/recommend', async (req, res) => {
       messages: [
         {
           role: 'user',
-          content: buildPrompt(books, focus, excludeBooks, [], readBooks, skippedBooks),
+          content: buildPrompt(books, focus, excludeBooks, [], skippedBooks),
         },
       ],
     });

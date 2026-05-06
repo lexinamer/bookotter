@@ -12,7 +12,6 @@ export async function loadShelf(uid) {
   return {
     savedBooks: data.savedBooks ?? [],
     skippedBooks: data.skippedBooks ?? data.passedBooks ?? [],
-    readBooks: data.readBooks ?? [],
   };
 }
 
@@ -50,19 +49,3 @@ export async function unskipBook(uid, bookId) {
   await updateDoc(userShelfRef(uid), { skippedBooks: updated });
 }
 
-export async function readBook(uid, book) {
-  const ref = userShelfRef(uid);
-  const snap = await getDoc(ref);
-  if (!snap.exists()) {
-    await setDoc(ref, { savedBooks: [], skippedBooks: [], readBooks: [book] });
-  } else {
-    await updateDoc(ref, { readBooks: arrayUnion(book) });
-  }
-}
-
-export async function unreadBook(uid, bookId) {
-  const snap = await getDoc(userShelfRef(uid));
-  if (!snap.exists()) return;
-  const updated = (snap.data().readBooks ?? []).filter(b => b.id !== bookId);
-  await updateDoc(userShelfRef(uid), { readBooks: updated });
-}
