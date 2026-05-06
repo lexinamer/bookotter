@@ -1,9 +1,3 @@
-import React from 'react';
-
-const ACTIONS = [
-  { id: 'saved', label: 'Save', active: 'Saved' },
-  { id: 'skipped', label: 'Pass', active: 'Passed' },
-];
 
 export default function BookCard({
   book,
@@ -11,19 +5,12 @@ export default function BookCard({
   shelfStatus,
   onSave,
   onSkip,
+  onUnsave,
+  onUnskip,
   saved = false,
 }) {
   const query = encodeURIComponent(`${book.title} ${book.author}`);
   const amazonUrl = `https://www.amazon.com/s?k=${query}`;
-
-  const currentState = saved ? 'saved' : null;
-
-  function handleShelfChange(e) {
-    const value = e.target.value;
-    if (value === shelfStatus) return;
-    if (value === 'saved') onSave(book);
-    if (value === 'skipped') onSkip(book);
-  }
 
   return (
     <article className={`book-card${variant === 'shelf' ? ' shelf' : ''}`}>
@@ -40,28 +27,27 @@ export default function BookCard({
         </div>
 
         {variant === 'shelf' ? (
-          <select className="bookcard-select" value={shelfStatus} onChange={handleShelfChange}>
-            <option value="saved">Saved</option>
-            <option value="skipped">Passed</option>
-          </select>
+          <div className="bookcard-actions">
+            {shelfStatus === 'saved' ? (
+              <>
+                <button className="bookcard-shelf-chip" onClick={() => onUnsave(book)}>Unsave</button>
+                <button className="bookcard-shelf-chip" onClick={() => onSkip(book)}>Pass</button>
+              </>
+            ) : (
+              <>
+                <button className="bookcard-shelf-chip" onClick={() => onUnskip(book)}>Remove</button>
+                <button className="bookcard-shelf-chip" onClick={() => onSave(book)}>Save</button>
+              </>
+            )}
+          </div>
         ) : (
           <div className="bookcard-actions">
-            {ACTIONS.map((action, index) => (
-              <React.Fragment key={action.id}>
-                {currentState === action.id ? (
-                  <span className="bookcard-action active">{action.active}</span>
-                ) : (
-                  <button className="bookcard-action" onClick={() => {
-                    if (action.id === 'saved') onSave(book);
-                    if (action.id === 'skipped') onSkip(book);
-                  }}>
-                    {action.label}
-                  </button>
-                )}
-
-                {index < ACTIONS.length - 1 && <span className="bookcard-divider">|</span>}
-              </React.Fragment>
-            ))}
+            {saved ? (
+              <span className="bookcard-chip">Saved</span>
+            ) : (
+              <button className="bookcard-action-save" onClick={() => onSave(book)}>Save</button>
+            )}
+            <button className="bookcard-action-pass" onClick={() => onSkip(book)}>Pass</button>
           </div>
         )}
       </header>

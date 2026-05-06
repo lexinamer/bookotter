@@ -52,6 +52,9 @@ export default function App() {
     await handleSkip(user.uid, book);
   };
 
+  const guardedUnsave = (book) => handleRemoveSaved(user.uid, book);
+  const guardedUnskip = (book) => handleRemoveSkipped(user.uid, book);
+
   return (
     <div className="app-shell">
       <Nav
@@ -103,6 +106,8 @@ export default function App() {
                 skippedBooks={skippedBooks}
                 onSave={guardedSave}
                 onSkip={guardedSkip}
+                onUnsave={guardedUnsave}
+                onUnskip={guardedUnskip}
               />
             }
           />

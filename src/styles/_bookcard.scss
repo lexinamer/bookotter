@@ -20,9 +20,15 @@
 
 .bookcard-header {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-2);
   margin-bottom: var(--space-4);
+}
+
+.bookcard-heading {
+  flex: 1;
+  min-width: 0;
 }
 
 .bookcard-title {
@@ -58,33 +64,64 @@
 
 .bookcard-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
 }
 
-.bookcard-action {
-  font-family: var(--font-sans);
-  font-size: var(--text-xs);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-
-  &.active {
-    color: var(--ink-mid);
-  }
-}
-
-.bookcard-select {
-  width: fit-content;
-  min-height: 34px;
-  padding: 0 var(--space-2);
-  border: 1px solid rgba(221, 213, 205, 0.8);
-  border-radius: 2px;
+.bookcard-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--pill-radius);
+  background: rgba(221, 213, 205, 0.5);
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-mid);
+}
+
+.bookcard-action-save {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--pill-radius);
+  border: 1px solid rgba(221, 213, 205, 0.8);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+}
+
+.bookcard-action-pass {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.bookcard-shelf-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--pill-radius);
+  border: 1px solid rgba(221, 213, 205, 0.8);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  transition: border-color 0.15s, color 0.15s;
+
+  &:hover {
+    border-color: var(--ink-mid);
+    color: var(--ink);
+  }
 }
 
 /* =========================
@@ -121,23 +158,6 @@
 ========================= */
 
 @media (min-width: 769px) {
-  .bookcard-header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: var(--space-5);
-  }
-
-  .bookcard-heading {
-    max-width: 72%;
-  }
-
-  .bookcard-actions,
-  .bookcard-select {
-    flex-shrink: 0;
-    padding-top: var(--space-1);
-  }
-
   .bookcard-title {
     font-size: var(--text-hero);
   }

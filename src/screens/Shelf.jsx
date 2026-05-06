@@ -11,6 +11,8 @@ export default function Shelf({
   skippedBooks,
   onSave,
   onSkip,
+  onUnsave,
+  onUnskip,
 }) {
   const [tab, setTab] = useState('saved');
 
@@ -56,6 +58,8 @@ export default function Shelf({
               shelfStatus={tab}
               onSave={onSave}
               onSkip={onSkip}
+              onUnsave={onUnsave}
+              onUnskip={onUnskip}
             />
           ))
         )}
