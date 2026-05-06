@@ -2,7 +2,6 @@ import React from 'react';
 
 const ACTIONS = [
   { id: 'saved', label: 'Save', active: 'Saved' },
-  { id: 'read', label: 'Already Read', active: 'Already Read' },
   { id: 'skipped', label: 'Not For Me', active: 'Not For Me' },
 ];
 
@@ -12,20 +11,17 @@ export default function BookCard({
   shelfStatus,
   onSave,
   onSkip,
-  onRead,
   saved = false,
-  read = false,
 }) {
   const query = encodeURIComponent(`${book.title} ${book.author}`);
   const amazonUrl = `https://www.amazon.com/s?k=${query}`;
 
-  const currentState = saved ? 'saved' : read ? 'read' : null;
+  const currentState = saved ? 'saved' : null;
 
   function handleShelfChange(e) {
     const value = e.target.value;
     if (value === shelfStatus) return;
     if (value === 'saved') onSave(book);
-    if (value === 'read') onRead(book);
     if (value === 'skipped') onSkip(book);
   }
 

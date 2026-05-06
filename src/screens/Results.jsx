@@ -28,29 +28,27 @@ export default function Results({
 
   return (
     <main className="results-screen">
-      <section className="results-top">
-        {prompt?.books?.length > 0 && (
-          <p className="results-label">Based on</p>
-        )}
-
-        <div className="results-bar">
-          <h3 className="results-title">
+      <section className="results-context">
+        <div className="results-context-source">
+          {prompt?.books?.length > 0 && (
+            <span className="results-context-label">Based on</span>
+          )}
+          <span className="results-context-books">
             {prompt?.books?.length > 0
               ? prompt.books.map(toTitleCase).join(' + ')
               : 'Your Recommendations'}
-          </h3>
+          </span>
+        </div>
 
-          <div className="results-actions">
-            {canRefresh && (
-              <button className="results-action" onClick={onRefresh}>
-                Try Again <span>({refreshesLeft} left)</span>
-              </button>
-            )}
-
-            <button className="results-action" onClick={onReset}>
-              Start Over
+        <div className="results-context-controls">
+          {canRefresh && (
+            <button className="results-control" onClick={onRefresh}>
+              Try Again <span>({refreshesLeft} left)</span>
             </button>
-          </div>
+          )}
+          <button className="results-control" onClick={onReset}>
+            Start Over
+          </button>
         </div>
       </section>
 

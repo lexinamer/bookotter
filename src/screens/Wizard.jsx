@@ -33,10 +33,10 @@ export default function Wizard({ onSubmit }) {
   }
 
   return (
-    <main className="wizard-screen">
+    <main className="wizard">
       <section className="wizard-hero">
         <h1>
-          Tell us two books you love and discover <span>what to read next.</span>
+          Tell us two books you love and we'll tell you <span>what to read next.</span>
         </h1>
       </section>
 

@@ -1,29 +1,20 @@
 /* =========================
-   SCREEN
+   LAYOUT
 ========================= */
 
-.wizard-screen {
-  padding-top: var(--space-6);
-  padding-bottom: var(--space-7);
+.wizard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
 }
 
 /* =========================
    HERO
 ========================= */
 
-.wizard-hero {
-  margin-bottom: var(--space-6);
-
-  h1 {
-    max-width: 380px;
-    font-size: var(--text-hero);
-    line-height: 1.08;
-  }
-
-  span {
-    color: var(--accent);
-    font-style: italic;
-  }
+.wizard-hero span {
+  color: var(--accent);
+  font-style: italic;
 }
 
 /* =========================
@@ -31,18 +22,18 @@
 ========================= */
 
 .wizard-form {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
 }
 
 .wizard-books {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  margin-bottom: var(--space-5);
 }
 
-.wizard-group {
-  label {
+label {
     display: block;
     margin-bottom: var(--space-2);
     font-family: var(--font-sans);
@@ -50,10 +41,9 @@
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--muted);
-  }
 }
 
-.wizard-group input {
+input {
   width: 100%;
   min-height: 64px;
   padding: 0 var(--space-4);
@@ -72,20 +62,6 @@
 /* =========================
    FOCUS
 ========================= */
-
-.wizard-focus {
-  margin-bottom: var(--space-6);
-
-  label {
-    display: block;
-    margin-bottom: var(--space-3);
-    font-family: var(--font-sans);
-    font-size: var(--text-xs);
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-}
 
 .wizard-pills {
   display: flex;
@@ -130,26 +106,5 @@
   &:disabled {
     opacity: 0.45;
     cursor: default;
-  }
-}
-
-/* =========================
-   DESKTOP
-========================= */
-
-@media (min-width: 769px) {
-  .wizard-screen {
-    padding-top: var(--space-8);
-  }
-
-  .wizard-hero h1 {
-    max-width: 520px;
-    font-size: 42px;
-  }
-
-  .wizard-cta button {
-    width: auto;
-    min-width: 260px;
-    padding: 0 var(--space-4);
   }
 }

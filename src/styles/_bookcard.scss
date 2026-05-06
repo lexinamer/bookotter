@@ -3,7 +3,7 @@
 ========================= */
 
 .book-card {
-  padding: var(--space-6) 0;
+  padding: var(--space-5) 0;
 
   &.shelf {
     padding: var(--space-5) 0;
@@ -11,7 +11,7 @@
 }
 
 .book-card {
-  border-top: 1px solid rgba(221, 213, 205, 0.55);
+  border-top: 1px solid rgba(221, 213, 205, 1);
 }
 
 /* =========================
@@ -72,10 +72,6 @@
   &.active {
     color: var(--ink-mid);
   }
-}
-
-.bookcard-divider {
-  color: rgba(221, 213, 205, 0.8);
 }
 
 .bookcard-select {

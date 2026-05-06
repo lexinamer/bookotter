@@ -6,8 +6,14 @@ export default function Nav({ user, onLogin, onLogout }) {
   return (
     <nav className="site-nav">
       <Link to="/" className="nav-logo">
-        <img src="/logo.svg" alt="NextRead" />
+        {/* <img src="/logo.svg" alt="NextRead" /> */}
+        <div className="logo">
+          <span className="logo-next">Next</span>
+          <span className="logo-read">Read</span>
+        </div>
       </Link>
+
+      
 
       <div className="nav-actions">
         <Link to="/shelf" className={`nav-link${pathname === '/shelf' ? ' active' : ''}`}>
