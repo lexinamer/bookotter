@@ -28,36 +28,32 @@ export default function BookCard({
 
         {variant === 'shelf' ? (
           <div className="bookcard-actions">
-            {shelfStatus === 'saved' ? (
-              <>
-                <button className="bookcard-shelf-chip" onClick={() => onUnsave(book)}>Unsave</button>
-                <button className="bookcard-shelf-chip" onClick={() => onSkip(book)}>Pass</button>
-              </>
-            ) : (
-              <>
-                <button className="bookcard-shelf-chip" onClick={() => onUnskip(book)}>Remove</button>
-                <button className="bookcard-shelf-chip" onClick={() => onSave(book)}>Save</button>
-              </>
-            )}
+            <button className="bookcard-chip" onClick={() => shelfStatus === 'saved' ? onUnsave(book) : onUnskip(book)}>
+              Remove
+            </button>
           </div>
         ) : (
           <div className="bookcard-actions">
             {saved ? (
-              <span className="bookcard-chip">Saved</span>
+              <span className="bookcard-saved">Saved</span>
             ) : (
-              <button className="bookcard-action-save" onClick={() => onSave(book)}>Save</button>
+              <>
+                <button className="bookcard-chip" onClick={() => onSave(book)}>Save</button>
+                <button className="bookcard-link" onClick={() => onSkip(book)}>Pass</button>
+              </>
             )}
-            <button className="bookcard-action-pass" onClick={() => onSkip(book)}>Pass</button>
           </div>
         )}
       </header>
 
       <p className="bookcard-summary">{book.what}</p>
 
-      <section className="bookcard-why">
-        <span className="bookcard-label">Why we picked it</span>
-        <p>{book.why}</p>
-      </section>
+      {variant !== 'shelf' && (
+        <section className="bookcard-why">
+          <span className="bookcard-label">Why we picked it</span>
+          <p>{book.why}</p>
+        </section>
+      )}
     </article>
   );
 }

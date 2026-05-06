@@ -72,51 +72,41 @@
 .bookcard-chip {
   display: inline-flex;
   align-items: center;
-  padding: 3px 10px;
+  padding: 5px var(--space-2) 4px;
   border-radius: var(--pill-radius);
-  background: rgba(221, 213, 205, 0.5);
+  border: 1px solid var(--action);
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ink-mid);
+  color: var(--action);
+  transition: border-color 0.15s, color 0.15s;
+
+  &:hover {
+    border-color: var(--ink-mid);
+    color: var(--ink);
+  }
 }
 
-.bookcard-action-save {
+.bookcard-saved {
   display: inline-flex;
   align-items: center;
-  padding: 3px 10px;
+  padding: 5px var(--space-2) 4px;
   border-radius: var(--pill-radius);
-  border: 1px solid rgba(221, 213, 205, 0.8);
+  background-color: var(--action);
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ink-mid);
+  color: #fff;
 }
 
-.bookcard-action-pass {
+.bookcard-link {
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--muted);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.bookcard-shelf-chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  border-radius: var(--pill-radius);
-  border: 1px solid rgba(221, 213, 205, 0.8);
-  font-family: var(--font-sans);
-  font-size: var(--text-xs);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--ink-mid);
-  transition: border-color 0.15s, color 0.15s;
 
   &:hover {
     border-color: var(--ink-mid);
