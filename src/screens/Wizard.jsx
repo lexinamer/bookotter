@@ -33,55 +33,43 @@ export default function Wizard({ onSubmit }) {
   }
 
   return (
-    <main className="wizard">
-      <section className="wizard-hero">
-        <h1>
-          Tell us two books you love and we'll tell you <span>what to read next.</span>
-        </h1>
-      </section>
+    <main>
+      <h1 className="tagline">
+        Tell us two books you love. We'll tell you <span>what's next.</span>
+      </h1>
 
-      <form className="wizard-form" onSubmit={handleSubmit}>
-        <div className="wizard-books">
-          {BOOK_FIELDS.map(({ label, placeholder }, index) => (
-            <div className="wizard-group" key={label}>
-              <label htmlFor={`book-${index}`}>{label}</label>
+      <form onSubmit={handleSubmit}  className="wizard">
+        {BOOK_FIELDS.map(({ label, placeholder }, index) => (
+          <section key={label}>
+            <label htmlFor={`book-${index}`}>{label}</label>
+            <input
+              id={`book-${index}`}
+              type="text"
+              placeholder={placeholder}
+              value={books[index]}
+              onChange={(e) => updateBook(index, e.target.value)}
+              autoComplete="off"
+              spellCheck="false"
+            />
+          </section>
+        ))}
 
-              <input
-                id={`book-${index}`}
-                type="text"
-                className="input-text"
-                placeholder={placeholder}
-                value={books[index]}
-                onChange={(e) => updateBook(index, e.target.value)}
-                autoComplete="off"
-                spellCheck="false"
-              />
-            </div>
-          ))}
-        </div>
-
-        <div className="wizard-focus">
+        <section>
           <label>Recommend by</label>
+          {FOCUS_OPTIONS.map((option) => (
+            <radio
+              key={option.value}
+              className={focus === option.value ? 'active' : ''}
+              onClick={() => setFocus(option.value)}
+            >
+              {option.label}
+            </radio>
+          ))}
+        </section>
 
-          <div className="wizard-pills">
-            {FOCUS_OPTIONS.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                className={`button-pill${focus === option.value ? ' active' : ''}`}
-                onClick={() => setFocus(option.value)}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="wizard-cta">
-          <button type="submit" className="button-primary" disabled={!canSubmit}>
-            Find my next read →
-          </button>
-        </div>
+        <button className="submit" type="submit" disabled={!canSubmit}>
+          Find my next read →
+        </button>
       </form>
     </main>
   );

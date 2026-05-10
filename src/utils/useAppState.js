@@ -167,7 +167,7 @@ export default function useAppState(navigate) {
       );
 
       const promptData = {
-        books: formData.books,
+        books: data.books?.length ? data.books : formData.books,
         focus: formData.focus,
       };
 

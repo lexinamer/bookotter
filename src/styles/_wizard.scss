@@ -46,7 +46,7 @@ input {
 
   &:focus {
     outline: none;
-    border-color: var(--rust-light);
+    border-color: var(--rust);
     box-shadow: 0 0 0 3px rgba(184, 92, 56, 0.08);
   }
 }
@@ -71,7 +71,7 @@ input {
   transition: border-color 0.18s, color 0.18s, background 0.18s;
 
   &:hover {
-    border-color: var(--rust-light);
+    border-color: var(--rust);
     color: var(--rust);
   }
 

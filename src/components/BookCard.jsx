@@ -1,4 +1,3 @@
-
 export default function BookCard({
   book,
   variant = 'results',
@@ -12,48 +11,45 @@ export default function BookCard({
   const query = encodeURIComponent(`${book.title} ${book.author}`);
   const amazonUrl = `https://www.amazon.com/s?k=${query}`;
 
+  const isShelf = variant === 'shelf';
+
   return (
-    <article className={`book-card${variant === 'shelf' ? ' shelf' : ''}`}>
-      <header className="bookcard-header">
-        <div className="bookcard-heading">
-          <h2 className="bookcard-title">
+    <article className={`book-card ${variant}`}>
+      <header>
+        <div className="heading">
+          <h2>
             <a href={amazonUrl} target="_blank" rel="noopener noreferrer">
               {book.title}
             </a>
           </h2>
-
-          <p className="bookcard-author">{book.author}</p>
-          <p className="bookcard-meta">{book.year} • {book.pages} pages • {book.genre}</p>
+          <p className="author">{book.author}</p>
+          <p className="meta">{book.year} • {book.pages} pages • {book.genre}</p>
         </div>
 
-        {variant === 'shelf' ? (
-          <div className="bookcard-actions">
-            <button className="bookcard-chip" onClick={() => shelfStatus === 'saved' ? onUnsave(book) : onUnskip(book)}>
-              Remove
-            </button>
-          </div>
-        ) : (
-          <div className="bookcard-actions">
-            {saved ? (
-              <span className="bookcard-saved">Saved</span>
-            ) : (
-              <>
-                <button className="bookcard-chip" onClick={() => onSave(book)}>Save</button>
-                <button className="bookcard-link" onClick={() => onSkip(book)}>Pass</button>
-              </>
-            )}
-          </div>
-        )}
       </header>
 
-      <p className="bookcard-summary">{book.what}</p>
+      <p className="summary">{book.what}</p>
 
-      {variant !== 'shelf' && (
-        <section className="bookcard-why">
-          <span className="bookcard-label">Why we picked it</span>
+      {!isShelf && (
+        <section className="why">
           <p>{book.why}</p>
         </section>
       )}
+
+      <div className="actions">
+        {isShelf ? (
+          <button className="chip" onClick={() => shelfStatus === 'saved' ? onUnsave(book) : onUnskip(book)}>
+            Remove
+          </button>
+        ) : saved ? (
+          <span className="saved">Saved</span>
+        ) : (
+          <>
+            <button className="chip" onClick={() => onSave(book)}>Save</button>
+            <button className="link" onClick={() => onSkip(book)}>Pass</button>
+          </>
+        )}
+      </div>
     </article>
   );
 }

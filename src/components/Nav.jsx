@@ -4,20 +4,17 @@ export default function Nav({ user, onLogin, onLogout }) {
   const { pathname } = useLocation();
 
   return (
-    <nav className="site-nav">
+    <nav>
       <Link to="/" className="logo">
-        <span className="logo-next">Next</span>
-        <span className="logo-read">Read</span>
+        Next<span>Read</span>
       </Link>
 
-      
-
-      <div className="nav-actions">
-        <Link to="/shelf" className={`nav-link${pathname === '/shelf' ? ' active' : ''}`}>
+      <div className="menu">
+        <Link to="/shelf" className={`menu-link${pathname === '/shelf' ? ' active' : ''}`}>
           Bookshelf
         </Link>
 
-        <button className="nav-link" onClick={user ? onLogout : onLogin}>
+        <button className="menu-link" onClick={user ? onLogout : onLogin}>
           {user ? 'Sign Out' : 'Sign In'}
         </button>
       </div>

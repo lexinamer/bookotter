@@ -106,6 +106,7 @@ For the "why" field: explain specifically why this scratches the same itch as th
 
 Respond ONLY with raw JSON:
 {
+  "books": ["Corrected Book Title One", "Corrected Book Title Two"],
   "recommendations": [
     {
       "id": "lowercase-title-author-slug",
@@ -118,7 +119,9 @@ Respond ONLY with raw JSON:
       "why": "Why it scratches the same itch."
     }
   ]
-}`;
+}
+
+The "books" field must contain the correctly spelled, properly capitalized titles of the input books — correcting any typos or misspellings. Preserve the same order as the input.`;
 }
 // ─── Response Parsing ────────────────────────────────────────────────────────
 
@@ -143,10 +146,13 @@ function parseRecommendationResponse(text) {
     throw new Error('Invalid recommendation payload');
   }
 
-  return parsed.recommendations.map((book) => ({
-    ...book,
-    id: book.id || makeBookId(book.title, book.author),
-  }));
+  return {
+    books: Array.isArray(parsed.books) ? parsed.books : [],
+    recommendations: parsed.recommendations.map((book) => ({
+      ...book,
+      id: book.id || makeBookId(book.title, book.author),
+    })),
+  };
 }
 
 // ─── Route ───────────────────────────────────────────────────────────────────
@@ -179,10 +185,10 @@ app.post('/api/recommend', async (req, res) => {
     const rawText = message.content?.[0]?.text;
     if (!rawText) throw new Error('Empty response from Claude');
 
-    const recommendations = parseRecommendationResponse(rawText);
+    const { books: correctedBooks, recommendations } = parseRecommendationResponse(rawText);
 
     console.log(`[recommend] success — ${recommendations.length} recommendation(s) returned`);
-    res.json({ recommendations });
+    res.json({ books: correctedBooks, recommendations });
   } catch (error) {
     console.error('[recommend] error:', error.message);
 

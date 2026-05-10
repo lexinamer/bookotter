@@ -27,7 +27,7 @@ export default function Results({
       <section className="results-context">
         <div className="results-context-source">
           {prompt?.books?.length > 0 && (
-            <span className="results-context-label">Based on</span>
+            <span className="results-context-label">Because you loved</span>
           )}
           <span className="results-context-books">
             {prompt?.books?.length > 0
