@@ -61,7 +61,7 @@ export default function Wizard({ onSubmit }) {
         </div>
 
         <div className="wizard-focus">
-          <label>What do you want more of?</label>
+          <label>Recommend by</label>
 
           <div className="wizard-pills">
             {FOCUS_OPTIONS.map((option) => (
@@ -79,7 +79,7 @@ export default function Wizard({ onSubmit }) {
 
         <div className="wizard-cta">
           <button type="submit" className="button-primary" disabled={!canSubmit}>
-            Find my next read
+            Find my next read →
           </button>
         </div>
       </form>
