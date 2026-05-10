@@ -35,16 +35,16 @@ export default function Results({
               : 'Your Recommendations'}
           </span>
         </div>
-
         <div className="results-context-controls">
           {canRefresh && (
-            <button className="results-control" onClick={onRefresh}>
-              Try Again <span>({refreshesLeft} left)</span>
-            </button>
+            <>
+              <button className="results-control" onClick={onRefresh}>
+                Try again ({refreshesLeft} left)
+              </button>
+              <span className="results-context-sep">·</span>
+            </>
           )}
-          <button className="results-control" onClick={onReset}>
-            Start Over
-          </button>
+          <button className="results-control" onClick={onReset}>Start over</button>
         </div>
       </section>
 
