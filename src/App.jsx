@@ -1,10 +1,9 @@
 import { useState } from 'react';
 
-import Nav from './screens/Nav';
-import Wizard from './screens/Wizard';
-import Results from './screens/Results';
+import Wizard from './Wizard';
+import Results from './Results';
 
-import './styles/global.scss';
+import './styles.scss';
 
 const STORAGE_KEY = 'nextread_session';
 const MAX_REFRESHES = 2;
@@ -110,7 +109,11 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <Nav />
+      <nav>
+        <a href="/" className="logo">
+          Next<span>Read</span>
+        </a>
+      </nav>
 
       {error ? (
         <div className="error">
