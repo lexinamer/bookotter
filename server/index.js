@@ -8,8 +8,8 @@ dotenv.config();
 // ─── Config ──────────────────────────────────────────────────────────────────
 
 const PORT = process.env.PORT || 3001;
-const MODEL = 'claude-sonnet-4-6';
-const MAX_TOKENS = 2000;
+const MODEL = 'claude-haiku-4-5-20251001';
+const MAX_TOKENS = 800;
 const TEMPERATURE = 0.65;
 const RECOMMENDATION_COUNT = 3;
 const MAX_BOOKS_INPUT = 20;
@@ -112,11 +112,12 @@ function makeBookId(title, author) {
 }
 
 function parseRecommendationResponse(text) {
-  const clean = text.replace(/```json|```/g, '').trim();
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error('No JSON found in Claude response');
 
   let parsed;
   try {
-    parsed = JSON.parse(clean);
+    parsed = JSON.parse(jsonMatch[0]);
   } catch {
     throw new Error('Failed to parse JSON from Claude response');
   }

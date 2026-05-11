@@ -171,6 +171,16 @@ input {
   margin-top: var(--space-2);
 }
 
+.error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-6) 0;
+  text-align: center;
+}
+
 /* =========================
    WIZARD
 ========================= */
