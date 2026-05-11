@@ -40,8 +40,7 @@ export default function Results({
 
       <section className="results-list">
         {data.map((book) => {
-          const query = encodeURIComponent(`${book.title} ${book.author}`);
-          const goodreadsUrl = `https://www.goodreads.com/search?q=${query}`;
+         const goodreadsUrl = `https://www.goodreads.com/search?q=${encodeURIComponent(`${book.title} ${book.author}`)}`;
 
           return (
             <article key={book.id} className="book-card">
