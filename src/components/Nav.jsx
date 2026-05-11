@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 
-export default function Nav({ user, onLogin, onLogout }) {
+export default function Nav() {
   const { pathname } = useLocation();
 
   return (
@@ -13,10 +13,6 @@ export default function Nav({ user, onLogin, onLogout }) {
         <Link to="/shelf" className={`menu-link${pathname === '/shelf' ? ' active' : ''}`}>
           Bookshelf
         </Link>
-
-        <button className="menu-link" onClick={user ? onLogout : onLogin}>
-          {user ? 'Sign Out' : 'Sign In'}
-        </button>
       </div>
     </nav>
   );

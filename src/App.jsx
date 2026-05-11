@@ -57,11 +57,7 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <Nav
-        user={user}
-        onLogin={confirmGoogleLogin}
-        onLogout={logoutUser}
-      />
+      <Nav />
 
       {loading ? (
         <div className="loading">
@@ -102,6 +98,9 @@ export default function App() {
             path="/shelf"
             element={
               <Shelf
+                user={user}
+                onLogin={confirmGoogleLogin}
+                onLogout={logoutUser}
                 savedBooks={savedBooks}
                 skippedBooks={skippedBooks}
                 onSave={guardedSave}

@@ -246,3 +246,66 @@ radio {
   color: var(--border);
   font-size: var(--text-sm);
 }
+
+
+/* =========================
+   SHELF
+========================= */
+
+.shelf-screen {
+  padding-top: 16px;
+  padding-bottom: 60px;
+}
+
+.shelf-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: var(--space-5);
+}
+
+.shelf-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  transition: color 0.15s ease;
+
+  &:hover { color: var(--ink); }
+
+  &.active {
+    color: var(--ink);
+    font-weight: 600;
+  }
+}
+
+.shelf-count {
+  color: var(--muted);
+}
+
+.shelf-auth-link {
+  margin-left: auto;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s ease;
+
+  &:hover { color: var(--ink-mid); }
+}
+
+.shelf-empty {
+  margin-top: 40px;
+}
+
+@media (min-width: 769px) {
+  .shelf-screen { padding-top: 24px; }
+  .shelf-list { margin-top: 34px; }
+}

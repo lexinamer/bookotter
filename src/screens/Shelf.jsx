@@ -7,6 +7,9 @@ const TABS = [
 ];
 
 export default function Shelf({
+  user,
+  onLogin,
+  onLogout,
   savedBooks,
   skippedBooks,
   onSave,
@@ -44,6 +47,10 @@ export default function Shelf({
             )}
           </button>
         ))}
+
+        <button className="shelf-auth-link" onClick={user ? onLogout : onLogin}>
+          {user ? 'Sign out' : 'Sign in with Google'}
+        </button>
       </section>
 
       <section className="shelf-list">
