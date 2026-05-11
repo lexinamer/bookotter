@@ -156,21 +156,19 @@ input {
    LOADING & ERROR
 ========================= */
 
-.loading, .error {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-6) 0;
-  text-align: center;
+.results-context.loading {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
-.loading {
-  font-family: var(--font-serif);
-  font-size: var(--text-xxl);
-  font-weight: 300;
-  font-style: italic;
+.results-context.loading::after {
+  content: 'Finding new recommendations...';
+  display: block;
+  font-size: var(--text-xxs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: var(--space-2);
 }
 
 /* =========================
@@ -212,7 +210,7 @@ input {
   }
 }
 
-radio {
+.wizard-focus button {
   flex: 1;
   min-height: var(--space-5);
   padding: var(--space-1) var(--space-4);

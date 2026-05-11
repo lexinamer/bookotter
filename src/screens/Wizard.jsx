@@ -11,7 +11,7 @@ const FOCUS_OPTIONS = [
   { value: 'style', label: 'Writing Style' },
 ];
 
-export default function Wizard({ onSubmit }) {
+export default function Wizard({ onSubmit, loading }) {
   const [books, setBooks] = useState(['', '']);
   const [focus, setFocus] = useState('mood');
 
@@ -23,7 +23,7 @@ export default function Wizard({ onSubmit }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!canSubmit) return;
+    if (!canSubmit || loading) return;
 
     const filledBooks = books
       .filter((book) => book.trim())
@@ -38,7 +38,7 @@ export default function Wizard({ onSubmit }) {
         Tell us two books you love. We'll tell you <span>what's next.</span>
       </h1>
 
-      <form onSubmit={handleSubmit}  className="wizard">
+      <form onSubmit={handleSubmit} className="wizard">
         {BOOK_FIELDS.map(({ label, placeholder }, index) => (
           <section key={label}>
             <label htmlFor={`book-${index}`}>{label}</label>
@@ -50,25 +50,28 @@ export default function Wizard({ onSubmit }) {
               onChange={(e) => updateBook(index, e.target.value)}
               autoComplete="off"
               spellCheck="false"
+              disabled={loading}
             />
           </section>
         ))}
 
-        <section>
+        <section className="wizard-focus">
           <label>Recommend by</label>
           {FOCUS_OPTIONS.map((option) => (
-            <radio
+            <button
               key={option.value}
+              type="button"
               className={focus === option.value ? 'active' : ''}
               onClick={() => setFocus(option.value)}
+              disabled={loading}
             >
               {option.label}
-            </radio>
+            </button>
           ))}
         </section>
 
-        <button className="submit" type="submit" disabled={!canSubmit}>
-          Find my next read →
+        <button className="submit" type="submit" disabled={!canSubmit || loading}>
+          {loading ? 'Finding your books...' : 'Find my next read →'}
         </button>
       </form>
     </main>

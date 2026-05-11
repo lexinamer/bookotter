@@ -8,13 +8,14 @@ export default function Results({
   onRefresh,
   refreshCount,
   maxRefreshes,
+  loading,
 }) {
   const refreshesLeft = maxRefreshes - refreshCount;
   const canRefresh = refreshesLeft > 0;
 
   return (
     <main className="results-screen">
-      <section className="results-context">
+      <section className={`results-context ${loading ? 'is-loading' : ''}`}>
         <div className="results-context-source">
           {prompt?.books?.length > 0 && (
             <span className="results-context-label">Because you loved</span>
@@ -28,19 +29,21 @@ export default function Results({
         <div className="results-context-controls">
           {canRefresh && (
             <>
-              <button className="results-control" onClick={onRefresh}>
-                Try again ({refreshesLeft} left)
+              <button className="results-control" onClick={onRefresh} disabled={loading}>
+                {loading ? 'Finding books...' : `Try again (${refreshesLeft} left)`}
               </button>
               <span className="results-context-sep">·</span>
             </>
           )}
-          <button className="results-control" onClick={onReset}>Start over</button>
+          <button className="results-control" onClick={onReset} disabled={loading}>
+            Start over
+          </button>
         </div>
       </section>
 
-      <section className="results-list">
+      <section className={`results-list ${loading ? 'is-loading' : ''}`}>
         {data.map((book) => {
-         const goodreadsUrl = `https://www.goodreads.com/search?q=${encodeURIComponent(`${book.title} ${book.author}`)}`;
+          const goodreadsUrl = `https://www.goodreads.com/search?q=${encodeURIComponent(`${book.title} ${book.author}`)}`;
 
           return (
             <article key={book.id} className="book-card">

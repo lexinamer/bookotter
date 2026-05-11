@@ -121,37 +121,33 @@ export default function App() {
     <div className="app-shell">
       <Nav />
 
-      {loading ? (
-        <div className="loading">
-          Finding your next favorite book...
-        </div>
-      ) : error ? (
+      {error ? (
         <div className="error">
           <p>{error}</p>
-          <button className="results-action" onClick={handleReset}>
-            Start Over
-          </button>
+          <button onClick={handleReset}>Start Over</button>
         </div>
       ) : (
-        <Routes>
-          <Route
-            path="/"
-            element={
-              !results ? (
-                <Wizard onSubmit={handleSubmit} />
-              ) : (
-                <Results
-                  data={results}
-                  prompt={prompt}
-                  onReset={handleReset}
-                  onRefresh={handleRefresh}
-                  refreshCount={refreshCount}
-                  maxRefreshes={MAX_REFRESHES}
-                />
-              )
-            }
-          />
-        </Routes>
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            !results ? (
+              <Wizard onSubmit={handleSubmit} loading={loading} />
+            ) : (
+              <Results
+                data={results}
+                prompt={prompt}
+                onReset={handleReset}
+                onRefresh={handleRefresh}
+                refreshCount={refreshCount}
+                maxRefreshes={MAX_REFRESHES}
+                loading={loading}
+              />
+            )
+          }
+        />
+      </Routes>
       )}
     </div>
   );
