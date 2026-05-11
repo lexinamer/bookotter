@@ -1,5 +1,3 @@
-import BookCard from '../components/BookCard';
-
 const toTitleCase = (str) =>
   str.replace(/\w\S*/g, (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
 
@@ -8,19 +6,11 @@ export default function Results({
   prompt,
   onReset,
   onRefresh,
-  onSave,
-  onSkip,
-  savedBooks,
-  skippedBooks,
   refreshCount,
   maxRefreshes,
 }) {
   const refreshesLeft = maxRefreshes - refreshCount;
   const canRefresh = refreshesLeft > 0;
-
-  const visibleBooks = data.filter(
-    (book) => !skippedBooks.some((item) => item.id === book.id)
-  );
 
   return (
     <main className="results-screen">
@@ -49,15 +39,32 @@ export default function Results({
       </section>
 
       <section className="results-list">
-        {visibleBooks.map((book) => (
-          <BookCard
-            key={book.id}
-            book={book}
-            onSave={onSave}
-            onSkip={onSkip}
-            saved={savedBooks.some((item) => item.id === book.id)}
-          />
-        ))}
+        {data.map((book) => {
+          const query = encodeURIComponent(`${book.title} ${book.author}`);
+          const goodreadsUrl = `https://www.goodreads.com/search?q=${query}`;
+
+          return (
+            <article key={book.id} className="book-card">
+              <header>
+                <div className="heading">
+                  <h2>
+                    <a href={goodreadsUrl} target="_blank" rel="noopener noreferrer">
+                      {book.title}
+                    </a>
+                  </h2>
+                  <p className="author">{book.author}</p>
+                  <p className="meta">{book.year} • {book.pages} pages • {book.genre}</p>
+                </div>
+              </header>
+
+              <p className="summary">{book.what}</p>
+
+              <section className="why">
+                <p>{book.why}</p>
+              </section>
+            </article>
+          );
+        })}
       </section>
     </main>
   );

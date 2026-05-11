@@ -1,59 +1,121 @@
+import { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 
-import Nav from './components/Nav';
+import Nav from './screens/Nav';
 import Wizard from './screens/Wizard';
 import Results from './screens/Results';
-import Shelf from './screens/Shelf';
 
-import useAppState from './utils/useAppState';
 import './styles/global.scss';
+
+const STORAGE_KEY = 'nextread_session';
+const MAX_REFRESHES = 2;
+
+async function getRecommendations(books, excludeBooks = [], focus = null) {
+  const response = await fetch('/api/recommend', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ books, excludeBooks, focus }),
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.error || 'Failed to get recommendations');
+  }
+
+  return response.json();
+}
+
+function saveSession(recommendations, prompt, refreshCount, excludedBooks) {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({ recommendations, prompt, refreshCount, excludedBooks })
+  );
+}
 
 export default function App() {
   const navigate = useNavigate();
 
-  const {
-    user,
-    confirmGoogleLogin,
-    logoutUser,
-    savedBooks,
-    skippedBooks,
-    handleSave,
-    handleRemoveSaved,
-    handleSkip,
-    handleRemoveSkipped,
-    results,
-    prompt,
-    loading,
-    error,
-    handleSubmit,
-    handleRefresh,
-    handleReset,
-    refreshCount,
-    maxRefreshes,
-  } = useAppState(navigate);
+  const [results, setResults] = useState(null);
+  const [prompt, setPrompt] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [refreshCount, setRefreshCount] = useState(0);
+  const [excludedBooks, setExcludedBooks] = useState([]);
 
-  const guardedSave = async (book) => {
-    if (!user) return confirmGoogleLogin();
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return;
 
-    if (skippedBooks.some((item) => item.id === book.id)) {
-      await handleRemoveSkipped(user.uid, book);
+    const session = JSON.parse(stored);
+    if (session.recommendations) setResults(session.recommendations);
+    if (session.prompt) setPrompt(session.prompt);
+    if (session.refreshCount != null) setRefreshCount(session.refreshCount);
+    if (session.excludedBooks) setExcludedBooks(session.excludedBooks);
+  }, []);
+
+  async function handleSubmit(formData) {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await getRecommendations(formData.books, [], formData.focus);
+
+      const promptData = {
+        books: data.books?.length ? data.books : formData.books,
+        focus: formData.focus,
+      };
+
+      setResults(data.recommendations);
+      setPrompt(promptData);
+      setRefreshCount(0);
+      setExcludedBooks([]);
+
+      saveSession(data.recommendations, promptData, 0, []);
+      navigate('/');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
+  }
 
-    await handleSave(user.uid, book);
-  };
+  async function handleRefresh() {
+    if (!prompt || refreshCount >= MAX_REFRESHES) return;
 
-  const guardedSkip = async (book) => {
-    if (!user) return confirmGoogleLogin();
+    setLoading(true);
+    setError(null);
 
-    if (savedBooks.some((item) => item.id === book.id)) {
-      await handleRemoveSaved(user.uid, book);
+    try {
+      const currentTitles = (results || []).map(
+        (book) => `${book.title} by ${book.author}`
+      );
+
+      const nextExcluded = [...excludedBooks, ...currentTitles];
+      const data = await getRecommendations(prompt.books, nextExcluded, prompt.focus);
+
+      const nextCount = refreshCount + 1;
+      setResults(data.recommendations);
+      setRefreshCount(nextCount);
+      setExcludedBooks(nextExcluded);
+
+      saveSession(data.recommendations, prompt, nextCount, nextExcluded);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
+  }
 
-    await handleSkip(user.uid, book);
-  };
+  function handleReset() {
+    setResults(null);
+    setPrompt(null);
+    setRefreshCount(0);
+    setExcludedBooks([]);
+    setError(null);
 
-  const guardedUnsave = (book) => handleRemoveSaved(user.uid, book);
-  const guardedUnskip = (book) => handleRemoveSkipped(user.uid, book);
+    localStorage.removeItem(STORAGE_KEY);
+    navigate('/');
+  }
 
   return (
     <div className="app-shell">
@@ -83,31 +145,10 @@ export default function App() {
                   prompt={prompt}
                   onReset={handleReset}
                   onRefresh={handleRefresh}
-                  onSave={guardedSave}
-                  onSkip={guardedSkip}
-                  savedBooks={savedBooks}
-                  skippedBooks={skippedBooks}
                   refreshCount={refreshCount}
-                  maxRefreshes={maxRefreshes}
+                  maxRefreshes={MAX_REFRESHES}
                 />
               )
-            }
-          />
-
-          <Route
-            path="/shelf"
-            element={
-              <Shelf
-                user={user}
-                onLogin={confirmGoogleLogin}
-                onLogout={logoutUser}
-                savedBooks={savedBooks}
-                skippedBooks={skippedBooks}
-                onSave={guardedSave}
-                onSkip={guardedSkip}
-                onUnsave={guardedUnsave}
-                onUnskip={guardedUnskip}
-              />
             }
           />
         </Routes>

@@ -42,35 +42,16 @@ function validateRequestBody({ books }) {
 }
 
 // ─── Prompt Builder ──────────────────────────────────────────────────────────
-const FOCUS_INSTRUCTIONS = {
-  mood: 'The reader wants books with the same immersive vibe and mood, emotional payoff, pacing, and overall feeling. Prioritize reader experience over exact plot similarity.',
-  topic: 'The reader wants books with the same topic, premise, setting, historical lane, or central story dynamic. Lean confidently into subject similarity.',
-  style: 'The reader wants books with the same writing style, readability, storytelling rhythm, and prose accessibility. Prioritize a similar reading experience even if the topic changes.',
-};
 
-function buildPrompt(
-  books,
-  mode = 'mood',
-  excludeBooks = [],
-  savedBooks = [],
-  skippedBooks = []
-) {
+function buildPrompt(books, mode = 'mood', excludeBooks = []) {
   const bookList = books.map(b => `- ${b}`).join('\n');
 
   const excludeNote = excludeBooks.length > 0
     ? `\nDo NOT recommend any of these books (already suggested):\n${excludeBooks.map(b => `- ${b}`).join('\n')}`
     : '';
 
-  const userMemory = [...savedBooks, ...skippedBooks].map(book =>
-    typeof book === 'string' ? book : book.title
-  );
-
-  const memoryNote = userMemory.length > 0
-    ? `\nDo NOT recommend any of these books the reader has already saved or skipped:\n${userMemory.map(b => `- ${b}`).join('\n')}`
-    : '';
-
   const modeInstruction = {
-    vibe: `Prioritize matching the same emotional mood, immersive feeling, pacing, atmosphere, and reader satisfaction over exact plot similarities.`,
+    mood: `Prioritize matching the same emotional mood, immersive feeling, pacing, atmosphere, and reader satisfaction over exact plot similarities.`,
 
     topic: `Prioritize matching the same subject matter, historical lane, premise, relationship dynamics, or central story situation while keeping the books highly readable and compelling.`,
 
@@ -82,7 +63,6 @@ function buildPrompt(
 A reader loved these books:
 ${bookList}
 ${excludeNote}
-${memoryNote}
 
 ${modeInstruction[mode]}
 
@@ -97,7 +77,6 @@ Rules for choosing:
 - The three recommendations should provide slightly different options, not three versions of the exact same book
 - Never recommend a book the reader already listed
 - Do NOT recommend any book already suggested above
-- Do NOT recommend any book the reader has already saved or skipped
 - Only recommend books you are certain exist
 
 For the "what" field: one vivid sentence that clearly explains what the book is about and why it feels compelling. Under 35 words.
@@ -158,7 +137,7 @@ function parseRecommendationResponse(text) {
 // ─── Route ───────────────────────────────────────────────────────────────────
 
 app.post('/api/recommend', async (req, res) => {
-  const { books, excludeBooks = [], focus = null, skippedBooks = [] } = req.body;
+  const { books, excludeBooks = [], focus = null } = req.body;
 
   const validationError = validateRequestBody({ books });
   if (validationError) {
@@ -177,7 +156,7 @@ app.post('/api/recommend', async (req, res) => {
       messages: [
         {
           role: 'user',
-          content: buildPrompt(books, focus, excludeBooks, [], skippedBooks),
+          content: buildPrompt(books, focus, excludeBooks),
         },
       ],
     });
