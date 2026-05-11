@@ -156,12 +156,12 @@ input {
    LOADING & ERROR
 ========================= */
 
-.results-context.loading {
+.results-context.is-loading {
   opacity: 0.5;
   pointer-events: none;
 }
 
-.results-context.loading::after {
+.results-context.is-loading::after {
   content: 'Finding new recommendations...';
   display: block;
   font-size: var(--text-xxs);
@@ -372,5 +372,5 @@ input {
 
 .results-context-sep {
   color: var(--border);
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
 }

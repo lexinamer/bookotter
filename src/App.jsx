@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 import Nav from './screens/Nav';
 import Wizard from './screens/Wizard';
@@ -9,6 +8,22 @@ import './styles/global.scss';
 
 const STORAGE_KEY = 'nextread_session';
 const MAX_REFRESHES = 2;
+
+function loadSession() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveSession(recommendations, prompt, refreshCount, excludedBooks) {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({ recommendations, prompt, refreshCount, excludedBooks })
+  );
+}
 
 async function getRecommendations(books, excludeBooks = [], focus = null) {
   const response = await fetch('/api/recommend', {
@@ -25,33 +40,15 @@ async function getRecommendations(books, excludeBooks = [], focus = null) {
   return response.json();
 }
 
-function saveSession(recommendations, prompt, refreshCount, excludedBooks) {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify({ recommendations, prompt, refreshCount, excludedBooks })
-  );
-}
-
 export default function App() {
-  const navigate = useNavigate();
+  const [initialSession] = useState(loadSession);
 
-  const [results, setResults] = useState(null);
-  const [prompt, setPrompt] = useState(null);
+  const [results, setResults] = useState(initialSession.recommendations ?? null);
+  const [prompt, setPrompt] = useState(initialSession.prompt ?? null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [refreshCount, setRefreshCount] = useState(0);
-  const [excludedBooks, setExcludedBooks] = useState([]);
-
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) return;
-
-    const session = JSON.parse(stored);
-    if (session.recommendations) setResults(session.recommendations);
-    if (session.prompt) setPrompt(session.prompt);
-    if (session.refreshCount != null) setRefreshCount(session.refreshCount);
-    if (session.excludedBooks) setExcludedBooks(session.excludedBooks);
-  }, []);
+  const [refreshCount, setRefreshCount] = useState(initialSession.refreshCount ?? 0);
+  const [excludedBooks, setExcludedBooks] = useState(initialSession.excludedBooks ?? []);
 
   async function handleSubmit(formData) {
     setLoading(true);
@@ -71,7 +68,6 @@ export default function App() {
       setExcludedBooks([]);
 
       saveSession(data.recommendations, promptData, 0, []);
-      navigate('/');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -86,10 +82,7 @@ export default function App() {
     setError(null);
 
     try {
-      const currentTitles = (results || []).map(
-        (book) => `${book.title} by ${book.author}`
-      );
-
+      const currentTitles = (results || []).map((book) => `${book.title} by ${book.author}`);
       const nextExcluded = [...excludedBooks, ...currentTitles];
       const data = await getRecommendations(prompt.books, nextExcluded, prompt.focus);
 
@@ -112,9 +105,7 @@ export default function App() {
     setRefreshCount(0);
     setExcludedBooks([]);
     setError(null);
-
     localStorage.removeItem(STORAGE_KEY);
-    navigate('/');
   }
 
   return (
@@ -126,28 +117,18 @@ export default function App() {
           <p>{error}</p>
           <button onClick={handleReset}>Start Over</button>
         </div>
-      ) : (
-
-      <Routes>
-        <Route
-          path="/"
-          element={
-            !results ? (
-              <Wizard onSubmit={handleSubmit} loading={loading} />
-            ) : (
-              <Results
-                data={results}
-                prompt={prompt}
-                onReset={handleReset}
-                onRefresh={handleRefresh}
-                refreshCount={refreshCount}
-                maxRefreshes={MAX_REFRESHES}
-                loading={loading}
-              />
-            )
-          }
+      ) : results ? (
+        <Results
+          data={results}
+          prompt={prompt}
+          onReset={handleReset}
+          onRefresh={handleRefresh}
+          refreshCount={refreshCount}
+          maxRefreshes={MAX_REFRESHES}
+          loading={loading}
         />
-      </Routes>
+      ) : (
+        <Wizard onSubmit={handleSubmit} loading={loading} />
       )}
     </div>
   );

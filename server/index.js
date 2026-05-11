@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import Anthropic from '@anthropic-ai/sdk';
 import dotenv from 'dotenv';
 
@@ -14,18 +15,31 @@ const TEMPERATURE = 0.65;
 const RECOMMENDATION_COUNT = 3;
 const MAX_BOOKS_INPUT = 20;
 const MAX_BOOK_STRING_LENGTH = 200;
+const VALID_FOCUS = ['mood', 'topic', 'style'];
 
 // ─── Client ──────────────────────────────────────────────────────────────────
 
 const app = express();
-app.use(cors());
+
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGIN || 'http://localhost:5173',
+}));
+
 app.use(express.json());
+
+app.use('/api/', rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later.' },
+}));
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 // ─── Validation ──────────────────────────────────────────────────────────────
 
-function validateRequestBody({ books }) {
+function validateRequestBody({ books, focus }) {
   if (!Array.isArray(books) || books.length === 0) {
     return 'At least one book is required';
   }
@@ -36,6 +50,10 @@ function validateRequestBody({ books }) {
 
   if (!books.every((b) => typeof b === 'string' && b.length <= MAX_BOOK_STRING_LENGTH)) {
     return 'Each book must be a string under 200 characters';
+  }
+
+  if (focus != null && !VALID_FOCUS.includes(focus)) {
+    return `Invalid focus — must be one of: ${VALID_FOCUS.join(', ')}`;
   }
 
   return null;
@@ -102,6 +120,7 @@ Respond ONLY with raw JSON:
 
 The "books" field must contain the correctly spelled, properly capitalized titles of the input books — correcting any typos or misspellings. Preserve the same order as the input.`;
 }
+
 // ─── Response Parsing ────────────────────────────────────────────────────────
 
 function makeBookId(title, author) {
@@ -140,7 +159,7 @@ function parseRecommendationResponse(text) {
 app.post('/api/recommend', async (req, res) => {
   const { books, excludeBooks = [], focus = null } = req.body;
 
-  const validationError = validateRequestBody({ books });
+  const validationError = validateRequestBody({ books, focus });
   if (validationError) {
     return res.status(400).json({ error: validationError });
   }

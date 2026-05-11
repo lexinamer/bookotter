@@ -56,7 +56,7 @@ export default function Wizard({ onSubmit, loading }) {
         ))}
 
         <section className="wizard-focus">
-          <label>Recommend by</label>
+          <label>See more like</label>
           {FOCUS_OPTIONS.map((option) => (
             <button
               key={option.value}
